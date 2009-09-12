@@ -4,22 +4,12 @@
 	<title></title>
 </head>
 <body>
-<?php include("circuit.php");?>
+<?php include("user.php");?>
 
 <?php
-	set_circuit("afsdf", 3);
-	/*echo "<br><br><br>";
-	get_user_nick('zpas');
-	echo "<br><br><br>";
-	set_user("qwe", "Juan",  "Palomo", "yyy", "algo@gmail.com", "Blanes", "colegio1", "xxx", "alumno", 123 );
-	echo "<br><br><br>";
-	get_user_nick('zpas');
-	echo "<br><br><br>";
-	delete_user_nick('zpas');
-	echo "<br><br><br>";
-	get_users();*/
-	
-	
+	$bool = ('algo');
+	/*function create_user($nick, $name, $surname1, $surname2, $email_user, $population, $school, $email_school, $type_user, $pass){*/
+	if ($bool) {echo "Funciona";}else{echo "No funciona";}
 ?>
 </body>
 </html>
