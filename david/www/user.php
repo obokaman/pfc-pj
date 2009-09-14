@@ -111,4 +111,21 @@
 		close_connection($connection);		
 	}
 	/*Post: La función borra el usuario de la BBDD*/
+	
+	
+	/*La función comprueba si el identificador del usuario existe*/
+	function exist_user($id){	
+	/*Pre: - */
+		$conexion = open_connection();
+		$query =  "SELECT * FROM user WHERE id_user = '$id'";
+	
+		if (!mysql_query($query, $connection)) {			
+			close_connection($connection);	
+			return false;
+		}else{
+			close_connection($connection);	
+			return true;
+		}		
+	}
+	/*Post: Devuelve cierto en caso de que el identificador del usuario existe, en caso contrario devuelve falso*/
 ?>

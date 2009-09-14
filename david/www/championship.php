@@ -110,5 +110,23 @@
 		close_connection($connection);		
 	}
 	/*Post: La función borra el circuito de la BBDD*/
+	
+	
+	
+	/*La función comprueba si el identificador del campeonato existe*/
+	function exist_championship($id){	
+	/*Pre: - */
+		$conexion = open_connection();
+		$query =  "SELECT * FROM championship WHERE id_champ = '$id'";
+	
+		if (!mysql_query($query, $connection)) {			
+			close_connection($connection);	
+			return false;
+		}else{
+			close_connection($connection);	
+			return true;
+		}		
+	}
+	/*Post: Devuelve cierto en caso de que el identificador del campeonato existe, en caso contrario devuelve falso*/
 
 ?>

@@ -129,4 +129,22 @@
 		close_connection($connection);		
 	}
 	/*Post: La función borra el circuito de la BBDD*/
+	
+	
+	
+	/*La función comprueba si el identificador del circuito existe*/
+	function exist_circuit($id){	
+	/*Pre: - */
+		$conexion = open_connection();
+		$query =  "SELECT * FROM circuit WHERE id_circuit = '$id'";
+	
+		if (!mysql_query($query, $connection)) {			
+			close_connection($connection);	
+			return false;
+		}else{
+			close_connection($connection);	
+			return true;
+		}		
+	}
+	/*Post: Devuelve cierto en caso de que el identificador del circuito existe, en caso contrario devuelve falso*/
 ?>
