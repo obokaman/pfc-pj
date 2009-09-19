@@ -4,12 +4,14 @@
 	<title></title>
 </head>
 <body>
-<?php include("user.php");?>
+<?php include("user.php");?>		
+
 
 <?php
-	$bool = ('algo');
-	/*function create_user($nick, $name, $surname1, $surname2, $email_user, $population, $school, $email_school, $type_user, $pass){*/
-	if ($bool) {echo "Funciona";}else{echo "No funciona";}
+
+	if (exist_user(1)) echo "encontrado";
+	else echo "no enconrtado";
+	
 ?>
 </body>
 </html>

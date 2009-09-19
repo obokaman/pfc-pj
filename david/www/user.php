@@ -26,18 +26,17 @@
 	/*La función nos devuelve la lista de todos los usuarios que estan almacenados en la BBDD, en formato JSON*/
 	function get_users(){
 	/*Pre: - */	
-		$conexion = open_connection();
+		$connection = open_connection();
 		$query =  "SELECT * FROM user";
-		$result_query = mysql_query($query, $conexion) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
 		while($obj = mysql_fetch_object($result_query)) {
 			$arr[] = $obj;
 		}
-		
 		print(json_encode($arr)); 
-		close_connection($conexion);		
+		close_connection($connection);		
 	}
 	/*Post: La función nos devuelve la lista de todos los usuarios que estan almacenados en la base de datos, en formato JSON*/
 
@@ -45,9 +44,9 @@
 	/*La función nos devuelve la información del usuario en formato JSON a partir del identificador que tiene en la BBDD*/
 	function get_user_id($id){
 	/*Pre: - */
-		$conexion = open_connection();
+		$connection = open_connection();
 		$query =  "SELECT * FROM user WHERE id_user = '$id'";
-		$result_query = mysql_query($query, $conexion) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -56,7 +55,7 @@
 		}
 		
 		print( json_encode($arr)); 
-		close_connection($conexion);
+		close_connection($connection);
 	}
 	/*Post: Retorna la información del usuario en formato JSON*/
 	
@@ -64,9 +63,9 @@
 	/*La función nos devuelve la información de usuario en formato JSON a partir del nick del usuario*/
 	function get_user_nick($nick){
 	/*Pre: - */
-		$conexion = open_connection();
+		$connection = open_connection();
 		$query =  "SELECT * FROM user WHERE nick = '$nick'";
-		$result_query = mysql_query($query, $conexion) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -75,7 +74,7 @@
 		}
 		
 		print( json_encode($arr)); 
-		close_connection($conexion);
+		close_connection($connection);
 	}
 	/*Post: Retorna la información del usuario en formato JSON*/
 	
@@ -106,7 +105,7 @@
 		
 	    $query = "DELETE FROM user WHERE id_user = '$id'";
 
-		$result_query = mysql_query($query, $conexion) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		close_connection($connection);		
 	}
@@ -116,16 +115,18 @@
 	/*La función comprueba si el identificador del usuario existe*/
 	function exist_user($id){	
 	/*Pre: - */
-		$conexion = open_connection();
+		$connection = open_connection();
 		$query =  "SELECT * FROM user WHERE id_user = '$id'";
+		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
 	
-		if (!mysql_query($query, $connection)) {			
-			close_connection($connection);	
-			return false;
-		}else{
-			close_connection($connection);	
-			return true;
-		}		
+		$arr = array();
+		
+		while($obj = mysql_fetch_object($result_query)) {
+			$arr[] = $obj;
+		}
+		
+		if (count($arr)==0)	return false;
+		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el identificador del usuario existe, en caso contrario devuelve falso*/
 ?>

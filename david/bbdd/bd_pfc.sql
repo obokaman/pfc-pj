@@ -29,9 +29,7 @@ CREATE TABLE team (
   id_founded 	integer  NOT NULL,
 
   PRIMARY KEY (id_team),
-  UNIQUE KEY (name),	
-
-  FOREIGN KEY (id_founded) REFERENCES user (id_user) ON UPDATE CASCADE
+  UNIQUE KEY (name)
 )
 ENGINE = InnoDB
 CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -57,14 +55,13 @@ CREATE TABLE championship (
   id_founded	integer NOT NULL,
 
   PRIMARY KEY (id_champ),
-  UNIQUE KEY (name),
-  FOREIGN KEY (id_founded)  REFERENCES user (id_user)	
+  UNIQUE KEY (name)
 )
 ENGINE = InnoDB
 CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-DROP TABLE IF EXISTS registration;
-CREATE TABLE registration (
+DROP TABLE IF EXISTS inscription;
+CREATE TABLE inscription (
   id_champ	integer	 NOT NULL,
   id_user	integer  NOT NULL,
   pendent 	integer  DEFAULT 0,

@@ -25,9 +25,9 @@
 	/*La función nos devuelve la lista de todos los equipos que estan almacenados en la BBDD, en formato JSON*/
 	function get_teams(){
 	/*Pre: - */	
-		$conexion = open_connection();
+		$connection = open_connection();
 		$query =  "SELECT * FROM team";
-		$result_query = mysql_query($query, $conexion) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -36,7 +36,7 @@
 		}
 		
 		print(json_encode($arr)); 
-		close_connection($conexion);		
+		close_connection($connection);		
 	}
 	/*Post: La función nos devuelve la lista de todos los equipos que estan almacenados en la base de datos, en formato JSON*/
 
@@ -44,9 +44,9 @@
 	/*La función nos devuelve la información del equipo en formato JSON a partir del identificador que tiene en la BBDD*/
 	function get_team_id($id){
 	/*Pre: - */
-		$conexion = open_connection();
+		$connection = open_connection();
 		$query =  "SELECT * FROM team WHERE id_team = '$id'";
-		$result_query = mysql_query($query, $conexion) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or die(mysql_error());
 		
 		$arr = array();
 		
@@ -55,7 +55,7 @@
 		}
 		
 		print( json_encode($arr)); 
-		close_connection($conexion);
+		close_connection($connection);
 	}
 	/*Post: Retorna la información del equipo en formato JSON*/
 	
@@ -63,9 +63,9 @@
 	/*La función nos devuelve la información del equipo en formato JSON a partir del nombre del campeonato*/
 	function get_team_name($name){
 	/*Pre: - */
-		$conexion = open_connection();
+		$connection = open_connection();
 		$query =  "SELECT * FROM team WHERE name = '$name'";
-		$result_query = mysql_query($query, $conexion) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or die(mysql_error());
 		
 		$arr = array();
 		
@@ -74,7 +74,7 @@
 		}
 		
 		print( json_encode($arr)); 
-		close_connection($conexion);
+		close_connection($connection);
 	}
 	/*Post: Retorna la información del equipo en formato JSON*/
 	
@@ -105,7 +105,7 @@
 		
 	    $query = "DELETE FROM team WHERE id_team = '$id'";
 
-		$result_query = mysql_query($query, $conexion) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		close_connection($connection);		
 	}
@@ -116,16 +116,19 @@
 	/*La función comprueba si el identificador del equipo existe*/
 	function exist_team($id){	
 	/*Pre: - */
-		$conexion = open_connection();
+		$connection = open_connection();
 		$query =  "SELECT * FROM team WHERE id_team = '$id'";
 	
-		if (!mysql_query($query, $connection)) {			
-			close_connection($connection);	
-			return false;
-		}else{
-			close_connection($connection);	
-			return true;
-		}		
+		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+	
+		$arr = array();
+		
+		while($obj = mysql_fetch_object($result_query)) {
+			$arr[] = $obj;
+		}
+		
+		if (count($arr)==0)	return false;
+		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el identificador del equipo existe, en caso contrario devuelve falso*/
 

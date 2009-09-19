@@ -25,9 +25,9 @@
 	/*La función nos devuelve la lista de todos los circuitos que estan almacenados en la BBDD, en formato JSON*/
 	function get_circuits(){
 	/*Pre: - */	
-		$conexion = open_connection();
+		$connection = open_connection();
 		$query =  "SELECT * FROM circuit";
-		$result_query = mysql_query($query, $conexion) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -36,7 +36,7 @@
 		}
 		
 		print(json_encode($arr)); 
-		close_connection($conexion);		
+		close_connection($connection);		
 	}
 	/*Post: La función nos devuelve la lista de todos los circuitos que estan almacenados en la base de datos, en formato JSON*/
 
@@ -44,9 +44,9 @@
 	/*La función nos devuelve la información del circuito en formato JSON a partir del identificador que tiene en la BBDD*/
 	function get_circuit_id($id){
 	/*Pre: - */
-		$conexion = open_connection();
+		$connection = open_connection();
 		$query =  "SELECT * FROM circuit WHERE id_circuit = '$id'";
-		$result_query = mysql_query($query, $conexion) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or die(mysql_error());
 		
 		$arr = array();
 		
@@ -55,7 +55,7 @@
 		}
 		
 		print( json_encode($arr)); 
-		close_connection($conexion);
+		close_connection($connection);
 	}
 	/*Post: Retorna la información del circuito en formato JSON*/
 	
@@ -63,9 +63,9 @@
 	/*La función nos devuelve la información del circuito en formato JSON a partir del nick del usuario*/
 	function get_circuit_name($name){
 	/*Pre: - */
-		$conexion = open_connection();
+		$connection = open_connection();
 		$query =  "SELECT * FROM circuit WHERE name = '$name'";
-		$result_query = mysql_query($query, $conexion) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or die(mysql_error());
 		
 		$arr = array();
 		
@@ -74,7 +74,7 @@
 		}
 		
 		print( json_encode($arr)); 
-		close_connection($conexion);
+		close_connection($connection);
 	}
 	/*Post: Retorna la información del circuito en formato JSON*/
 	
@@ -82,9 +82,9 @@
 	/*La función nos devuelve la información del circuito en formato JSON a partir del nombre corto del circuito*/
 	function get_circuit_short_name($short_name){
 	/*Pre: - */
-		$conexion = open_connection();
+		$connection = open_connection();
 		$query =  "SELECT * FROM circuit WHERE short_name = '$short_name'";
-		$result_query = mysql_query($query, $conexion) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or die(mysql_error());
 		
 		$arr = array();
 		
@@ -93,7 +93,7 @@
 		}
 		
 		print( json_encode($arr)); 
-		close_connection($conexion);
+		close_connection($connection);
 	}
 	/*Post: Retorna la información del circuito en formato JSON*/
 	
@@ -124,7 +124,7 @@
 		
 	    $query = "DELETE FROM circuit WHERE id = '$id'";
 
-		$result_query = mysql_query($query, $conexion) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		close_connection($connection);		
 	}
@@ -135,16 +135,19 @@
 	/*La función comprueba si el identificador del circuito existe*/
 	function exist_circuit($id){	
 	/*Pre: - */
-		$conexion = open_connection();
+		$connection = open_connection();
 		$query =  "SELECT * FROM circuit WHERE id_circuit = '$id'";
 	
-		if (!mysql_query($query, $connection)) {			
-			close_connection($connection);	
-			return false;
-		}else{
-			close_connection($connection);	
-			return true;
-		}		
+		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+	
+		$arr = array();
+		
+		while($obj = mysql_fetch_object($result_query)) {
+			$arr[] = $obj;
+		}
+		
+		if (count($arr)==0)	return false;
+		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el identificador del circuito existe, en caso contrario devuelve falso*/
 ?>
