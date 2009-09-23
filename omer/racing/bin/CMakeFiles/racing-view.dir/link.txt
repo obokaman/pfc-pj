@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/racing-view.dir/mainview.cc.o CMakeFiles/racing-view.dir/Qview.cc.o CMakeFiles/racing-view.dir/bezier.cc.o CMakeFiles/racing-view.dir/moc_Qview.cxx.o  -o racing-view -rdynamic -lQtGui -lQtCore 
