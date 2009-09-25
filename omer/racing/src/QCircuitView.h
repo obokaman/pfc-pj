@@ -17,6 +17,7 @@ public:
   CircuitView(QWidget *parent = 0);
   void load(const Circuit &extc);
   void drawCircuit(QPainter *painter);
+  Circuit getCircuit();
 
 protected:
   void mousePressEvent(QMouseEvent *event);

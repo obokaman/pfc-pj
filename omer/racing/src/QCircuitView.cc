@@ -9,6 +9,8 @@ CircuitView::CircuitView(QWidget *parent): QWidget(parent) {
   pressed = false;
 }
 
+Circuit CircuitView::getCircuit() {return c;}
+
 void CircuitView::load(const Circuit &extc) {
   c = extc;
   updateImage(QSize(width(), height()));
@@ -192,13 +194,27 @@ void CircuitView::mouseReleaseEvent(QMouseEvent *event) {
     if (presspoint%3 == 0) {
       c.vpd[presspoint/3].p.x = mapx;
       c.vpd[presspoint/3].p.y = mapy;
-      cerr << mapx << " " << mapy << endl;
       c.precalcula();
       updateImage(QSize(width(), height()));
     } else if (presspoint%3 == 1) {
-
+      Punt p(c.vpd[presspoint/3].p.x, c.vpd[presspoint/3].p.y);
+      Punt q(mapx, mapy);
+      
+      c.vpd[presspoint/3].alpha = atan2(q.y-p.y, q.x-p.x);
+      c.vpd[presspoint/3].fpost = (q-p).mida() /
+	(c.vpd[presspoint/3].p - c.vpd[(presspoint/3+1)%c.n].p).mida();
+      c.precalcula();
+      updateImage(QSize(width(), height()));
     } else {
-
+      Punt p(c.vpd[(presspoint/3+1)%c.n].p.x,
+	     c.vpd[(presspoint/3+1)%c.n].p.y);
+      Punt q(mapx, mapy);
+      
+      c.vpd[(presspoint/3+1)%c.n].alpha = atan2(p.y-q.y, p.x-q.x);
+      c.vpd[(presspoint/3+1)%c.n].fpre = (q-p).mida() /
+	(c.vpd[presspoint/3].p - c.vpd[(presspoint/3+1)%c.n].p).mida();
+      c.precalcula();
+      updateImage(QSize(width(), height()));
     }    
     pressed = false;
     update();

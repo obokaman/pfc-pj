@@ -33,7 +33,6 @@ MainView::MainView() {
 }
 
 void MainView::loadFile() {
-  cerr << "load" << endl;
   QString loadFileName =
     QFileDialog::getOpenFileName(this,
 				 tr("Load Circuit"),
@@ -59,5 +58,21 @@ void MainView::loadCircuit(const string &fname) {
 }
 
 void MainView::saveFile() {
-  cerr << "save" << endl;
+  QString saveFileName =
+    QFileDialog::getSaveFileName(this,
+				 tr("Save Circuit"),
+				 QString(filename.c_str()),
+				 tr("Circuit files (*.txt)"));
+  saveCircuit(saveFileName.toStdString());
+  setWindowTitle(QString(("racing-view: <" + filename+">").c_str()));
+}
+
+void MainView::saveCircuit(const string &fname) {
+  filename = fname;
+  ofstream ofs(filename.c_str());
+  if (not ofs) {
+    cerr << "Circuit file '" << filename << "' cannot be opened." << endl;
+  }
+  ofs << qcv->getCircuit();
+  update();
 }

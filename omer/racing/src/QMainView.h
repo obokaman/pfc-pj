@@ -17,6 +17,7 @@ class MainView : public QMainWindow {
 public:
   MainView();
   void loadCircuit(const string &fname);
+  void saveCircuit(const string &fname);
 
 private:
   string filename;
@@ -32,3 +33,4 @@ private slots:
 };
 
 #endif
+
