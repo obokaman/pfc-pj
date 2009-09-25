@@ -1,8 +1,8 @@
 // -*- mode: c++; -*-
 #include <QApplication>
 #include <fstream>
-#include "bezier.h"
-#include "Qview.h"
+#include "corbes.h"
+#include "QCircuitView.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,8 +18,8 @@ int main(int argc, char *argv[])
     return 1;
   }
   
-  View view;
-  Circuito c;
+  CircuitView view;
+  Circuit c;
   if (not (ifs >> c)) {
     cerr << "Circuit file '" << argv[1] << "' does not make sense." << endl;
     return 1;

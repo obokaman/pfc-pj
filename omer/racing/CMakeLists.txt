@@ -1,4 +1,4 @@
-project(racing CXX)
+project(racing CXX C)
 
 cmake_minimum_required(VERSION 2.6)
 

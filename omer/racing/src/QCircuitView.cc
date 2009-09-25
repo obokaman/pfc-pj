@@ -1,20 +1,21 @@
 // -*- mode: c++; -*-
 #include <QtGui>
-#include "Qview.h"
+#include "QCircuitView.h"
 #include "common.h"
 
-View::View(QWidget *parent): QWidget(parent) {
-  setMinimumSize(600,600);
+CircuitView::CircuitView(QWidget *parent): QWidget(parent) {
+  setMinimumSize(500,500);
   setWindowTitle("racing-view");
+  showControlPoints = true;
 }
 
-void View::load(const Circuito &extc) {
+void CircuitView::load(const Circuit &extc) {
   c = extc;
 }
 
-void View::paintEvent(QPaintEvent *) {
+void CircuitView::paintEvent(QPaintEvent *) {
   const double ANCHO_CARRETERA = 30;
-  const double ANCHO_BORDILLO = 10;
+  const double ANCHO_BORDILLO = 8;
 
   QPainter painter(this);
   QPen pblack = painter.pen();
@@ -41,15 +42,13 @@ void View::paintEvent(QPaintEvent *) {
 
   double STEP = 2.5;
   double d = STEP;
-  Punto oldp = c.coord(0);
+  Punt oldp = c.getPos(d);
+  double dist = c.getDist();
 
   painter.setRenderHint(QPainter::Antialiasing, false);
   painter.setPen(pblack);
-  while (d<c.dist()) {
-    double t = c.d2t(d);
-    Punto p = c.coord(t);
-    //    Punto dir = c.circdir(t);
-    //    Punto perp(-dir.y, dir.x);
+  while (d<dist) {
+    Punt p(c.getPos(d));
 
     painter.drawLine(oldp.x, oldp.y, p.x, p.y);
 
@@ -59,17 +58,16 @@ void View::paintEvent(QPaintEvent *) {
 
   //segunda pasada
   d = STEP;
-  oldp = c.coord(0);
-  Punto olddir = c.circdir(0);
-  Punto oldperp(-olddir.y, olddir.x);
+  oldp = c.getPos(0);
+  Punt olddir(c.getDir(0));
+  Punt oldperp(-olddir.y, olddir.x);
 
   painter.setRenderHint(QPainter::Antialiasing);
   int i = 0;
-  while (d<c.dist()) {
-    double t = c.d2t(d);
-    Punto p = c.coord(t);
-    Punto dir = c.circdir(t);
-    Punto perp(-dir.y, dir.x);
+  while (d<dist) {
+    Punt p = c.getPos(d);
+    Punt dir = c.getDir(d);
+    Punt perp(-dir.y, dir.x);
 
     if (++i%6 > 2) painter.setPen(pwhite);
     else painter.setPen(pred);
@@ -94,23 +92,27 @@ void View::paintEvent(QPaintEvent *) {
     d += STEP;
   }
 
+  //puntos de control
+  if (showControlPoints) {
+    For(i, c.n) {
+      painter.setPen(pfullblack);
+      For(j, 3) {
+	const Punt &p = c.vp[3*i+j];
+	painter.drawLine(p.x+10, p.y+10,
+			 p.x-10, p.y-10);
+	painter.drawLine(p.x+10, p.y-10,
+			 p.x-10, p.y+10);
+      }
+      painter.setPen(pfullblack);
+      Punt p1 = c.vp[3*i], p2 = c.vp[3*i+1];
+      painter.drawLine(p1.x, p1.y, p2.x, p2.y);
 
+      p1 = c.vp[3*i+2], p2 = c.vp[3*i+3];
+      painter.drawLine(p1.x, p1.y, p2.x, p2.y);
 
-
-  /*  d = 0;
-  while (d<c.dist()) {
-    double t = c.d2t(d);
-    Punto p = c.coord(t);
-
-
-    if (int(d)%20<10) painter.setPen(pred);
-    else painter.setPen(pwhite);
-
-    painter.drawLine(perpdir.x*(ANCHO+2)+p.x, 1000-(perpdir.y*(ANCHO+2)+p.y),
-		     perpdir.x*(ANCHO-2)+p.x, 1000-(perpdir.y*(ANCHO-2)+p.y));
-    painter.drawLine(-perpdir.x*(ANCHO+2)+p.x, 1000-(-perpdir.y*(ANCHO+2)+p.y),
-		     -perpdir.x*(ANCHO-2)+p.x, 1000-(-perpdir.y*(ANCHO-2)+p.y));
-
-    d += STEP;
-    }*/
+      //      painter.setPen(pred);
+      //      p1 = c.vp[3*i+1], p2 = c.vp[3*i+2];
+      //      painter.drawLine(p1.x, p1.y, p2.x, p2.y);
+    }
+  }
 }
