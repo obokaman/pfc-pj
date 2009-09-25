@@ -1,10 +1,13 @@
 #racing-view
 cmake_minimum_required(VERSION 2.6)
 
-set(MOC_HEADERS QCircuitView.h)
+set(MOC_HEADERS QCircuitView.h QMainView.h)
 qt_wrap_cpp(racing MOC_FILES ${MOC_HEADERS})
 
-set(VIEW_FILES mainview.cc QCircuitView.cc QCircuitView.h corbes.cc corbes.h common.h)
+set(VIEW_FILES mainview.cc QMainView.cc QMainView.h
+                           QCircuitView.cc QCircuitView.h
+                           corbes.cc corbes.h
+                           common.h)
 add_executable(racing-view ${VIEW_FILES} ${MOC_FILES})
 
 target_link_libraries(racing-view ${QT_LIBRARIES})

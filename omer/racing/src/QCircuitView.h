@@ -13,10 +13,24 @@ class CircuitView: public QWidget {
   Circuit c;
   bool showControlPoints;
 
-  public:
+public:
   CircuitView(QWidget *parent = 0);
   void load(const Circuit &extc);
+  void drawCircuit(QPainter *painter);
+
+protected:
+  void mousePressEvent(QMouseEvent *event);
+  void mouseReleaseEvent(QMouseEvent *event);
   void paintEvent(QPaintEvent *);
+  void resizeEvent(QResizeEvent *event);
+  void updateImage(const QSize &newSize);
+
+private:
+  QImage image;
+  QTransform transform;
+  bool pressed;
+  int pressx, pressy;
+  int presspoint;
 };
 
 #endif
