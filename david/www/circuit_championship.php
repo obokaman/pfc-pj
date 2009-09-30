@@ -1,7 +1,3 @@
-<?php include("connection.php");?>
-<?php include("error.php");?>
-
-
 <?php
 
 	/*La función crea una instancia que relaciona un circuito con un campeonato mediante sus identificadores*/

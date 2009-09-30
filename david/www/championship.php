@@ -1,6 +1,3 @@
-<?php include("connection.php");?>
-<?php include("error.php");?>
-
 <?php
 
 	/*La función crea un campeonato en la BBDD con los parametros que le pasamos de entrada*/

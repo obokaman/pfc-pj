@@ -1,7 +1,3 @@
-<?php include("connection.php");?>
-<?php include("error.php");?>
-
-
 <?php
 
 	/*La función crea una instancia que relaciona un usuario con un campeonato mediante sus identificadores*/
@@ -101,7 +97,7 @@
 	
 	
 	/*Esta función nos modifica el estado de una instancia entre un usuario y un campeonato al que esta inscrito*/
-	function set_status($id_user, $id_champ, $pendent){
+	function set_inscription_status($id_user, $id_champ, $pendent){
 	/*Pre: - */
 		$connection = open_connection();
 		

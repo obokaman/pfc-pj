@@ -4,13 +4,14 @@
 	<title></title>
 </head>
 <body>
-<?php include("user.php");?>		
-
+<?php include("includes.php");?>
 
 <?php
 
-	if (exist_user(1)) echo "encontrado";
-	else echo "no enconrtado";
+	$bool = create_game(3,1,null,null);
+	
+	if ($bool) echo "Insertado correctamente";
+	else echo "ERROR";
 	
 ?>
 </body>

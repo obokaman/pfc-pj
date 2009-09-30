@@ -1,7 +1,3 @@
-<?php include("connection.php");?>
-<?php include("error.php");?>
-
-
 <?php
 
 	/*La función crea nua instancia que relaciona un usuario con un equipo mediante sus identificadores*/
@@ -101,7 +97,7 @@
 	
 	
 	/*Esta función nos modifica el estado de una instancia entre un usuario y un equipo*/
-	function set_status($id_user, $id_team, $pendent){
+	function set_user_team_status($id_user, $id_team, $pendent){
 	/*Pre: - */
 		$connection = open_connection();
 		
