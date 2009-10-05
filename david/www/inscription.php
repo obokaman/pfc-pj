@@ -120,7 +120,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		
-	    $query = "DELETE FROM inscritption WHERE id_user = '$id_user' and id_champ='$id_champ'";
+	    $query = "DELETE FROM inscription WHERE id_user = '$id_user' and id_champ='$id_champ'";
 
 		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
 		

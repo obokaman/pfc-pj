@@ -1,7 +1,7 @@
 <?php
 
 	/*La función crea un circuito en la BBDD con los parametros que le pasamos de entrada*/
-	function create_circuit($nick, $name, $surname1, $surname2, $email_user, $population, $school, $email_school, $type_user, $pass){
+	function create_circuit($name, $short_name, $level, $n_laps, $time){
 	/*Pre: - */	
 		$connection = open_connection();
 		
@@ -119,7 +119,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		
-	    $query = "DELETE FROM circuit WHERE id = '$id'";
+	    $query = "DELETE FROM circuit WHERE id_circuit = '$id'";
 
 		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
 		

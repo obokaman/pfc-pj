@@ -8,9 +8,25 @@
 
 <?php
 
-	$bool = create_game(3,1,null,null);
+
 	
-	if ($bool) echo "Insertado correctamente";
+	get_games();
+	
+	echo '<br><br>Por ID: ';
+	
+	get_game_id(1);
+	
+		
+	$bool = exist_game(3, 1);
+    
+	if ($bool) echo "Funciona";
+	else echo "ERROR";
+	
+	delete_game(9);
+	
+	$bool = exist_game(3, 1);
+    
+	if ($bool) echo "Funciona";
 	else echo "ERROR";
 	
 ?>

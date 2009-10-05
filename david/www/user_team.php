@@ -1,7 +1,7 @@
 <?php
 
 	/*La función crea nua instancia que relaciona un usuario con un equipo mediante sus identificadores*/
-	function create_user_team($id_user, $id_team, $pendent){
+	function add_user_team($id_user, $id_team, $pendent){
 	/*Pre: - */	
 		$connection = open_connection();
 		

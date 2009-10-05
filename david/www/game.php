@@ -1,33 +1,46 @@
 <?php
 
-	/*La función crea una partida que nos relaciona, mediante identificadores, el usuario que la realiza, el ciruito y el campeonato al que     
+	/*La función crea una partida que nos relaciona, mediante identificadores, el usuario que la realiza, el circuito y el campeonato al que     
    participa, finalmente se nos indica el tiempo que el usuario ha estado*/
-	function create_game($id_user, $id_circuit, $id_champ, $time){
+	function create_game_with_champ($id_user, $id_circuit, $id_champ, $time){
 	/*Pre: Los identificadores de la entrada de la función existen, y el circuito pertenece al campeonato que se nos indica
     en la entrada */	
 		$connection = open_connection();
-		
-		if(($id_champ!=null) and (!exist_circuit_champ($id_circuit, $id_champ))){
-				return false; 
-		}else{		
-				$query = "INSERT INTO game ( id_user, id_circuit, id_champ, time_result)
-								VALUES ('$id_user',' $id_circuit', '$id_champ', '$time')";
-								
-				if (!mysql_query($query, $connection)) {
-					my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
-					close_connection($connection);	
-					return false;
-				}else{	
-					close_connection($connection);	
-					return true;
-				}
+
+		$query = "INSERT INTO game ( id_user, id_circuit, id_champ, time_result) VALUES ('$id_user',' $id_circuit', '$id_champ', '$time')";
+	
+		if (!mysql_query($query, $connection)) {
+			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			close_connection($connection);	
+			return false;
+		}else{	
+			close_connection($connection);	
+			return true;
+		}
+	}
+	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion de la nueva partida, en caso contrario devuelve falso*/
+	
+	/*La función crea una partida que nos relaciona, mediante identificadores, el usuario que la realizay  el circuito sin tener en cuenta  el campeonato al que participa, finalmente se nos indica el tiempo que el usuario ha estado*/
+	function create_game($id_user, $id_circuit, $time){
+	/*Pre: Los identificadores de la entrada de la función existen */	
+		$connection = open_connection();
+
+		$query = "INSERT INTO game ( id_user, id_circuit, time_result) VALUES ('$id_user',' $id_circuit', '$time')";
+	
+		if (!mysql_query($query, $connection)) {
+			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			close_connection($connection);	
+			return false;
+		}else{	
+			close_connection($connection);	
+			return true;
 		}
 	}
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion de la nueva partida, en caso contrario devuelve falso*/
 	
 	
 	/*La función nos devuelve la lista de todos las partidas realizadas que estan almacenados en la BBDD, en formato JSON*/
-	function get_game(){
+	function get_games(){
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT * FROM game";
