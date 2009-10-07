@@ -58,7 +58,7 @@ public class JocProg implements EntryPoint {
    private String[] cityList = {"CIUTAT", "Barcelona","Sabadell","Terrassa"};
    private String[] schoolList = {"CIRCUIT", "circuit1","circuit2","circuit3"};
    
-   private static final String JSON_URL = "http://localhost/prueba_mia.php";
+   private static final String JSON_URL = "http://localhost/php/prueba.php";
 
   /**
    * Entry point method.
