@@ -2,8 +2,24 @@
 
 <?php
 
+
+/*
+session_name("pfc");
+session_start();
+
+if (!isset($_SESSION["id_user"])) {
+
+	$_SESSION["id_user"] = 1;
+
+}else{
+
+	get_user_id($_SESSION["user"]);
+
+}
+
+echo "<br><br>"
+*/
+
 get_users();
 	
-
-
 
