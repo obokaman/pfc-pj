@@ -23,7 +23,7 @@
 	function get_circuits(){
 	/*Pre: - */	
 		$connection = open_connection();
-		$query =  "SELECT * FROM circuit";
+		$query =  "SELECT name FROM circuit";
 		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();

@@ -38,6 +38,23 @@
 	}
 	/*Post: La función nos devuelve la lista de todos los usuarios junto con los equipos a los que pertenecen y el estado que estan almacenados en la base de datos, en formato JSON*/
 
+    /*La función devuelve una lista de nombres de equipos a los que pertenece el usuario que esta logueado*/
+	function get_myteam(){
+	/*Pre: - */	
+		
+		if(isset($_SESSION["user"])){
+			
+			$nick_session = $_SESSION["user"]; 
+			$connection = open_connection();
+			$query =  "SELECT id_team FROM user_team WHERE id_user = '$id'";
+			
+			
+			
+			
+		}
+		
+	}
+	/*Post: */
 	
 	/*La función nos devuelve el identificador de los equipos a los que pertenece el identificador del usuario de la entrada en formato JSON */
 	function get_teams_of_user($id){

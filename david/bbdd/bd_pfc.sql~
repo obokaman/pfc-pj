@@ -15,8 +15,6 @@ CREATE TABLE user(
 	email_school    varchar(50),
 	type_user	varchar(20) NOT NULL,
 	pass		varchar(20) DEFAULT 12345,
-	activated 	bool	    DEFAULT false,
-	activation_key  varchar(20),
 
 	PRIMARY KEY (id_user),
 	UNIQUE KEY (nick)	
