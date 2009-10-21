@@ -41,7 +41,7 @@ login(nick, password) returns int:
 
 ==========================
 
-newUser(nick, name, surname1, surname2, email_user, city,
+newUser(nick, name, surname1, surname2, email_user, population,
         school, email_school, password) returns int:
   * 0 si no hay problema: nuevo usuario, generar activation_key (y hay que enviar
     un e-mail, pero ya nos preocuparemos otro dia de esto). No se entra en LOGIN.
