@@ -1,0 +1,119 @@
+Hola David.
+
+Estas son algunas de las cosas que hemos comentado, y que es necesario que hagas:
+
+En la base de datos:
+
+Añadir a la tabla user:
+  * bool activated (por defecto, falso)
+  * varchar(20) activation_key
+
+
+
+Funciones de php. Todas tus funciones de php se acceden del siguiente modo:
+  * Te llaman a main.php
+  * Recibiras uno o mas parametros. El primer parametro siempre es "function="
+ y el nombre de funcion.
+  * Por ejemplo, para llamarte a la funcion:
+
+  login(nick, password) returns int:
+
+  te llamaran a
+
+  http://localhost/php/main.php?function=login&nick=pepito&passwork=lapiz
+
+
+Estas son las funciones. Cuando hay que devolver alguna cosa, tienes que hacerlo
+por JSON (como ya hicieramos el otro dia). Siempre tienes que comprobar que todos los
+datos tienen sentido (por ejemplo: si un parametro debe ser un numero positivo,
+tienes que comprobar que te estan pasando un int, y que este es positivo, etc.). Para
+ello, lo mejor es que te hagas funciones de comprobacion de cada tipo de parametro;
+busca informacion sobre "sanitize php" (esto es, filtrar los datos que te pasan para
+comprobar que no te esten colando cosas en la base de datos como "); DROP TABLE user"
+como nombre de usuario, etc.)
+
+==========================
+ 
+login(nick, password) returns int:
+  * 0 si nick y password son correctos  (PHP_SESSION entra en modo LOGIN)
+  * 1 si nick no existe, o password es incorrecto
+  * 2 si nick y password son correctos, pero no esta activado (activated=0)
+
+==========================
+
+newUser(nick, name, surname1, surname2, email_user, city,
+        school, email_school, password) returns int:
+  * 0 si no hay problema: nuevo usuario, generar activation_key (y hay que enviar
+    un e-mail, pero ya nos preocuparemos otro dia de esto). No se entra en LOGIN.
+  * 1 nick ya existe
+  * 2 algun otro error relativo con los datos (codificacion, muy largo,
+  NULLs, etc.)
+
+==========================
+ 
+getUser(nick) return user (array con algunos campos de un user)
+  * retorna informacion del nick si estas logeado:
+   - si eres tu mismo, lo devuelves todo (excepto el password)
+   - si es otra persona, devuelves el nick, el name, city y school.
+  * si no estas logeado, retorna user vacio
+
+==========================
+
+changeUser(name, surname1, surname2, email_user, city,
+        school, email_school, oldpassword, password) returns int:
+  * 1 si no estamos en modo LOGIN (error)
+  * 2 si "oldpassword" no es correcto (respecto al nick que esta logeado)
+  * 0 si no hay problema: podemos cambiar los datos (incluyendo el password)
+
+==========================
+
+getMyTeams() returns strings[]
+  * Nada si no estamos logeados.
+  * Los 'name' de los equipos a los que el usuario pertenece
+
+==========================
+
+getMyChampionship() returns strings[]
+  * Nada si no estamos logeados.
+  * Los 'name' de los championships a los que el usuario pertenece
+
+==========================
+
+getCircuito()
+  * No es necesario estar logeado.
+  * Los 'name' de todos los circuitos que existen.
+
+==========================
+
+getRankings(circuito, team, championship, page, sizepage)
+  * no es necesario estar logeado
+  * circuito, page o sizepage no es NULL, pero team, championship pueden ser NULL
+  * si team o championship es NULL, no hay que filtrar por team o championship
+  * si page 0: hay que buscar en que pagina pertenece el nick logeado,
+  y devolverla; si no esta logeado, hay que devolver la primera pagina.
+  * si page!=0, hay que devolver la pagina que se pide.
+  * las paginas van de 1 a sizepage; sizepage+1 a 2*sizepage, etc... si sizepage=0,
+  devuelve el sizepage por defecto (50)
+
+  devuelve: un array con tres campos:
+    page: devuelve el numero de pagina devuelta
+    numpages: devuelve el total de paginas que hay en la base de datos
+    data: un listado de (como mucho) 'sizepage' pares 'nick', 'tiempo', correspondientes
+  a la pagina 'page'
+
+==========================
+
+
+Esta es una funcion especial: no devuelve JSON, sino que devuelve HTML. (El motivo
+es que no funcina a traves de la UI de GWT, sino que se llama directamente; ya te lo
+explicaremos otro dia).
+
+
+activate(nick, activation_key) returns HTML
+  * Si nick no existe, o esta ya activado, o activation key erroneo: devuelve
+  HTML explicando el error
+  * Si nick existe, no esta activado, y activation_key coincide, entonces
+   - activated pasa a valer cierto
+   - muestra pagina web con el texto "Has sido activado. En cinco segundos te
+   redirigimos a la pagina web de inicio" (y que lo haga).
+

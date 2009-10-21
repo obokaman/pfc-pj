@@ -133,6 +133,7 @@ public class JocProg implements EntryPoint {
 
 	    requestCircuits();
 	    // Add drop boxs with the lists
+	    circuitsDropBox.clear();
 	    for (int i=0; i<circuitsList.size(); i++) { circuitsDropBox.addItem(circuitsList.get(i)); }
 	    champsList.add("CAMPEONATOS");
 	    teamsList.add("EQUIPOS");
@@ -154,7 +155,7 @@ public class JocProg implements EntryPoint {
 	    circuitsDropBox.addChangeHandler(new ChangeHandler() {
 	    	public void onChange(ChangeEvent event) {
 	    		if(circuitsDropBox.getSelectedIndex()>0){
-	    			//requestRanking(); aa;
+	    			requestRanking();
 	    			champsDropBox.setEnabled(true);
 	    			teamsDropBox.setEnabled(true);
 
@@ -163,18 +164,19 @@ public class JocProg implements EntryPoint {
 	    			champsDropBox.setSelectedIndex(0);
 	    			champsDropBox.setEnabled(false);
 	    			teamsDropBox.setSelectedIndex(0);
-	    			teamsDropBox.setEnabled(false);	    			
+	    			teamsDropBox.setEnabled(false);	
+	    			Window.alert("Debes elegir un circuito válido");
 	    		}
 			}
 		});
 	    champsDropBox.addChangeHandler(new ChangeHandler() {
 	    	public void onChange(ChangeEvent event) {
-	    		//if(champsDropBox.getSelectedIndex()>0) requestRanking(); aa;
+	    		if(champsDropBox.getSelectedIndex()>0) requestRanking();
 	    	}
 	    });
 	    teamsDropBox.addChangeHandler(new ChangeHandler() {
 	    	public void onChange(ChangeEvent event) {
-	    		//if(teamsDropBox.getSelectedIndex()>0) requestRanking(); aa;
+	    		if(teamsDropBox.getSelectedIndex()>0) requestRanking();
 			}
 		});
 	    
@@ -191,6 +193,16 @@ public class JocProg implements EntryPoint {
 	    msgLabel.setVisible(false);
 	    ranking2HPanel.add(msgLabel);
 	    ranking2HPanel.add(rankingFlexTable);
+	    rankPagesDropBox.clear();
+	    rankPagesDropBox.addItem("Página");
+	    rankPagesDropBox.setEnabled(false);
+	    ranking2HPanel.add(rankPagesDropBox);
+	    
+	    rankPagesDropBox.addChangeHandler(new ChangeHandler() {
+	    	public void onChange(ChangeEvent event) {
+	    		if(rankPagesDropBox.getSelectedIndex()>0) requestRanking();
+	    	}
+	    });
 	    
 	    rankingVPanel.setSize("100%","100%");
 	    rankingVPanel.add(rankingHPanel);
@@ -297,37 +309,36 @@ public class JocProg implements EntryPoint {
   
   
   /**
-   * Update the ricPe and Change fields for all rows in the ranking table.
+   * Update the "Usuario" and "Tiempo" fields for all rows in the ranking table.
    *
-   * @param prices Stock data for all rows.
+   * @param ranking data for all rows.
    */
-  private void updateTable(JsArray<RankingData> positions) {
-    for (int i = 0; i < positions.length(); i++) {
-      updateTable(positions.get(i));
-    }
+  private void updateTable(JsArray<RankingUserData> rankInfo) {
+    for (int i=0; i<rankInfo.length(); i++) updateTable(rankInfo.get(i));
   }
   
   /**
    * Update a single row in the ranking table.
    *
-   * @param price Stock data for a single row.
+   * @param ranking data for a single row.
   */
-  private void updateTable(RankingData position) {
-
+  private void updateTable(RankingUserData info) { 
      int row = rankingFlexTable.getRowCount();
-
-      // Populate the Price and Change fields with new data.
-      rankingFlexTable.setText(row, 0, position.getName());
-      rankingFlexTable.setText(row, 1, position.getSurname1());
-      rankingFlexTable.setText(row, 2, position.getPopulation());
+     // Populate the "Usuario" and "Tiempo" fields with new data.
+     rankingFlexTable.setText(row, 0, info.getNick());
+     rankingFlexTable.setText(row, 1, info.getTiempo());
   }
   
   /**
    * Convert the string of JSON into JavaScript object.
    */
-  private final native JsArray<RankingData> asArrayOfRankingData(String json) /*-{
-    return eval(json);
-  }-*/;
+  //private final native JsArray<RankingData> asArrayOfRankingData(String json) /*-{
+    //return eval(json);
+  //}-*/;
+  
+  private final native RankingData asRankingData(String json) /*-{
+	return eval(json);
+  }-*/; 
   
   private final native int asInt(String json) /*-{
   	return eval(json);
@@ -340,47 +351,59 @@ public class JocProg implements EntryPoint {
   
   private void requestRanking(){
 
-	    String url = JSON_URL;
-		String circuit = circuitsList.get(circuitsDropBox.getSelectedIndex());
-		String champ = champsList.get(champsDropBox.getSelectedIndex());
-		String team = teamsList.get(teamsDropBox.getSelectedIndex());
-
-	    url = URL.encode(url);
-
-	    // Send request to server and catch any errors.
-	    //RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	    //builder.setHeader("Content-Type","application/x-www-form-urlencoded");
-
-	    /*try {
-	      Request request = builder.sendRequest(URL.encodeComponent("circuit")+"="+
-	      URL.encodeComponent(circuit)+"&"+URL.encodeComponent("city")+"="+
-	      URL.encodeComponent(city)+"&"+URL.encodeComponent("school")+"="+
-	      URL.encodeComponent(school), new RequestCallback() {
-	        public void onError(Request request, Throwable exception) {
-	          //displayError("Couldn't retrieve JSON");
-	        	msgLabel.setText("Couldn't retrieve JSON1");
-	        	msgLabel.setVisible(true);
-	        }
-
-	        public void onResponseReceived(Request request, Response response) {
-	          if (200 == response.getStatusCode()) {
-	        	  //msgLabel.setText(response.getText());
-	        	  //msgLabel.setVisible(true);
-	        	  JsArray<RankingData> arr = asArrayOfRankingData(response.getText());
-	        	  updateTable(asArrayOfRankingData(response.getText()));
-	          } else {
-	            //displayError("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
-	        	  msgLabel.setText("Couldn't retrieve JSON (" + response.getStatusText()+ ")2");
-	        	  msgLabel.setVisible(true);
-	          }
-	        }
-	      });
-	    } catch (RequestException e) {
-	      //displayError("Couldn't retrieve JSON");
-        	msgLabel.setText("Couldn't retrieve JSON3");
-        	msgLabel.setVisible(true);
-	    }*/
+	  if(circuitsDropBox.getSelectedIndex()==0){
+		  Window.alert("Debes elegir un circuito válido");
 	  }
+	  else {
+		  int sizepage = 50;
+		  int page = rankPagesDropBox.getSelectedIndex();
+		  String circuit = circuitsList.get(circuitsDropBox.getSelectedIndex());
+		  String champ;
+		  if(champsDropBox.getSelectedIndex()==0) champ = "";
+		  else champ = champsList.get(champsDropBox.getSelectedIndex());
+		  String team;
+		  if(teamsDropBox.getSelectedIndex()==0) team = "";
+		  else team = teamsList.get(teamsDropBox.getSelectedIndex());
+
+		  String url = JSON_URL;
+		  url = URL.encode(url);
+		  // Send request to server and catch any errors.
+		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+
+		  try {
+			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+					  URL.encodeComponent("getRankings")+"&"+URL.encodeComponent("circuito")+"="+
+					  URL.encodeComponent(circuit)+"&"+URL.encodeComponent("team")+"="+
+					  URL.encodeComponent(team)+"&"+URL.encodeComponent("championship")+"="+
+					  URL.encodeComponent(champ)+"&"+URL.encodeComponent("page")+"="+
+					  URL.encodeComponent(String.valueOf(page))+"&"+URL.encodeComponent("sizepage")+"="+
+					  URL.encodeComponent(String.valueOf(sizepage)), new RequestCallback() {
+				  public void onError(Request request, Throwable exception) {
+					  Window.alert("Couldn't retrieve JSON");
+				  }
+
+				  public void onResponseReceived(Request request, Response response) {
+					  if (200 == response.getStatusCode()) {
+						  RankingData res = asRankingData(response.getText());
+						  updateTable(res.getData());
+						  int pag = res.getPage();
+						  int npag = res.getNumPages();
+						  rankPagesDropBox.clear();
+						  rankPagesDropBox.addItem("Página");
+						  for(int i=1;i<=npag;i++) rankPagesDropBox.addItem(String.valueOf(i));
+						  rankPagesDropBox.setSelectedIndex(pag);
+						  rankPagesDropBox.setEnabled(true);
+					  } else {
+						  Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+					  }
+				  }
+			  });
+		  } catch (RequestException e) {
+			  Window.alert("Couldn't retrieve JSON");
+		  }
+	  }
+  }
   
   private void requestLogin() {
 	  
@@ -536,6 +559,7 @@ public class JocProg implements EntryPoint {
 		      public void onResponseReceived(Request request, Response response) {
 		    	  if (200 == response.getStatusCode()) {
 		    		  String[] champs = asArrayOfString(response.getText());
+		    		  champsDropBox.clear();
 		    		  champsList.clear();
 		    		  champsList.add("CAMPEONATOS");
 		    		  for(int i=0;i<champs.length;i++) { champsList.add(champs[i]); }
@@ -560,6 +584,7 @@ public class JocProg implements EntryPoint {
 		      public void onResponseReceived(Request request, Response response) {
 		    	  if (200 == response.getStatusCode()) {
 		    		  String[] teams = asArrayOfString(response.getText());
+		    		  teamsDropBox.clear();
 		    		  teamsList.clear();
 		    		  teamsList.add("EQUIPOS");
 		    		  for(int i=0;i<teams.length;i++) { teamsList.add(teams[i]); }
