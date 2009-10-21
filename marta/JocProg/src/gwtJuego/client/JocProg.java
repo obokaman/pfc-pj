@@ -63,6 +63,7 @@ public class JocProg implements EntryPoint {
   private ListBox circuitsDropBox = new ListBox(false);
   private ListBox champsDropBox = new ListBox(false);
   private ListBox teamsDropBox = new ListBox(false);
+  private ListBox rankPagesDropBox = new ListBox(false);
   private FlexTable rankingFlexTable = new FlexTable();
   private TextBox loginUserTextBox = new TextBox();
   private PasswordTextBox loginPassword = new PasswordTextBox();
@@ -98,7 +99,6 @@ public class JocProg implements EntryPoint {
    * Entry point method.
    */
   public void onModuleLoad() {
-    // TODO Create table for stock data.
 
 //------------------------------------------> tab corre
 	  //Text areas
