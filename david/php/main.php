@@ -6,6 +6,12 @@ session_start();
 if (isset($_REQUEST["user"])) print( json_encode(1)); 
 else print( json_encode(0)); 
 
+$var = print_r($_REQUEST,  true);
+
+$handle =  fopen("/tmp/pfc.php.log", "a");
+fwrite($handle, $var);
+fclose($handle);
+
 /*
 if (isset($_SESSION["user"])){	
 	echo 'Usuario registrado: '.$_SESSION["user"].'<br>';
