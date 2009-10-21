@@ -3,14 +3,61 @@
 session_name("PFC");
 session_start();
 
-if (isset($_REQUEST["user"])) print( json_encode(1)); 
-else print( json_encode(0)); 
+fopen("/tmp/pfc.php.log", "a+");
+// fwrite("Hola.");
 
-$var = print_r($_REQUEST,  true);
 
-$handle =  fopen("/tmp/pfc.php.log", "a");
-fwrite($handle, $var);
-fclose($handle);
+//recoge: a) comprueba que esta en isset (sino, genera excepcion)
+//b) limpia caracteres "raros" del valor (sanitize el valor; limpiarlo si no tiene buena pinta)
+$f = recoge("function", "string");
+
+
+//devuelve: recibe un valor de php (int, array, lo que sea) y
+//hace un print( json_encode(valor) )
+if ($f == "login") {
+	devuelve( login( recoge("user", "string"),
+	                           recoge("password", "string") ) );
+}
+else if ($f == "newUser") {
+	devuelve(
+		create_user(
+			recoge("nick", "string"),
+			recoge("name", "string"),
+			recoge("surname1", "string"),
+			recoge("surname2", "string"),
+			recoge("email_user", "string"),
+			recoge("city", "string"),
+			recoge("school", "string"),
+			recoge("email_school", "string"),
+			recoge("password", "string")
+		)
+	);
+}/*
+else if ($f == "changeUser") {
+	$nick = recoge("nick", "string");
+	if (isset($_SESSION["user"]) && $_SESSION["user"]==$nick) {
+		devuelve(
+			set_user(
+				$nick.
+				recoge("name", "string"),
+				recoge("surname1", "string"),
+				recoge("surname2", "string"),
+				recoge("email_user", "string"),
+				recoge("city", "string"),
+				recoge("school", "string"),
+				recoge("email_school", "string"),
+				recoge("password", "string"),
+				...
+			)
+		);
+	}
+	else escribe_log("ADFadskfdashfldsjfdsali");*/
+	
+
+//else ...
+
+
+
 
 /*
 if (isset($_SESSION["user"])){	
