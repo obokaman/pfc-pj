@@ -1,6 +1,7 @@
 package gwtJuego.client;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 
 
 class RankingData extends JavaScriptObject {
@@ -24,4 +25,8 @@ class RankingData extends JavaScriptObject {
 	  /*public final double getChangePercent() {
 	    return 100.0 * getChange() / getPrice();
 	  }*/
+	  
+	  public final native int getPage() /*-{ return this.page; }-*/;
+	  public final native int getNumPages() /*-{ return this.numpages; }-*/;
+	  private final native JsArray<RankingUserData> getData() /*-{ return this.data; }-*/;
 }
