@@ -8,7 +8,7 @@
 	    $query = "INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('$name', '$short_name', '$level', '$n_laps', '$time')";
 						
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			 my_error('CREATE_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{	
@@ -24,16 +24,16 @@
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT name FROM circuit";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUITS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
 		while($obj = mysql_fetch_object($result_query)) {
 			$arr[] = $obj;
 		}
-		
-		print(json_encode($arr)); 
 		close_connection($connection);		
+		return($arr);
+		
 	}
 	/*Post: La función nos devuelve la lista de todos los circuitos que estan almacenados en la base de datos, en formato JSON*/
 
@@ -43,7 +43,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM circuit WHERE id_circuit = '$id'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUIT_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -51,8 +51,8 @@
 			$arr[] = $obj;
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return($arr);
 	}
 	/*Post: Retorna la información del circuito en formato JSON*/
 	
@@ -62,7 +62,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM circuit WHERE name = '$name'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUIT_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -70,8 +70,8 @@
 			$arr[] = $obj;
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return($arr);
 	}
 	/*Post: Retorna la información del circuito en formato JSON*/
 	
@@ -81,7 +81,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM circuit WHERE short_name = '$short_name'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUIT_SHORT_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -89,8 +89,8 @@
 			$arr[] = $obj;
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return($arr);
 	}
 	/*Post: Retorna la información del circuito en formato JSON*/
 	
@@ -103,7 +103,7 @@
 	    $query = "UPDATE circuit SET name='$name' short_name='$short_name' level= '$level', n_laps='$n_laps', time='$time' WHERE id_circuit = '$id'";
 
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+			 my_error('SET_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{
@@ -121,7 +121,7 @@
 		
 	    $query = "DELETE FROM circuit WHERE id_circuit = '$id'";
 
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or  my_error('DELETE_CIRCUIT_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		close_connection($connection);		
 	}
@@ -135,7 +135,7 @@
 		$connection = open_connection();
 		$query =  "SELECT * FROM circuit WHERE id_circuit = '$id'";
 	
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 	
 		$arr = array();
 		

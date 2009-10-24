@@ -8,14 +8,14 @@
 			$connection = mysql_connect($dbhost, $dbusuario, $dbpassword);
 			
 			if (!$connection){
-					die(my_error( 'Could not connect: ' . mysql_error(), 1));
+					die(my_error( 'OPEN_CONNECTION -> Could not connect: ' . mysql_error(), 1));
 			}
 			
 			$db_selected = mysql_select_db($db, $connection);
 			
 			if (!$db_selected)
 			{
-					die (my_error("Can\'t use test_db : " . mysql_error(), 1));
+					die (my_error('OPEN_CONNECTION -> Can\'t use test_db : ' . mysql_error(), 1));
 			}
 			return $connection;
 	} 

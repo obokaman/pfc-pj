@@ -9,7 +9,7 @@
 						VALUES ('$id_user',' $id_team', '$pendent')";
 						
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			my_error('ADD_USER_TEAM->  '.mysql_errno($connection) . ": " . mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{	
@@ -25,7 +25,7 @@
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT * FROM user_team";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('GET_USERS_TEAMS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -33,8 +33,8 @@
 			$arr[] = $obj;
 		}
 		
-		print(json_encode($arr)); 
-		close_connection($connection);		
+		close_connection($connection);	
+		return($arr); 		
 	}
 	/*Post: La función nos devuelve la lista de todos los usuarios junto con los equipos a los que pertenecen y el estado que estan almacenados en la base de datos, en formato JSON*/
 
@@ -61,16 +61,16 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT id_team FROM user_team WHERE id_user = '$id'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or  my_error('GET_TEAMS_OF_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
 		while($obj = mysql_fetch_object($result_query)) {
 			$arr[] = $obj;
 		}
-		
-		print( json_encode($arr)); 
 		close_connection($connection);
+		return($arr); 
+		
 	}
 	/*Post: Retorna una lista de los identificadores de equipo a los que pertence el usuario de la entrada en formato JSON*/
 	
@@ -80,16 +80,15 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT id_user FROM user_team WHERE id_team = '$id'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or  my_error('GET_USERS_OF_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
 		while($obj = mysql_fetch_object($result_query)) {
 			$arr[] = $obj;
 		}
-		
-		print( json_encode($arr)); 
 		close_connection($connection);
+		return($arr); 		
 	}
 	/*Post: Retorna la lista de identificadores de usuarios que pertenecen al identificador de equipo de la entrada en formato JSON*/
 	
@@ -102,7 +101,7 @@
 	    $query = "SELECT pendent FROM user_team WHERE id_user='$id_user' AND id_team='$id_team'";
 
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+			 my_error('GET_STATUS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return null;
 		}else{
@@ -121,7 +120,7 @@
 		$query = "UPDATE user_team SET pendent='$pendent' WHERE id_user='$id_user' AND id_team='$id_team'";
 		
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+			 my_error('SET_USER_TEAM_STATUS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{
@@ -139,7 +138,7 @@
 		
 	    $query = "DELETE FROM user_team WHERE id_user = '$id_user' and id_team='$id_team'";
 
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or  my_error('DELETE_USER_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		close_connection($connection);		
 	}
@@ -152,7 +151,7 @@
 		$connection = open_connection();
 		$query =  "SELECT * FROM user_team WHERE id_user = '$id_user' AND id_team='$id_team'";
 	
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or  my_error('EXIST_USER_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 	
 		$arr = array();
 		

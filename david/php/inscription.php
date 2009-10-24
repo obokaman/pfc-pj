@@ -9,7 +9,7 @@
 						VALUES ('$id_user',' $id_champ', '$pendent')";
 						
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			my_error('CREATE_INSCRIPTION-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{	
@@ -25,7 +25,7 @@
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT * FROM inscription";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('GET_INSCRIPTIONS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -33,8 +33,8 @@
 			$arr[] = $obj;
 		}
 		
-		print(json_encode($arr)); 
 		close_connection($connection);		
+		return($arr);	
 	}
 	/*Post: La función nos devuelve la lista de todos los usuarios junto con los campeonatos a los que estan inscritos y el estado que estan almacenados en la base de datos, en formato JSON*/
 
@@ -44,7 +44,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT id_champ FROM inscription WHERE id_user = '$id'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPS_OF_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -52,8 +52,8 @@
 			$arr[] = $obj;
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return($arr);
 	}
 	/*Post: Retorna una lista de los identificadores de campeonatos a los que esta inscrito el usuario de la entrada en formato JSON*/
 	
@@ -63,7 +63,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT id_user FROM inscription WHERE id_champ = '$id'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or my_error('GET_USERS_OF_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -71,8 +71,8 @@
 			$arr[] = $obj;
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return($arr);
 	}
 	/*Post: Retorna la lista de identificadores de usuarios que estan inscritos al identificador de campeonato de la entrada en formato JSON*/
 	
@@ -85,7 +85,7 @@
 	    $query = "SELECT pendent FROM inscription WHERE id_user='$id_user' AND id_champ='$id_champ'";
 
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+			my_error('GET_STATUS_INSCRIPTION-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return null;
 		}else{
@@ -104,7 +104,7 @@
 		$query = "UPDATE inscription SET pendent='$pendent' WHERE id_user='$id_user' AND id_champ='$id_champ'";
 		
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+			my_error('SET_INSCRIPTION_STATUS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{
@@ -122,7 +122,7 @@
 		
 	    $query = "DELETE FROM inscription WHERE id_user = '$id_user' and id_champ='$id_champ'";
 
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('DELETE_INSCRIPTION-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		close_connection($connection);		
 	}
@@ -135,7 +135,7 @@
 		$connection = open_connection();
 		$query =  "SELECT * FROM inscription WHERE id_user = '$id_user' AND id_champ='$id_champ'";
 	
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_INSCRIPTION-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 	
 		$arr = array();
 		

@@ -11,7 +11,7 @@
 		if (!mysql_query($query, $connection)) {
 			if (exist_user_nick($nick)) return 1;
 			else{			
-						my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+						my_error('CREATE_USER-> '.mysql_errno($connection) . ": " . mysql_error($connection), 1);
 						close_connection($connection);	
 						return 2;
 					}
@@ -32,15 +32,15 @@
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT * FROM user";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('GET_USERS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
 		while($obj = mysql_fetch_object($result_query)) {
 			$arr[] = $obj;
 		}
-		print(json_encode($arr)); 
 		close_connection($connection);		
+		return($arr);	
 	}
 	/*Post: La función nos devuelve la lista de todos los usuarios que estan almacenados en la base de datos, en formato JSON*/
 
@@ -50,7 +50,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM user WHERE id_user = '$id'";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('GET_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -58,8 +58,8 @@
 			$arr[] = $obj;
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return($arr);
 	}
 	/*Post: Retorna la información del usuario en formato JSON*/
 	
@@ -78,15 +78,15 @@
 				$query =  "SELECT nick, name, population, school FROM user WHERE nick = '$nick'";
 			}
 			
-			$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);			
+			$result_query = mysql_query($query, $connection) or my_error('GET_USER_NICK-> '.mysql_errno($connection).": ".mysql_error($connection), 1);			
 			$arr = array();
 			
 			while($obj = mysql_fetch_object($result_query)) {
 				$arr[] = $obj;
 			}
 			
-			print( json_encode($arr)); 
-			close_connection($connection);
+			close_connection($connection);		
+		     return($arr);
 			
 			}
 		
@@ -117,7 +117,7 @@
 				}else{				
 						$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', population='$population', school='$school', email_school='$email_school', type_user='$type_user', pass='$pass' WHERE nick='$nick_session' and pass='$old_pass'";
 						
-						$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+						$result_query = mysql_query($query, $connection) or my_error('SET_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 						close_connection($connection);	
 						return 1; /*Se ha realizado el cambio correctamente*/
 				}
@@ -136,7 +136,7 @@
 		
 	    $query = "DELETE FROM user WHERE id_user = '$id'";
 
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('DELETE_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		close_connection($connection);		
 	}
@@ -148,7 +148,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM user WHERE id_user = '$id'";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 	
 		$arr = array();
 		
@@ -166,7 +166,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM user WHERE nick = '$nick'";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_USER_NICK-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 	
 		$arr = array();
 		
@@ -187,7 +187,7 @@
 		
 	    $query = "SELECT activated FROM user WHERE nick = '$nick' AND pass = '$pass'";
 		
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('LOGIN-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 	
 		$arr = array();
 		

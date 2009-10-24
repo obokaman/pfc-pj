@@ -10,7 +10,7 @@
 		$query = "INSERT INTO game ( id_user, id_circuit, id_champ, time_result) VALUES ('$id_user',' $id_circuit', '$id_champ', '$time')";
 	
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			my_error('CREATE_GAME_WITH_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{	
@@ -28,7 +28,7 @@
 		$query = "INSERT INTO game ( id_user, id_circuit, time_result) VALUES ('$id_user',' $id_circuit', '$time')";
 	
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			my_error('CREATE_GAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{	
@@ -44,7 +44,7 @@
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT * FROM game";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('GET_GAMES-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -52,8 +52,8 @@
 			$arr[] = $obj;
 		}
 		
-		print(json_encode($arr)); 
 		close_connection($connection);		
+		return($arr);		
 	}
 	/*Post: La función nos devuelve la lista de todas las partidas realizadas que estan almacenados en la base de datos, en formato JSON*/
 	
@@ -63,7 +63,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM game WHERE id_game = '$id'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or my_error('GET_GAME_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -71,8 +71,8 @@
 			$arr[] = $obj;
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return($arr);
 	}
 	/*Post: Retorna la información de una partida a partir del identificador de esta en formato JSON */
 	
@@ -85,7 +85,7 @@
 		$query = "UPDATE game SET time_result='$time' WHERE id_game='$id_game'";
 		
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+			my_error('SET_TIME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{
@@ -103,7 +103,7 @@
 		
 	    $query = "DELETE FROM game WHERE id_game = '$id_game'";
 
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('DELETE_GAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		close_connection($connection);		
 	}
@@ -116,7 +116,7 @@
 		$connection = open_connection();
 		$query =  "SELECT * FROM game WHERE id_game = '$id_game'";
 	
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_GAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 	
 		$arr = array();
 		

@@ -9,7 +9,7 @@
 						VALUES ('$id_circuit',' $id_champ')";
 						
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			my_error('ADD_CIRCUIT_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{	
@@ -25,16 +25,15 @@
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT * FROM circuit_championship";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('GET_CIRCUIT_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
 		while($obj = mysql_fetch_object($result_query)) {
 			$arr[] = $obj;
 		}
-		
-		print(json_encode($arr)); 
 		close_connection($connection);		
+		return($arr);		
 	}
 	/*Post: La función nos devuelve la lista de todos los circuitos junto con los campeonatos a los que pertenecen y el estado que estan almacenados en la base de datos, en formato JSON*/
 
@@ -44,7 +43,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT id_champ FROM circuit_championship WHERE id_circuit = '$id'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPS_OF_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -52,8 +51,8 @@
 			$arr[] = $obj;
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return($arr);
 	}
 	/*Post: Retorna una lista de los identificadores de campeonatos a los que pertenece el circuito de la entrada en formato JSON*/
 	
@@ -63,7 +62,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT id_circuit FROM circuit_championship WHERE id_champ = '$id'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or my_error('GET_CIRCUITS_OF_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -71,8 +70,8 @@
 			$arr[] = $obj;
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return($arr);
 	}
 	/*Post: Retorna la lista de identificadores de circuitos que pertenecen al identificador de campeonato de la entrada en formato JSON*/
 	
@@ -84,7 +83,7 @@
 		
 	    $query = "DELETE FROM circuit_championship WHERE id_circuit = '$id_circuit' and id_champ='$id_champ'";
 
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('DELETE_CIRCUIT_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		close_connection($connection);		
 	}
@@ -97,7 +96,7 @@
 		$connection = open_connection();
 		$query =  "SELECT * FROM circuit_championship WHERE id_circuit = '$id_circuit' AND id_champ='$id_champ'";
 	
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_CIRCUIT_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 	
 		$arr = array();
 		

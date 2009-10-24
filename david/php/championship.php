@@ -8,7 +8,7 @@
 	    $query = "INSERT INTO championship (name, data_limit, id_founded) VALUES ('$name', '$data_limit', '$id_founded')";
 						
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			my_error('CREATE_CHAMPIONSHIP-> '.mysql_errno($connection) . ": " . mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{	
@@ -24,7 +24,7 @@
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT * FROM championship";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPIONSHIPS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -32,8 +32,8 @@
 			$arr[] = $obj;
 		}
 		
-		print(json_encode($arr)); 
 		close_connection($connection);		
+		return($arr);		
 	}
 	/*Post: La función nos devuelve la lista de todos los campeonatos que estan almacenados en la base de datos, en formato JSON*/
 
@@ -51,8 +51,8 @@
 			$arr[] = $obj;
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return($arr);
 	}
 	/*Post: Retorna la información del campeonato en formato JSON*/
 	
@@ -62,7 +62,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM championship WHERE name = '$name'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPIONSHIP_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -70,8 +70,8 @@
 			$arr[] = $obj;
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return($arr);
 	}
 	/*Post: Retorna la información del campeonato en formato JSON*/
 	
@@ -84,7 +84,7 @@
 	    $query = "UPDATE championship SET name='$name' data_limit= '$data_limit', id_founded='$id_founded' WHERE id_champ = '$id'";
 
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+			my_error('SET_CHAMPIONSHIP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{
@@ -116,7 +116,7 @@
 		$connection = open_connection();
 		$query =  "SELECT * FROM championship WHERE id_champ = '$id'";
 	
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_CHAMPIONSHIP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 	
 		$arr = array();
 		

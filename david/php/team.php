@@ -8,7 +8,7 @@
 	    $query = "INSERT INTO team (name, id_founded) VALUES ('$name', '$id_founded')";
 						
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			my_error('CREATE_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{	
@@ -24,7 +24,7 @@
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT * FROM team";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('GET_TEAMS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -32,8 +32,8 @@
 			$arr[] = $obj;
 		}
 		
-		print(json_encode($arr)); 
 		close_connection($connection);		
+		return($arr);	
 	}
 	/*Post: La función nos devuelve la lista de todos los equipos que estan almacenados en la base de datos, en formato JSON*/
 
@@ -43,7 +43,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM team WHERE id_team = '$id'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or my_error('GET_TEAM_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -51,8 +51,8 @@
 			$arr[] = $obj;
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return($arr);
 	}
 	/*Post: Retorna la información del equipo en formato JSON*/
 	
@@ -62,7 +62,7 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM team WHERE name = '$name'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or my_error('GET_TEAM_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		$arr = array();
 		
@@ -70,8 +70,8 @@
 			$arr[] = $obj;
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return($arr);
 	}
 	/*Post: Retorna la información del equipo en formato JSON*/
 	
@@ -84,7 +84,7 @@
 	    $query = "UPDATE team SET name='$name'  id_founded='$id_founded' WHERE id_team = '$id'";
 
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+			my_error('SET_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{
@@ -102,7 +102,7 @@
 		
 	    $query = "DELETE FROM team WHERE id_team = '$id'";
 
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('DELETE_TEAM_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		close_connection($connection);		
 	}
@@ -116,7 +116,7 @@
 		$connection = open_connection();
 		$query =  "SELECT * FROM team WHERE id_team = '$id'";
 	
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 	
 		$arr = array();
 		
