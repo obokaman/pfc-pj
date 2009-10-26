@@ -9,3 +9,4 @@
 <?php include("inscription.php");?>
 <?php include("game.php");?>
 <?php include("sanitize.php");?>
+<?php include("others.php");?>

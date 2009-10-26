@@ -19,80 +19,57 @@
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion del nuevo circuito, en caso contrario devuelve falso*/
 	
 	
-	/*La función nos devuelve la lista de todos los circuitos que estan almacenados en la BBDD, en formato JSON*/
+	/*La función nos devuelve la lista de todos los circuitos que estan almacenados en la BBDD*/
 	function get_circuits(){
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT name FROM circuit";
 		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUITS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
+
 		close_connection($connection);		
-		return($arr);
+		return(extract_row($result_query));
 		
 	}
-	/*Post: La función nos devuelve la lista de todos los circuitos que estan almacenados en la base de datos, en formato JSON*/
+	/*Post: La función nos devuelve una array con todos los objetos circuito que estan almacenados en la base de datos*/
 
 	
-	/*La función nos devuelve la información del circuito en formato JSON a partir del identificador que tiene en la BBDD*/
+	/*La función nos devuelve la información del circuito a partir del identificador que tiene en la BBDD*/
 	function get_circuit_id($id){
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM circuit WHERE id_circuit = '$id'";
 		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUIT_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
 		close_connection($connection);		
-		return($arr);
+		return(extract_row($result_query));
 	}
-	/*Post: Retorna la información del circuito en formato JSON*/
+	/*Post: La función nos devuelve una array el objeto circuito seleccionado a partir de su identificador de circuito */
 	
 	
-	/*La función nos devuelve la información del circuito en formato JSON a partir del nick del usuario*/
+	/*La función nos devuelve la información del circuito a partir del nick del usuario*/
 	function get_circuit_name($name){
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM circuit WHERE name = '$name'";
 		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUIT_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
+
 		close_connection($connection);		
-		return($arr);
+		return(extract_row($result_query));
 	}
-	/*Post: Retorna la información del circuito en formato JSON*/
+	/*Post: La función nos devuelve una array el objeto circuito seleccionado a partir de su nombre */
 	
 	
-	/*La función nos devuelve la información del circuito en formato JSON a partir del nombre corto del circuito*/
+	/*La función nos devuelve la información del circuito a partir del nombre corto del circuito*/
 	function get_circuit_short_name($short_name){
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM circuit WHERE short_name = '$short_name'";
 		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUIT_SHORT_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
+
 		close_connection($connection);		
-		return($arr);
+		return(extract_row($result_query));
 	}
-	/*Post: Retorna la información del circuito en formato JSON*/
+	/*Post: La función nos devuelve una array el objeto circuito seleccionado a partir de su nombre corto */
 	
 	
 	/*Esta función modifica los campos almacenados de un circuito en la BBDD*/
@@ -136,14 +113,8 @@
 		$query =  "SELECT * FROM circuit WHERE id_circuit = '$id'";
 	
 		$result_query = mysql_query($query, $connection) or my_error('EXIST_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-	
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		if (count($arr)==0)	return false;
+
+		if (count(extract_row($result_query))==0)	return false;
 		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el identificador del circuito existe, en caso contrario devuelve falso*/

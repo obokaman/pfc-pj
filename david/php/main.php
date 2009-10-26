@@ -3,7 +3,7 @@
 session_name("PFC");
 session_start();
 
-$f = clean("function", "string");
+$f = clean("function", "string"); //--------------> Pasar el texto a minusculas ?????
 
 if ($f == "login") {
 	send( login( clean("user", "string"),	clean("password", "string") ) );
@@ -42,6 +42,22 @@ else if ($f == "changeUser") {
 else if ($f == "getUsers") {	
 		send(
 			get_users()
+		);
+}
+else if ($f == "getMyTeams") {	
+		send(
+			getMyTeams()
+		);
+}
+else if ($f == "getMyChampionships") {	
+		send(
+			getMyChampionships()
+		);
+}
+else if ($f == "activated") {	
+		activated(
+			clean("nick", "string"),
+			clean("activation_key", "string")
 		);
 }
 	//else escribe_log("ADFadskfdashfldsjfdsali");*/
