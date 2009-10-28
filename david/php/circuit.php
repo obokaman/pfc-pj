@@ -27,7 +27,7 @@
 		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUITS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
 		close_connection($connection);		
-		return(extract_row($result_query));
+		return(extract_rows($result_query));
 		
 	}
 	/*Post: La función nos devuelve una array con todos los objetos circuito que estan almacenados en la base de datos*/
