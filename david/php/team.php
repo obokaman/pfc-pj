@@ -75,8 +75,12 @@
 								and  ut.id_team = t.id_team";
 			$result_query = mysql_query($query, $connection) or my_error('GET_MYTEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			
-			close_connection($connection);	
-			return(extract_row($result_query)); 		
+			$arr = extract_rows($result_query);
+			$res = array();
+			foreach ($arr as $row) {
+				$res[] = $row->name;
+			}
+			return $res;			
 		}
 		
 	}

@@ -76,10 +76,13 @@
 								and  i.id_champ = c.id_champ";
 			$result_query = mysql_query($query, $connection) or my_error('GET_MYTEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			
-			close_connection($connection);	
-			return(extract_row($result_query)); 		
-		}
-		
+			$arr = extract_rows($result_query);
+			$res = array();
+			foreach ($arr as $row) {
+				$res[] = $row->name;
+			}
+			return $res;		
+		}		
 	}
 	/*Post: Devuelve una array de strings con los nombres de los campeonatos que tiene relacion con el usuario que esta logueado*/
 	
