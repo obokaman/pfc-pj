@@ -8,9 +8,7 @@ session_start();
 
 
 
-$_SESSION['user']='dgb';
-
-echo json_encode(get_user_nick('dgb'));
+echo make_activationkey();
 
 
 /*
