@@ -40,9 +40,11 @@ else if ($f == "changeUser") {
 			)
 		);
 }
-else if ($f == "getUsers") {	
+else if ($f == "getUser") {	
 		send(
-			get_users()
+			get_user_nick(
+				clean("nick", "string")
+			)
 		);
 }
 else if ($f == "getMyTeams") {	
