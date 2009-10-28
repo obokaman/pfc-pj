@@ -8,7 +8,7 @@
 	    $query = "INSERT INTO championship (name, data_limit, id_founded) VALUES ('$name', '$data_limit', '$id_founded')";
 						
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			my_error('CREATE_CHAMPIONSHIP-> '.mysql_errno($connection) . ": " . mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{	
@@ -19,42 +19,30 @@
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion del nuevo campeonato, en caso contrario devuelve falso*/
 	
 	
-	/*La función nos devuelve la lista de todos los campeonatos que estan almacenados en la BBDD, en formato JSON*/
+	/*La función nos devuelve la lista de todos los campeonatos que estan almacenados en la BBDD*/
 	function get_championships(){
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT * FROM championship";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		print(json_encode($arr)); 
+		$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPIONSHIPS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+
 		close_connection($connection);		
+		return(extract_row($result_query));		
 	}
-	/*Post: La función nos devuelve la lista de todos los campeonatos que estan almacenados en la base de datos, en formato JSON*/
+	/*Post: La función nos devuelve la array con todos los objetos campeonato que estan almacenados en la base de datos*/
 
 	
-	/*La función nos devuelve la información del campeonato en formato JSON a partir del identificador que tiene en la BBDD*/
+	/*La función nos devuelve la información del campeonato a partir del identificador que tiene en la BBDD*/
 	function get_championship_id($id){
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM championship WHERE id_champ = '$id'";
 		$result_query = mysql_query($query, $connection) or die(mysql_error());
 		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		close_connection($connection);		
+		return(extract_row($result_query));
 	}
-	/*Post: Retorna la información del campeonato en formato JSON*/
+	/*Post: La función devuelve un array con el objeto campeonato seleccionado por su identificador*/
 	
 	
 	/*La función nos devuelve la información del campeonato en formato JSON a partir del nombre del campeonato*/
@@ -62,18 +50,38 @@
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM championship WHERE name = '$name'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPIONSHIP_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+
+		close_connection($connection);		
+		return(extract_row($result_query));
+	}
+	/*Post: La función devuelve un array con el objeto campeonato seleccionado por su nombre*/
+	
+	
+	    /*La función devuelve una lista de nombres de campeonatos a los que pertenece el usuario que esta logueado*/
+	function getMyChampionships(){
+	/*Pre: - */	
 		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
+		if(isset($_SESSION["user"])){
+			
+			$nick_session = $_SESSION["user"]; 
+			$connection = open_connection();
+			$query =  	"select c.name
+								from 	user u,
+											inscription i,
+											championship c
+								where u.nick = '$nick_session'
+								and  u.id_user = i.id_user
+								and  i.pendent <> 0
+								and  i.id_champ = c.id_champ";
+			$result_query = mysql_query($query, $connection) or my_error('GET_MYTEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+			
+			close_connection($connection);	
+			return(extract_row($result_query)); 		
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
 	}
-	/*Post: Retorna la información del campeonato en formato JSON*/
+	/*Post: Devuelve una array de strings con los nombres de los campeonatos que tiene relacion con el usuario que esta logueado*/
 	
 	
 	/*Esta función modifica los campos almacenados de un campeonato en la BBDD*/
@@ -84,7 +92,7 @@
 	    $query = "UPDATE championship SET name='$name' data_limit= '$data_limit', id_founded='$id_founded' WHERE id_champ = '$id'";
 
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+			my_error('SET_CHAMPIONSHIP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{
@@ -116,15 +124,9 @@
 		$connection = open_connection();
 		$query =  "SELECT * FROM championship WHERE id_champ = '$id'";
 	
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
-	
-		$arr = array();
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_CHAMPIONSHIP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		if (count($arr)==0)	return false;
+		if (count(extract_row($result_query))==0)	return false;
 		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el identificador del campeonato existe, en caso contrario devuelve falso*/

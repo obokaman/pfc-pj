@@ -9,7 +9,7 @@
 						VALUES ('$id_user',' $id_team', '$pendent')";
 						
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			my_error('ADD_USER_TEAM->  '.mysql_errno($connection) . ": " . mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{	
@@ -20,78 +20,44 @@
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion de la nueva instancia entre el usuario y el equipo, en caso contrario devuelve falso*/
 	
 	
-	/*La función nos devuelve la lista de todos los usuarios y equipos que estan relacionados que estan almacenados en la BBDD, en formato JSON*/
+	/*La función nos devuelve la lista de todos los usuarios y equipos que estan relacionados que estan almacenados en la BBDD*/
 	function get_users_teams(){
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT * FROM user_team";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('GET_USERS_TEAMS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		print(json_encode($arr)); 
-		close_connection($connection);		
+		close_connection($connection);	
+		return(extract_row($result_query)); 		
 	}
-	/*Post: La función nos devuelve la lista de todos los usuarios junto con los equipos a los que pertenecen y el estado que estan almacenados en la base de datos, en formato JSON*/
-
-    /*La función devuelve una lista de nombres de equipos a los que pertenece el usuario que esta logueado*/
-	function get_myteam(){
-	/*Pre: - */	
-		
-		if(isset($_SESSION["user"])){
-			
-			$nick_session = $_SESSION["user"]; 
-			$connection = open_connection();
-			$query =  "SELECT id_team FROM user_team WHERE id_user = '$id'";
-			
-			
-			
-			
-		}
-		
-	}
-	/*Post: */
+	/*Post: La función nos devuelve una array de objetos de todos los usuarios junto con los equipos a los que pertenecen y el estado que estan almacenados en la base de datos*/
 	
-	/*La función nos devuelve el identificador de los equipos a los que pertenece el identificador del usuario de la entrada en formato JSON */
+	
+	/*La función nos devuelve el identificador de los equipos a los que pertenece el identificador del usuario de la entrada */
 	function get_teams_of_user($id){
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT id_team FROM user_team WHERE id_user = '$id'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or  my_error('GET_TEAMS_OF_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		print( json_encode($arr)); 
 		close_connection($connection);
+		return(extract_row($result_query)); 
+		
 	}
-	/*Post: Retorna una lista de los identificadores de equipo a los que pertence el usuario de la entrada en formato JSON*/
+	/*Post: Retorna una array de los identificadores de equipo a los que pertence el usuario de la entrada*/
 	
 	
-	/*La función nos devuelve la lista de usuarios que pertenecen a un equipo en concreto, la información la retorna en formato JSON*/
+	/*La función nos devuelve la lista de usuarios que pertenecen a un equipo en concreto, la información la retorna*/
 	function get_users_of_team($id){
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT id_user FROM user_team WHERE id_team = '$id'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
+		$result_query = mysql_query($query, $connection) or  my_error('GET_USERS_OF_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		print( json_encode($arr)); 
 		close_connection($connection);
+		return(extract_row($result_query)); 		
 	}
-	/*Post: Retorna la lista de identificadores de usuarios que pertenecen al identificador de equipo de la entrada en formato JSON*/
+	/*Post: Retorna una array de identificadores de usuarios que pertenecen al identificador de equipo de la entrada en formato JSON*/
 	
 	
 	/*Devuelve el estado de un usuario en un equipo*/
@@ -102,7 +68,7 @@
 	    $query = "SELECT pendent FROM user_team WHERE id_user='$id_user' AND id_team='$id_team'";
 
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+			 my_error('GET_STATUS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return null;
 		}else{
@@ -121,7 +87,7 @@
 		$query = "UPDATE user_team SET pendent='$pendent' WHERE id_user='$id_user' AND id_team='$id_team'";
 		
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+			 my_error('SET_USER_TEAM_STATUS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{
@@ -139,7 +105,7 @@
 		
 	    $query = "DELETE FROM user_team WHERE id_user = '$id_user' and id_team='$id_team'";
 
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or  my_error('DELETE_USER_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		close_connection($connection);		
 	}
@@ -152,16 +118,11 @@
 		$connection = open_connection();
 		$query =  "SELECT * FROM user_team WHERE id_user = '$id_user' AND id_team='$id_team'";
 	
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
-	
-		$arr = array();
+		$result_query = mysql_query($query, $connection) or  my_error('EXIST_USER_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		if (count($arr)==0)	return false;
+		if (count(extract_row($result_query))==0)	return false;
 		else return true;
+		
 	}
 	/*Post: Devuelve cierto en caso de que el identificador del usuario y del equipo existe, en caso contrario devuelve falso*/
 ?>

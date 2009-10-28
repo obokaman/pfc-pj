@@ -8,7 +8,7 @@
 	    $query = "INSERT INTO team (name, id_founded) VALUES ('$name', '$id_founded')";
 						
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			my_error('CREATE_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{	
@@ -19,61 +19,68 @@
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion del nuevo equipo, en caso contrario devuelve falso*/
 	
 	
-	/*La función nos devuelve la lista de todos los equipos que estan almacenados en la BBDD, en formato JSON*/
+	/*La función nos devuelve la lista de todos los equipos que estan almacenados en la BBDD*/
 	function get_teams(){
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT * FROM team";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('GET_TEAMS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		print(json_encode($arr)); 
 		close_connection($connection);		
+		return(extract_row($result_query));	
 	}
-	/*Post: La función nos devuelve la lista de todos los equipos que estan almacenados en la base de datos, en formato JSON*/
+	/*Post: La función nos devuelve una array de objetos de todos los equipos que estan almacenados en la base de datos*/
 
 	
-	/*La función nos devuelve la información del equipo en formato JSON a partir del identificador que tiene en la BBDD*/
+	/*La función nos devuelve la información del equipo a partir del identificador que tiene en la BBDD*/
 	function get_team_id($id){
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM team WHERE id_team = '$id'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
-		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		$result_query = mysql_query($query, $connection) or my_error('GET_TEAM_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+
+		close_connection($connection);		
+		return(extract_row($result_query));
 	}
-	/*Post: Retorna la información del equipo en formato JSON*/
+	/*Post: Retorna una array con el objeto equipo que contienen la información del equipo*/
 	
 	
-	/*La función nos devuelve la información del equipo en formato JSON a partir del nombre del campeonato*/
+	/*La función nos devuelve la información del equipo a partir del nombre del campeonato*/
 	function get_team_name($name){
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM team WHERE name = '$name'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
-		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
+		$result_query = mysql_query($query, $connection) or my_error('GET_TEAM_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+
+		close_connection($connection);		
+		return(extract_row($result_query));
+	}
+	/*Post: Retorna la información del equipo*/
+	
+	
+	/*La función devuelve una lista de nombres de equipos a los que pertenece el usuario que esta logueado*/
+	function getMyTeams(){
+	/*Pre: - */			
+		if(isset($_SESSION["user"])){
+			
+			$nick_session = $_SESSION["user"]; 
+			$connection = open_connection();
+			$query =  	"Select t.name
+								from 	user u,
+											user_team ut,
+											team t
+								where u.nick = '$nick_session'
+								and  u.id_user = ut.id_user
+								and ut.pendent <> 0
+								and  ut.id_team = t.id_team";
+			$result_query = mysql_query($query, $connection) or my_error('GET_MYTEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+			
+			close_connection($connection);	
+			return(extract_row($result_query)); 		
 		}
 		
-		print( json_encode($arr)); 
-		close_connection($connection);
 	}
-	/*Post: Retorna la información del equipo en formato JSON*/
+	/*Post:  Devuelve una array de nombres de equipos a loos que pertenece el usuario logueado*/
 	
 	
 	/*Esta función modifica los campos almacenados de un equipo en la BBDD*/
@@ -84,7 +91,7 @@
 	    $query = "UPDATE team SET name='$name'  id_founded='$id_founded' WHERE id_team = '$id'";
 
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+			my_error('SET_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{
@@ -102,7 +109,7 @@
 		
 	    $query = "DELETE FROM team WHERE id_team = '$id'";
 
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('DELETE_TEAM_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		close_connection($connection);		
 	}
@@ -116,15 +123,9 @@
 		$connection = open_connection();
 		$query =  "SELECT * FROM team WHERE id_team = '$id'";
 	
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
-	
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		if (count($arr)==0)	return false;
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+
+		if (count(extract_row($result_query))==0)	return false;
 		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el identificador del equipo existe, en caso contrario devuelve falso*/

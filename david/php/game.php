@@ -10,7 +10,7 @@
 		$query = "INSERT INTO game ( id_user, id_circuit, id_champ, time_result) VALUES ('$id_user',' $id_circuit', '$id_champ', '$time')";
 	
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			my_error('CREATE_GAME_WITH_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{	
@@ -28,7 +28,7 @@
 		$query = "INSERT INTO game ( id_user, id_circuit, time_result) VALUES ('$id_user',' $id_circuit', '$time')";
 	
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection) . ": " . mysql_error($connection), 1);
+			my_error('CREATE_GAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{	
@@ -39,42 +39,30 @@
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion de la nueva partida, en caso contrario devuelve falso*/
 	
 	
-	/*La función nos devuelve la lista de todos las partidas realizadas que estan almacenados en la BBDD, en formato JSON*/
+	/*La función nos devuelve la lista de todos las partidas realizadas que estan almacenados en la BBDD*/
 	function get_games(){
 	/*Pre: - */	
 		$connection = open_connection();
 		$query =  "SELECT * FROM game";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		print(json_encode($arr)); 
+		$result_query = mysql_query($query, $connection) or my_error('GET_GAMES-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+
 		close_connection($connection);		
+		return(extract_row($result_query));		
 	}
-	/*Post: La función nos devuelve la lista de todas las partidas realizadas que estan almacenados en la base de datos, en formato JSON*/
+	/*Post: La función nos devuelve una array de todos los objetos partida realizadas que estan almacenados en la base de datos*/
 	
 	
-	/*La función devuelve la información de una partida a partir del identificador de esta en formato JSON */
+	/*La función devuelve la información de una partida a partir del identificador de esta*/
 	function get_game_id($id){
 	/*Pre: - */
 		$connection = open_connection();
 		$query =  "SELECT * FROM game WHERE id_game = '$id'";
-		$result_query = mysql_query($query, $connection) or die(mysql_error());
-		
-		$arr = array();
-		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		print( json_encode($arr)); 
-		close_connection($connection);
+		$result_query = mysql_query($query, $connection) or my_error('GET_GAME_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+
+		close_connection($connection);		
+		return(extract_row($result_query));
 	}
-	/*Post: Retorna la información de una partida a partir del identificador de esta en formato JSON */
+	/*Post: Retorna la información de una partida a partir del identificador de esta */
 	
 	
 	/*Esta función nos modifica el tiempo que tiene la partida */
@@ -85,7 +73,7 @@
 		$query = "UPDATE game SET time_result='$time' WHERE id_game='$id_game'";
 		
 		if (!mysql_query($query, $connection)) {
-			my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+			my_error('SET_TIME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			close_connection($connection);	
 			return false;
 		}else{
@@ -103,7 +91,7 @@
 		
 	    $query = "DELETE FROM game WHERE id_game = '$id_game'";
 
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('DELETE_GAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		close_connection($connection);		
 	}
@@ -116,15 +104,9 @@
 		$connection = open_connection();
 		$query =  "SELECT * FROM game WHERE id_game = '$id_game'";
 	
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
-	
-		$arr = array();
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_GAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		while($obj = mysql_fetch_object($result_query)) {
-			$arr[] = $obj;
-		}
-		
-		if (count($arr)==0)	return false;
+		if (count(extract_row($result_query))==0)	return false;
 		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el identificador de la partida exista, en caso contrario devuelve falso*/
