@@ -58,7 +58,9 @@
 	/*Pre: - */	
 		if (isset($_SESSION["user"])){
 			
-			$connection = open_connection();
+			//$connection = open_connection();
+			
+			global $connection;
 			
 			if ($nick == $_SESSION["user"]){
 				$nick_session = $_SESSION["user"];
@@ -69,7 +71,7 @@
 			
 			$result_query = mysql_query($query, $connection) or my_error('GET_USER_NICK-> '.mysql_errno($connection).": ".mysql_error($connection), 1);			
 			
-			close_connection($connection);		
+			//close_connection($connection);		
 		     return(extract_row($result_query));
 			
 			}

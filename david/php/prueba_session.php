@@ -6,7 +6,9 @@ include("includes.php");
 session_name("PFC");
 session_start();
 
-activated('dgb', 'laskhdf')
+$_SESSION['user']='dgb';
+
+echo json_encode(get_user_nick('dgb'));
 
 
 /*
