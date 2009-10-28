@@ -16,4 +16,5 @@
 	function extract_row($result_query) {
 		return mysql_fetch_object($result_query);
 	}
+	
 ?>
