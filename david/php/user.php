@@ -58,9 +58,7 @@
 	/*Pre: - */	
 		if (isset($_SESSION["user"])){
 			
-			//$connection = open_connection();
-			
-			global $connection;
+			$connection = open_connection();
 			
 			if ($nick == $_SESSION["user"]){
 				$nick_session = $_SESSION["user"];
@@ -157,8 +155,8 @@
 	/* Función que gestiona el logueo de los usuarios*/
 	function login( $nick, $pass){
 	/*Pre: - */
-		//$connection = open_connection();
-		global $connection;
+		$connection = open_connection();
+		
 		
 	    $query = "SELECT activated FROM user WHERE nick = '$nick' AND pass = '$pass'";
 		
@@ -166,7 +164,7 @@
 	
 		$arr = extract_row($result_query);
 		
-		//close_connection($connection);	
+		close_connection($connection);	
 		
 		if (count($arr)==0)	return 1; /*El nick no existe o la contraseña es incorrecta*/
 		else{
