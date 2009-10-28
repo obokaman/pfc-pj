@@ -26,9 +26,12 @@
 		$query =  "SELECT name FROM circuit";
 		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUITS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-		close_connection($connection);		
-		return(extract_rows($result_query));
-		
+		$arr = extract_rows($result_query);
+		$res = array();
+		foreach ($arr as $row) {
+			$res[] = $row->name;
+		}
+		return $res;
 	}
 	/*Post: La función nos devuelve una array con todos los objetos circuito que estan almacenados en la base de datos*/
 

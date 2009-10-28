@@ -17,4 +17,16 @@
 		return mysql_fetch_object($result_query);
 	}
 	
+	function make_activationkey(){
+			
+		
+		for($i = 0; $i < 20; $i++){
+			
+			$s = $s.mt_rand(0,9);
+			
+		}
+		
+		return $s;
+		
+	}
 ?>
