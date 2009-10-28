@@ -10,7 +10,7 @@ CREATE TABLE user(
 	surname1 	varchar(20) NOT NULL,
 	surname2 	varchar(20),
 	email_user	varchar(50) NOT NULL,
-	population	varchar(20) NOT NULL,
+	city		varchar(20) NOT NULL,
 	school  	varchar(50) NOT NULL,
 	email_school    varchar(50),
 	type_user	varchar(20) NOT NULL,
@@ -136,13 +136,13 @@ ENGINE = InnoDB
 CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 INSERT INTO user (nick, name, surname1, surname2, email_user,
-population, school, email_school, type_user, pass) VALUES ('dgb', 'David', 'Garcia', 'Bautista', 'dvdgarcia.83@gmail.com', 'Blanes', 'Colegio1', 'cole@colegio1.com', 'alumno', '123');
+city, school, email_school, type_user, pass) VALUES ('dgb', 'David', 'Garcia', 'Bautista', 'dvdgarcia.83@gmail.com', 'Blanes', 'Colegio1', 'cole@colegio1.com', 'alumno', '123');
 
 INSERT INTO user (nick, name, surname1, surname2, email_user,
-population, school, email_school, type_user, pass) VALUES ('asd', 'Mari', 'Juana', 'Rica', 'mjuana@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'alumno', '123');
+city, school, email_school, type_user, pass, activated) VALUES ('asd', 'Mari', 'Juana', 'Rica', 'mjuana@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'alumno', '123', 1);
 
 INSERT INTO user (nick, name, surname1, surname2, email_user,
-population, school, email_school, type_user, pass) VALUES ('qwe', 'Omer', 'Jimenez', 'algo', 'omer.jimenez@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'tutor', '123');
+city, school, email_school, type_user, pass) VALUES ('qwe', 'Omer', 'Jimenez', 'algo', 'omer.jimenez@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'tutor', '123');
 
 INSERT INTO team (name, id_founded) VALUES ('Escuderia1', 3);
 
@@ -159,3 +159,13 @@ INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('Turquia', '
 INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato1', '2009-01-31', 3);
 
 INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato2', '2010-01-31', 3);
+
+INSERT INTO inscription (id_user, id_champ) VALUES (1, 1);
+
+INSERT INTO inscription (id_user, id_champ) VALUES (2, 1);
+
+INSERT INTO inscription (id_user, id_champ) VALUES (2, 2);
+
+INSERT INTO inscription (id_user, id_champ) VALUES (3, 1);
+
+INSERT INTO inscription (id_user, id_champ) VALUES (3, 2);

@@ -109,7 +109,7 @@ CREATE TABLE game (
   id_game	integer	 NOT NULL AUTO_INCREMENT,
   id_user	integer  NOT NULL,
   id_circuit 	integer  NOT NULL,
-  id_champ	integer	 NOT NULL,
+  id_champ	integer	 DEFAULT NULL,
   time_result	time	 DEFAULT NULL,  
 
   PRIMARY KEY (id_game),

@@ -1,12 +1,12 @@
 <?php
 
 	/*La función crea un usuario en la BBDD con los parametros que le pasamos de entrada*/
-	function create_user($nick, $name, $surname1, $surname2, $email_user, $city, $school, $email_school, $type_user, $pass){
+	function create_user($nick, $name, $surname1, $surname2, $email_user, $city, $school, $email_school, $pass){
 	/*Pre: - */	
 		$connection = open_connection();
 		
 	    $query = "INSERT INTO user ( nick, name, surname1, surname2, email_user, city, school, email_school, type_user, pass)
-						VALUES ('$nick',' $name',' $surname1',' $surname2',' $email_user',' $city',' $school',' $email_school','$type_user',' $pass')";
+						VALUES ('$nick',' $name',' $surname1',' $surname2',' $email_user',' $city',' $school',' $email_school','alumno',' $pass')";
 						
 		if (!mysql_query($query, $connection)) {
 			if (exist_user_nick($nick)) return 1;
@@ -15,11 +15,8 @@
 						close_connection($connection);	
 						return 2;
 					}
-		}else{	
-			close_connection($connection);	
-			return 0;
-		}
-
+		}else	return 0;
+		
 	}
 	/*Post: La función devolverá según el comportamiento de la inserción del nuevo usuario:
 				- Un 0, si el usuario se ha insertado correctamente
@@ -34,8 +31,7 @@
 		$query =  "SELECT * FROM user";
 		$result_query = mysql_query($query, $connection) or my_error('GET_USERS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-		close_connection($connection);		
-		return(extract_row($result_query));	
+		return(extract_rows($result_query));	
 	}
 	/*Post: La función nos devuelve una array de objetos de todos los usuarios que estan almacenados en la base de datos*/
 
@@ -47,7 +43,6 @@
 		$query =  "SELECT * FROM user WHERE id_user = '$id'";
 		$result_query = mysql_query($query, $connection) or my_error('GET_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		close_connection($connection);		
 		return(extract_row($result_query));
 	}
 	/*Post: Retorna una array con el objeto usuario que contiene la información del usuario*/
@@ -69,11 +64,9 @@
 			
 			$result_query = mysql_query($query, $connection) or my_error('GET_USER_NICK-> '.mysql_errno($connection).": ".mysql_error($connection), 1);			
 			
-			//close_connection($connection);		
-		     return(extract_row($result_query));
+		    return(extract_row($result_query));
 			
-			}
-		
+			}		
 		}
 	/*Post: La función devolvera información distinta en diferentes casos:
 				- Devuelve toda la información del usuario, si el nick de la entrada es el mismo que el nick del usuario logueado de la session.
