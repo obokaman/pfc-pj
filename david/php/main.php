@@ -54,6 +54,11 @@ else if ($f == "getMyChampionships") {
 			getMyChampionships()
 		);
 }
+else if ($f == "getCircuits") {	
+		send(
+			get_circuits()
+		);
+}
 else if ($f == "activated") {	
 		activated(
 			clean("nick", "string"),

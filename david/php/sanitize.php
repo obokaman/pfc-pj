@@ -9,6 +9,9 @@
 						$var = (int) $var;
 					break;
 					case 'string': // trim string
+						$var = trim ( $var );						
+					break;
+					case 'sql': // trim string
 						$var = trim ( $var );
 						$var = mysql_real_escape_string($var); /*limpia el parametros evitando la inyección de codigo SQL
 	ademas de colocar barras en caracteres especiales*/
