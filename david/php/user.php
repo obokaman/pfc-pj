@@ -3,7 +3,8 @@
 	/*La función crea un usuario en la BBDD con los parametros que le pasamos de entrada*/
 	function create_user($nick, $name, $surname1, $surname2, $email_user, $city, $school, $email_school, $pass){
 	/*Pre: - */	
-		$connection = open_connection();
+		global $connection;
+		
 		$key_act = make_activationkey();
 	    $query = "INSERT INTO user ( nick, name, surname1, surname2, email_user, city, school, email_school, type_user, pass, activation_key)
 						VALUES ('$nick',' $name',' $surname1',' $surname2',' $email_user',' $city',' $school',' $email_school','alumno',' $pass', '$key_ac')";
@@ -12,7 +13,7 @@
 			if (exist_user_nick($nick)) return 1;
 			else{			
 						my_error('CREATE_USER-> '.mysql_errno($connection) . ": " . mysql_error($connection), 1);
-						close_connection($connection);	
+							
 						return 2;
 					}
 		}else	return 0;
@@ -27,7 +28,8 @@
 	/*La función nos devuelve la lista de todos los usuarios que estan almacenados en la BBDD*/
 	function get_users(){
 	/*Pre: - */	
-		$connection = open_connection();
+		global $connection;
+		
 		$query =  "SELECT * FROM user";
 		$result_query = mysql_query($query, $connection) or my_error('GET_USERS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
@@ -39,7 +41,8 @@
 	/*La función nos devuelve la información del usuario a partir del identificador que tiene en la BBDD*/
 	function get_user_id($id){
 	/*Pre: - */
-		$connection = open_connection();
+		global $connection;
+		
 		$query =  "SELECT * FROM user WHERE id_user = '$id'";
 		$result_query = mysql_query($query, $connection) or my_error('GET_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
@@ -53,7 +56,7 @@
 	/*Pre: - */	
 		if (isset($_SESSION["user"])){
 			
-			$connection = open_connection();
+			global $connection;
 			
 			if ($nick == $_SESSION["user"]){
 				$nick_session = $_SESSION["user"];
@@ -77,7 +80,8 @@
 	/*Esta función modifica los campos almacenados de un usuario en la BBDD*/
 	function set_user($name, $surname1, $surname2, $email_user, $city, $school, $email_school, $type_user, $old_pass, $pass){
 	/*Pre: El identificador del usuario existe y los campos no son nulos a exception del segundo apellido o del email de la escuela */
-		$connection = open_connection();
+		
+		global $connection;
 		
 		if(!isset($_SESSION["user"])){
 				return 1; /*No estamos en modo login*/
@@ -95,7 +99,7 @@
 						$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', city='$city', school='$school', email_school='$email_school', type_user='$type_user', pass='$pass' WHERE nick='$nick_session' and pass='$old_pass'";
 						
 						$result_query = mysql_query($query, $connection) or my_error('SET_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-						close_connection($connection);	
+							
 						return 1; /*Se ha realizado el cambio correctamente*/
 				}
 		}
@@ -109,13 +113,12 @@
 	/*Esta función borra el usuario de la BBDD identificado por el mismo identificador que tienen en la BBDD*/
 	function delete_user_id($id){
 	/*Pre: - */
-		$connection = open_connection();
+	
+		global $connection;
 		
 	    $query = "DELETE FROM user WHERE id_user = '$id'";
-
-		$result_query = mysql_query($query, $connection) or my_error('DELETE_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-		close_connection($connection);		
+		$result_query = mysql_query($query, $connection) or my_error('DELETE_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);		
+	
 	}
 	/*Post: La función borra el usuario de la BBDD*/
 	
@@ -123,7 +126,9 @@
 	/*La función comprueba si el identificador del usuario existe*/
 	function exist_user_id($id){	
 	/*Pre: - */
-		$connection = open_connection();
+	
+		global $connection;
+		
 		$query =  "SELECT * FROM user WHERE id_user = '$id'";
 		$result_query = mysql_query($query, $connection) or my_error('EXIST_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
@@ -135,7 +140,7 @@
 	/*La función comprueba si el nick del usuario existe*/
 	function exist_user_nick($nick){	
 	/*Pre: - */
-		$connection = open_connection();
+		global $connection;
 		$query =  "SELECT * FROM user WHERE nick = '$nick'";
 		$result_query = mysql_query($query, $connection) or my_error('EXIST_USER_NICK-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
@@ -148,8 +153,8 @@
 	/* Función que gestiona el logueo de los usuarios*/
 	function login( $nick, $pass){
 	/*Pre: - */
-		$connection = open_connection();
-		
+	
+		global $connection;
 		
 	    $query = "SELECT activated FROM user WHERE nick = '$nick' AND pass = '$pass'";
 		
@@ -172,7 +177,6 @@
 				- 2 si nick y password son correctos, pero no esta activado*/
 				
 	
-	
 	function activated($nick, $activation_key){
 	/*{Pre: -}*/	
 	
@@ -182,7 +186,7 @@
 								</head>								 
 								<body> ";
 	
-		$connection = open_connection();
+		global $connection;
 		
 		$query = "SELECT activated, activation_key FROM user WHERE nick = '$nick'";
 		
