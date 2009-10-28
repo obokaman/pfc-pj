@@ -164,11 +164,9 @@
 	
 		$arr = extract_row($result_query);
 		
-		close_connection($connection);	
-		
-		if (count($arr)==0)	return 1; /*El nick no existe o la contraseña es incorrecta*/
+		if (!$arr) return 1; /*El nick no existe o la contraseña es incorrecta*/
 		else{
-			if ( $arr[0]->activated){   /*La cuenta del usuario esta activada*/
+			if ( $arr->activated){   /*La cuenta del usuario esta activada*/
 				$_SESSION["user"] = $nick;				
 				return 0;
 			}
