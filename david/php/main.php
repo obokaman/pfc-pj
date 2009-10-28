@@ -2,11 +2,12 @@
 
 session_name("PFC");
 session_start();
+$connection = open_connection();
 
 $f = clean("function", "string"); //--------------> Pasar el texto a minusculas ?????
 
 if ($f == "login") {
-	send( login( clean("user", "string"),	clean("password", "string") ) );
+	send( login( clean("nick", "string"),	clean("password", "string") ) );
 }
 else if ($f == "newUser") {
 	send(
@@ -66,6 +67,7 @@ else if ($f == "activated") {
 		);
 }
 	//else escribe_log("ADFadskfdashfldsjfdsali");*/
+close_connection($connection);
 	
 	
 ?>
