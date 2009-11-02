@@ -41,7 +41,7 @@ login(nick, password) returns int:
 
 ==========================
 
-newUser(nick, name, surname1, surname2, email_user, population,
+newUser(nick, name, surname1, surname2, email_user, city,
         school, email_school, password) returns int:
   * 0 si no hay problema: nuevo usuario, generar activation_key (y hay que enviar
     un e-mail, pero ya nos preocuparemos otro dia de esto). No se entra en LOGIN.
@@ -54,7 +54,7 @@ newUser(nick, name, surname1, surname2, email_user, population,
 getUser(nick) return user (array con algunos campos de un user)
   * retorna informacion del nick si estas logeado:
    - si eres tu mismo, lo devuelves todo (excepto el password)
-   - si es otra persona, devuelves el nick, el name, population y school.
+   - si es otra persona, devuelves el nick, el name, city y school.
   * si no estas logeado, retorna user vacio
 
 ==========================
@@ -64,6 +64,8 @@ changeUser(name, surname1, surname2, email_user, city,
   * 1 si no estamos en modo LOGIN (error)
   * 2 si "oldpassword" no es correcto (respecto al nick que esta logeado)
   * 0 si no hay problema: podemos cambiar los datos (incluyendo el password)
+
+!!!! si no ha cambiado el password el campo password sera null y por tanto cualquier valor que pueda tener oldpassword dara igual
 
 ==========================
 
@@ -79,7 +81,7 @@ getMyChampionship() returns strings[]
 
 ==========================
 
-getCircuito()
+getCircuits()
   * No es necesario estar logeado.
   * Los 'name' de todos los circuitos que existen.
 
