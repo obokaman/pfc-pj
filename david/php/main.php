@@ -2,7 +2,7 @@
 
 session_name("PFC");
 session_start();
-$connection = open_connection2();
+$connection = open_connection();
 
 $f = clean("function", "string"); //--------------> Pasar el texto a minusculas ?????
 
@@ -69,7 +69,7 @@ else if ($f == "activated") {
 		);
 }
 	//else escribe_log("ADFadskfdashfldsjfdsali");*/
-close_connection2($connection);
+close_connection($connection);
 	
 	
 ?>
