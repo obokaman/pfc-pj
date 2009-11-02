@@ -1,36 +1,77 @@
-<?php
-
-
-include("includes.php");
+<?php include("includes.php");
 
 session_name("PFC");
 session_start();
+$connection = open_connection();
 
+$f = clean("function", "string"); //--------------> Pasar el texto a minusculas ?????
 
-
-echo make_activationkey();
-
-
-/*
-session_name("PFC");
-session_start();
-
-if (!isset($_SESSION["visitas"])){
-	$_SESSION["visitas"] = 0;
-}else{
-	$_SESSION["visitas"]++;
+if ($f == "login") {
+	send( login( clean("nick", "string"),	clean("password", "string") ) );
 }
+else if ($f == "newUser") {
+	send(
+		create_user(
+			clean("nick", "string"),
+			clean("name", "string"),
+			clean("surname1", "string"),
+			clean("surname2", "string"),
+			clean("email_user", "string"),
+			clean("city", "string"),
+			clean("school", "string"),
+			clean("email_school", "string"),
+			clean("password", "string")
+		)
+	);
+}
+else if ($f == "changeUser") {	
+		send(
+			set_user(
+				clean("name", "string"),
+				clean("surname1", "string"),
+				clean("surname2", "string"),
+				clean("email_user", "string"),
+				clean("city", "string"),
+				clean("school", "string"),
+				clean("email_school", "string"),
+				clean("type_user", "string"),
+				clean("oldpassword", "string"),
+				clean("password", "string")
+			)
+		);
+}
+else if ($f == "getUser") {	
+		send(
+			get_user_nick(
+				clean("nick", "string")
+			)
+		);
+}
+else if ($f == "getMyTeams") {	
+		send(
+			getMyTeams()
+		);
+}
+else if ($f == "getMyChampionships") {	
+		send(
+			getMyChampionships()
+		);
+}
+else if ($f == "getCircuits") {	
+		send(
+			get_circuits()
+		);
+}
+else if ($f == "activated") {	
+		activated(
+			clean("nick", "string"),
+			clean("activation_key", "string")
+		);
+}
+	//else escribe_log("ADFadskfdashfldsjfdsali");*/
+close_connection($connection);
+	
+	
 
-echo $_SESSION["visitas"];
 
-
-$message = "<form action='main.php' method='POST'>
-								Nombre de la función: <input name='function' type='text'>
-								User: <input name='user' type='text'>
-								Pass: <input name='password' type='text'>
-								<input type='submit'>
-						</form>";
-						
-echo $message;
-*/
 ?>

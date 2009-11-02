@@ -7,7 +7,7 @@
 		
 		$key_act = make_activationkey();
 	    $query = "INSERT INTO user ( nick, name, surname1, surname2, email_user, city, school, email_school, type_user, pass, activation_key)
-						VALUES ('$nick',' $name',' $surname1',' $surname2',' $email_user',' $city',' $school',' $email_school','alumno',' $pass', '$key_ac')";
+						VALUES ('$nick',' $name',' $surname1',' $surname2',' $email_user',' $city',' $school',' $email_school','alumno','$pass', '$key_ac')";
 						
 		if (!mysql_query($query, $connection)) {
 			if (exist_user_nick($nick)) return 1;
@@ -89,24 +89,22 @@
 				$nick_session = $_SESSION["user"];
 				$query = "SELECT pass FROM user WHERE nick='$nick_session'";
 				$result_query = mysql_query($query, $connection);
-				while ($row = mysql_fetch_row($result_query)){
-						$pass_user_session = $row[0];
-				}		
-		
-				if ($pass_user_session != $old_pass){
+				$pass_user_session = extract_row($result_query);
+				
+				if ($pass_user_session -> pass != $old_pass){
 					return 2;	  /*La 'old_pass' no coincide con la contraseña del usuario de la sesion*/
 				}else{				
 						$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', city='$city', school='$school', email_school='$email_school', type_user='$type_user', pass='$pass' WHERE nick='$nick_session' and pass='$old_pass'";
-						
+
 						$result_query = mysql_query($query, $connection) or my_error('SET_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 							
-						return 1; /*Se ha realizado el cambio correctamente*/
+						return 0; /*Se ha realizado el cambio correctamente*/
 				}
 		}
 	}
 	/*Post: La función retorna enteros distintos dependiendo del comportamiento que siga:
-				- 0 si el usuario de la sesion no esta logueado
-				- 1 se realiza el cambio correctamente ya que el 'old_pass' es correcto para el usuario logueado
+				- 1 si el usuario de la sesion no esta logueado
+				- 0 se realiza el cambio correctamente ya que el 'old_pass' es correcto para el usuario logueado
 				- 2 el 'old_pass' no corresponde al usuario logueado*/
 	
 	
@@ -156,15 +154,14 @@
 	
 		global $connection;
 		
-	    $query = "SELECT activated FROM user WHERE nick = '$nick' AND pass = '$pass'";
+	    $query = "SELECT activated,pass FROM user WHERE nick = '$nick'";
 		
-		$result_query = mysql_query($query, $connection) or my_error('LOGIN-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-	
+		$result_query = mysql_query($query, $connection) or my_error('LOGIN-> '.mysql_errno($connection).": ".mysql_error($connection), 1);	
 		$arr = extract_row($result_query);
 		
-		if (!$arr) return 1; /*El nick no existe o la contraseña es incorrecta*/
+		if ((!$arr) or ($arr->pass != $pass)) return 1; /*El nick no existe o la contraseña es incorrecta*/
 		else{
-			if ( $arr->activated){   /*La cuenta del usuario esta activada*/
+			if ($arr->activated){   /*La cuenta del usuario esta activada*/
 				$_SESSION["user"] = $nick;				
 				return 0;
 			}
@@ -175,7 +172,7 @@
 				- 0 si nick y passwrod son correctos
 				- 1 si nick no existe, o password es incorrecto
 				- 2 si nick y password son correctos, pero no esta activado*/
-				
+	
 	
 	function activated($nick, $activation_key){
 	/*{Pre: -}*/	
