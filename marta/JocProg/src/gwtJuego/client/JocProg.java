@@ -4,19 +4,21 @@ import java.util.ArrayList;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -209,6 +211,7 @@ public class JocProg implements EntryPoint {
 	  CellFormatter loginCellFormatter = loginLayout.getCellFormatter();
 	
 	  // Add a title to the form
+	  loginVPanel.clear();
 	  Label loginLabel = new Label("Identifícate para acceder a tu cuenta:");
 	  loginVPanel.add(loginLabel);
 	  loginVPanel.setCellVerticalAlignment(loginLabel,HasVerticalAlignment.ALIGN_BOTTOM);
@@ -257,7 +260,7 @@ public class JocProg implements EntryPoint {
 	  registerDisclosure.setContent(regOptions);
 	  loginVPanel.add(registerDisclosure);
 	  loginVPanel.setCellVerticalAlignment(registerDisclosure,HasVerticalAlignment.ALIGN_TOP);
-	  loginVPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+	  //loginVPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
   }
   
   private void createPerfilPanel(){
@@ -279,12 +282,13 @@ public class JocProg implements EntryPoint {
 		    	  if (200 == response.getStatusCode()) {
 		    		  UserData res = asUserData(response.getText());
 		    		  
+		    		  perfilVPanel.clear();
 		    		  perfilVPanel.add(logoutButton);
-		    		    
-		    		  Grid perfilInfo = new Grid(9, 4);
+
+		    		  Grid perfilInfo = new Grid(8, 4);
 		    		  perfilInfo.setCellSpacing(6);
 		    		  perfilInfo.setHTML(0, 0, "Usuario: ");
-		    		  regNickTextBox.setText(res.getNick());
+		    		  regNickTextBox.setText(res.get("nick"));
 		    		  regNickTextBox.setEnabled(false);
 		    		  perfilInfo.setWidget(0, 1, regNickTextBox);
 		    		  perfilInfo.setHTML(1, 0, "Name: ");
@@ -329,14 +333,14 @@ public class JocProg implements EntryPoint {
 		    		  regConfirmPassword.setEnabled(false);
 		    		  regConfirmPassword.setVisible(false);
 		    		  perfilInfo.setWidget(7, 3, regConfirmPassword);
-		    		  perfilInfo.setWidget(8,3, changeButton);
-		    		  saveChangeButton.setEnabled(false);
-		    		  saveChangeButton.setVisible(false);
-		    		  perfilInfo.setWidget(8,3, saveChangeButton);
-		    		  CellFormatter perfilInfoCellFormatter = perfilInfo.getCellFormatter();
-		    		  perfilInfoCellFormatter.setHorizontalAlignment(8,3,HasHorizontalAlignment.ALIGN_RIGHT);
+		    		  //CellFormatter perfilInfoCellFormatter = perfilInfo.getCellFormatter();
+		    		  //perfilInfoCellFormatter.setHorizontalAlignment(8,3,HasHorizontalAlignment.ALIGN_RIGHT);
 		    		  perfilVPanel.setSize("100%","100%");
 		    		  perfilVPanel.add(perfilInfo);
+		    		  perfilVPanel.add(changeButton);
+		    		  saveChangeButton.setEnabled(false);
+		    		  saveChangeButton.setVisible(false);
+		    		  perfilVPanel.add(saveChangeButton);
 		    		  perfilVPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);  
 		
 		    		  	    		  
@@ -354,14 +358,36 @@ public class JocProg implements EntryPoint {
 	  //Text areas
 	  consolaPanel.setSize("100%","100%");
 	  consolaPanel.setSpacing(5);
-	  inputPanel.setSize("100%","100%");
-	  inputPanel.setSpacing(5);
+	  //inputPanel.setSize("100%","100%");
+	  //inputPanel.setSpacing(5);
 	  consolaTextArea.setText("consola de salida");
 	  consolaTextArea.setSize("100%","100%");
-	  inputTextArea.setText("entrada de código");
-	  inputTextArea.setSize("100%","100%");
+	  //inputTextArea.setText("entrada de código");
+	  //inputTextArea.setSize("100%","100%");
 	  consolaPanel.add(consolaTextArea);
-	  inputPanel.add(inputTextArea);
+	  //inputPanel.add(inputTextArea);
+	  
+	  String html = "<html>"+
+	  				"<head>"+
+	  				"<script language='javascript' type='text/javascript' src='jocprog/editarea/edit_area/edit_area_full.js'></script>"+
+	  				"<script language='javascript' type='text/javascript'>"+
+	  				"editAreaLoader.init({"+
+	  					"id : 'textarea_1'"+
+	  					",syntax: 'cpp',start_highlight: true"+
+	  					",min_width: 900 ,min_height: 200 ,allow_resize: 'no'"+
+	  					",allow_toggle: true"+
+	  					",toolbar: 'load,save,|,search,go_to_line,fullscreen,|,undo,redo,|,select_font,|,change_smooth_selection,highlight,reset_highlight,word_wrap,|,help'});"+
+	  				"</script>"+
+	  				"</head>"+
+	  				"<body>"+
+	  				"<form method='post'>"+
+	  				"<textarea id='textarea_1' style='height: 100%; width: 100%;' name='content'>"+
+	  				"</textarea>"+
+	  				"</body>"+
+	  				"</html>";
+
+	  HTMLPanel input = new HTMLPanel(html);
+	  input.setSize("100%","100%");
 		  
 	  //Assemble Split panels.
 	  correPanel.setSize("100%","100%");
@@ -370,14 +396,19 @@ public class JocProg implements EntryPoint {
 	  buttonsPanel.add(playButton);
 	  stopButton.setEnabled(false);
 	  buttonsPanel.add(stopButton);
+	  Image img = new Image();
+	  img.setUrl("http://localhost/circuito.jpg");
+	  buttonsPanel.add(img);
 	  //correPanel.setLeftWidget(new Label("CIRCUITO"));
 	  correPanel.setLeftWidget(buttonsPanel);
+	  //correPanel.setLeftWidget(img);
 	  correPanel.setRightWidget(consolaPanel);
 		  
 	  codiPanel.setSize("100%","100%");
 	  codiPanel.setSplitPosition("50%");
 	  codiPanel.setTopWidget(correPanel);
-	  codiPanel.setBottomWidget(inputPanel);
+	  //codiPanel.setBottomWidget(inputPanel);
+	  codiPanel.setBottomWidget(input);
 	  
 	  playButton.addClickHandler( 
 			  new ClickHandler() {
@@ -408,7 +439,7 @@ public class JocProg implements EntryPoint {
 	  circuitsDropBox.clear();
 	  circuitsDropBox.addItem("CIRCUITOS");
 	  //for (int i=0; i<circuitsList.length; i++) { circuitsDropBox.addItem(circuitsList[i]); }
-	  for (int i=0; i<circuitsList.size(); i++) { circuitsDropBox.addItem((String)circuitsList.get(i)); }
+	  //for (int i=0; i<circuitsList.size(); i++) { circuitsDropBox.addItem((String)circuitsList.get(i)); }
 	  champsDropBox.clear();
 	  champsDropBox.addItem("CAMPEONATOS");
 	  champsDropBox.setEnabled(false);
@@ -438,9 +469,11 @@ public class JocProg implements EntryPoint {
 	  circuitsDropBox.addChangeHandler(new ChangeHandler() {
 		  public void onChange(ChangeEvent event) {
 			  if(circuitsDropBox.getSelectedIndex()>0){
-				  requestRanking();
-				  champsDropBox.setEnabled(true);
-				  teamsDropBox.setEnabled(true);
+				  if(!USER.equals("")){
+					  requestRanking();
+					  champsDropBox.setEnabled(true);
+					  teamsDropBox.setEnabled(true);
+				  }
 			  }
 			  else{
 				  champsDropBox.setSelectedIndex(0);
@@ -591,13 +624,17 @@ public class JocProg implements EntryPoint {
 
 	  try {
 		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("getCircuito"), new RequestCallback() {
+		  URL.encodeComponent("getCircuits"), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
 		      public void onResponseReceived(Request request, Response response) {
 		    	  if (200 == response.getStatusCode()) {
-		    		  circuitsList = asArrayOfString(response.getText());
+		    		  JsArrayString circs = asJsArrayString(response.getText());
+		    		  circuitsList.clear();
+		    		  for(int i=0;i<circs.length();i++) { circuitsList.add(circs.get(i)); }
+		    		  for (int i=0; i<circuitsList.size(); i++) { circuitsDropBox.addItem((String)circuitsList.get(i)); }
+		    		  //circuitsList = asArrayOfString(response.getText());
 		          } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 		          }
@@ -619,13 +656,13 @@ public class JocProg implements EntryPoint {
 
 	  try {
 		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("getMyChampionship"), new RequestCallback() {
+		  URL.encodeComponent("getMyChampionships"), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
 		      public void onResponseReceived(Request request, Response response) {
 		    	  if (200 == response.getStatusCode()) {
-		    		  champsList = asArrayOfString(response.getText());
+		    		  //champsList = asArrayOfString(response.getText());
 		    		  champsDropBox.clear();
 		    		  champsDropBox.addItem("CAMPEONATOS");
 		    		  //for(int i=0;i<champsList.length;i++) { champsDropBox.addItem(champsList[i]); }
@@ -648,7 +685,7 @@ public class JocProg implements EntryPoint {
 			  }
 		      public void onResponseReceived(Request request, Response response) {
 		    	  if (200 == response.getStatusCode()) {
-		    		  teamsList = asArrayOfString(response.getText());
+		    		  //teamsList = asArrayOfString(response.getText());
 		    		  teamsDropBox.clear();
 		    		  teamsDropBox.addItem("EQUIPOS");
 		    		  //for(int i=0;i<teamsList.length;i++) { teamsDropBox.addItem(teamsList[i]); }
@@ -725,13 +762,10 @@ public class JocProg implements EntryPoint {
   
   
   
-  
-
   private void logout(){
 	  USER = ""; 
 	  
 	  multiPanel.remove(perfilVPanel);
-	  multiPanel.add(loginVPanel);
 	  
 	  regNickTextBox.setText("");  regNameTextBox.setText("");
 	  regSurname1TextBox.setText("");  regSurname2TextBox.setText("");
@@ -745,6 +779,8 @@ public class JocProg implements EntryPoint {
 	  regSchoolTextBox.setEnabled(true);  regEmailSchoolTextBox.setEnabled(true);
 	  regPassword.setEnabled(true); regConfirmPassword.setEnabled(true);
 	  regConfirmPassword.setVisible(true);
+	  createLoginPanel();
+	  multiPanel.add(loginVPanel);
 	  
 	  circuitsDropBox.setSelectedIndex(0);
 	  champsDropBox.clear();
@@ -899,20 +935,21 @@ public class JocProg implements EntryPoint {
    * Convert the string of JSON into JavaScript object.
    */  
   private final native RankingData asRankingData(String json) /*-{
-	return eval(json);
+	return eval('('+json+')');
   }-*/; 
   
   private final native UserData asUserData(String json) /*-{
-	return eval(json);
+	return eval('('+json+')');
   }-*/;
   
   private final native int asInt(String json) /*-{
-  	return eval(json);
+  	return eval('('+json+')');
   }-*/;
  
   //private final native String[] asArrayOfString(String json) /*-{
-  private final native ArrayList asArrayOfString(String json) /*-{
-  	return eval(json);
+  //private final native ArrayList asArrayOfString(String json) /*-{
+  private final native JsArrayString asJsArrayString(String json) /*-{
+  	return eval('('+json+')');
   }-*/;
   
   

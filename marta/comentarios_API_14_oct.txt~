@@ -65,6 +65,8 @@ changeUser(name, surname1, surname2, email_user, city,
   * 2 si "oldpassword" no es correcto (respecto al nick que esta logeado)
   * 0 si no hay problema: podemos cambiar los datos (incluyendo el password)
 
+!!!! si no ha cambiado el password el campo password sera null y por tanto cualquier valor que pueda tener oldpassword dara igual
+
 ==========================
 
 getMyTeams() returns strings[]
@@ -79,7 +81,7 @@ getMyChampionship() returns strings[]
 
 ==========================
 
-getCircuito()
+getCircuits()
   * No es necesario estar logeado.
   * Los 'name' de todos los circuitos que existen.
 

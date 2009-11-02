@@ -6,6 +6,8 @@ class UserData extends JavaScriptObject {
 	  // Overlay types always have protected, zero argument constructors.
 	  protected UserData() {}
 	  
+	  
+	  public final native String get(String s) /*-{ return this[s] ; }-*/;
 	  // JSNI methods to get user data.
 	  public final native String getNick() /*-{ return this.nick; }-*/;
 	  public final native String getName() /*-{ return this.name; }-*/;

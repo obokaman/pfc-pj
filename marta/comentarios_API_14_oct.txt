@@ -75,13 +75,13 @@ getMyTeams() returns strings[]
 
 ==========================
 
-getMyChampionship() returns strings[]
+getMyChampionships() returns strings[]
   * Nada si no estamos logeados.
   * Los 'name' de los championships a los que el usuario pertenece
 
 ==========================
 
-getCircuito()
+getCircuits()
   * No es necesario estar logeado.
   * Los 'name' de todos los circuitos que existen.
 
