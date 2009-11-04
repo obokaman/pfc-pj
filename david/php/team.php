@@ -59,20 +59,44 @@
 	
 	
 	/*La función devuelve una lista de nombres de equipos a los que pertenece el usuario que esta logueado*/
-	function getMyTeams(){
+	function getMyTeams($name_circuit, $name_champ){
 	/*Pre: - */			
 		if(isset($_SESSION["user"])){
 			
 			$nick_session = $_SESSION["user"]; 
 			global $connection;
-			$query =  	"Select t.name
-								from 	user u,
-											user_team ut,
-											team t
-								where u.nick = '$nick_session'
-								and  u.id_user = ut.id_user
-								and ut.pendent <> 0
-								and  ut.id_team = t.id_team";
+			
+			if ($name_champ == null){
+					$query =  	"select t.name
+										from 	user u,
+													user_team ut,
+													team t
+										where u.nick = '$nick_session'
+										and  u.id_user = i.id_user
+										and  i.pendent <> 0
+										and u.id_user = ut.id_user
+										and ut.id_team = t.id_team";
+			}else{
+					$query =  	"select t.name
+										from 	user u,
+													inscription i,
+													championship c,
+													circuit ci,
+													circuit_championship cc,
+													user_team ut,
+													team t
+										where u.nick = '$nick_session'
+										and  u.id_user = i.id_user
+										and  i.pendent <> 0
+										and  i.id_champ = c.id_champ
+										and c.name = '$name_champ'
+										and c.id_champ = cc.id_champ
+										and cc.id_circuit = ci.id_circuit
+										and ci.name = '$name_circuit''
+										and u.id_user = ut.id_user
+										and ut.id_team = t.id_team ";
+			}
+			
 			$result_query = mysql_query($query, $connection) or my_error('GET_MYTEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			
 			$arr = extract_rows($result_query);

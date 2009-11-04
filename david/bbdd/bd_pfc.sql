@@ -142,13 +142,21 @@ INSERT INTO user (nick, name, surname1, surname2, email_user,
 city, school, email_school, type_user, pass, activated) VALUES ('asd', 'Mari', 'Juana', 'Rica', 'mjuana@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'alumno', '123', 1);
 
 INSERT INTO user (nick, name, surname1, surname2, email_user,
-city, school, email_school, type_user, pass) VALUES ('qwe', 'Omer', 'Jimenez', 'algo', 'omer.jimenez@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'tutor', '123');
+city, school, email_school, type_user, pass, activated) VALUES ('qwe', 'Omer', 'Jimenez', 'algo', 'omer.jimenez@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'tutor', '123', 1);
 
 INSERT INTO team (name, id_founded) VALUES ('Escuderia1', 3);
 
-INSERT INTO user_team (id_user, id_team, pendent) VALUES (1,1,0);
+INSERT INTO team (name, id_founded) VALUES ('Escuderia2', 3);
 
-INSERT INTO user_team (id_user, id_team, pendent) VALUES (2,1,0) ;
+INSERT INTO team (name, id_founded) VALUES ('Escuderia3', 3);
+
+INSERT INTO user_team (id_user, id_team, pendent) VALUES (1,1,1);
+
+INSERT INTO user_team (id_user, id_team, pendent) VALUES (2,1,1);
+
+INSERT INTO user_team (id_user, id_team, pendent) VALUES (1,2,1);
+
+INSERT INTO user_team (id_user, id_team, pendent) VALUES (2,2,1);
 
 INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('Montmelo', 'MNT', null, 3, null);
 
@@ -166,6 +174,17 @@ INSERT INTO inscription (id_user, id_champ) VALUES (2, 1);
 
 INSERT INTO inscription (id_user, id_champ) VALUES (2, 2);
 
+INSERT INTO inscription (id_user, id_champ) VALUES (2, 3);
+
 INSERT INTO inscription (id_user, id_champ) VALUES (3, 1);
 
 INSERT INTO inscription (id_user, id_champ) VALUES (3, 2);
+
+INSERT INTO inscription (id_user, id_champ) VALUES (3, 3);
+
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 1);
+
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 2);
+
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 3);
+

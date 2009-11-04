@@ -12,31 +12,31 @@ if ($f == "login") {
 else if ($f == "newUser") {
 	send(
 		create_user(
-			clean("nick", "string"),
-			clean("name", "string"),
-			clean("surname1", "string"),
-			clean("surname2", "string"),
-			clean("email_user", "string"),
-			clean("city", "string"),
-			clean("school", "string"),
-			clean("email_school", "string"),
-			clean("password", "string")
+			clean("nick", "sql"),
+			clean("name", "sql"),
+			clean("surname1", "sql"),
+			clean("surname2", "sql"),
+			clean("email_user", "sql"),
+			clean("city", "sql"),
+			clean("school", "sql"),
+			clean("email_school", "sql"),
+			clean("password", "sql")
 		)
 	);
 }
 else if ($f == "changeUser") {	
 		send(
 			set_user(
-				clean("name", "string"),
-				clean("surname1", "string"),
-				clean("surname2", "string"),
-				clean("email_user", "string"),
-				clean("city", "string"),
-				clean("school", "string"),
-				clean("email_school", "string"),
-				clean("type_user", "string"),
-				clean("oldpassword", "string"),
-				clean("password", "string")
+				clean("name", "sql"),
+				clean("surname1", "sql"),
+				clean("surname2", "sql"),
+				clean("email_user", "sql"),
+				clean("city", "sql"),
+				clean("school", "sql"),
+				clean("email_school", "sql"),
+				clean("type_user", "sql"),
+				clean("oldpassword", "sql"),
+				clean("password", "sql")
 			)
 		);
 }

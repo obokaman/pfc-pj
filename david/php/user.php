@@ -93,8 +93,12 @@
 				
 				if ($pass_user_session -> pass != $old_pass){
 					return 2;	  /*La 'old_pass' no coincide con la contraseña del usuario de la sesion*/
-				}else{				
-						$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', city='$city', school='$school', email_school='$email_school', type_user='$type_user', pass='$pass' WHERE nick='$nick_session' and pass='$old_pass'";
+				}else{	
+						if($pass != null){
+								$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', city='$city', school='$school', email_school='$email_school', type_user='$type_user', pass='$pass' WHERE nick='$nick_session' and pass='$old_pass'";
+						}else{
+								$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', city='$city', school='$school', email_school='$email_school', type_user='$type_user' WHERE nick='$nick_session' and pass='$old_pass'";
+						}
 
 						$result_query = mysql_query($query, $connection) or my_error('SET_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 							

@@ -51,7 +51,6 @@
 		global $connection;
 		$query =  "SELECT * FROM championship WHERE name = '$name'";
 		$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPIONSHIP_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-
 				
 		return(extract_row($result_query));
 	}
@@ -59,7 +58,7 @@
 	
 	
 	    /*La función devuelve una lista de nombres de campeonatos a los que pertenece el usuario que esta logueado*/
-	function getMyChampionships(){
+	function getMyChampionships($name_circuit){
 	/*Pre: - */	
 		
 		if(isset($_SESSION["user"])){
@@ -69,11 +68,16 @@
 			$query =  	"select c.name
 								from 	user u,
 											inscription i,
-											championship c
+											championship c,
+											circuit ci,
+											circuit_championship cc
 								where u.nick = '$nick_session'
 								and  u.id_user = i.id_user
 								and  i.pendent <> 0
-								and  i.id_champ = c.id_champ";
+								and  i.id_champ = c.id_champ
+								and c.id_champ = cc.id_champ
+								and cc.id_circuit = ci.id_circuit
+								and ci.name = '$name_circuit''";
 			$result_query = mysql_query($query, $connection) or my_error('GET_MYTEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			
 			$arr = extract_rows($result_query);
