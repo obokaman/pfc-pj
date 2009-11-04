@@ -168,23 +168,25 @@ INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato1', '
 
 INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato2', '2010-01-31', 3);
 
-INSERT INTO inscription (id_user, id_champ) VALUES (1, 1);
+INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato3', '2010-01-31', 3);
 
-INSERT INTO inscription (id_user, id_champ) VALUES (2, 1);
+INSERT INTO inscription (id_user, id_champ, pendent) VALUES (1, 1, 1);
 
-INSERT INTO inscription (id_user, id_champ) VALUES (2, 2);
+INSERT INTO inscription (id_user, id_champ, pendent) VALUES (2, 1, 1);
 
-INSERT INTO inscription (id_user, id_champ) VALUES (2, 3);
+INSERT INTO inscription (id_user, id_champ, pendent) VALUES (2, 2, 1);
 
-INSERT INTO inscription (id_user, id_champ) VALUES (3, 1);
+INSERT INTO inscription (id_user, id_champ, pendent) VALUES (2, 3, 0);
 
-INSERT INTO inscription (id_user, id_champ) VALUES (3, 2);
+INSERT INTO inscription (id_user, id_champ, pendent) VALUES (3, 1, 1);
 
-INSERT INTO inscription (id_user, id_champ) VALUES (3, 3);
+INSERT INTO inscription (id_user, id_champ, pendent) VALUES (3, 2, 1);
+
+INSERT INTO inscription (id_user, id_champ, pendent) VALUES (3, 3, 1);
 
 INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 1);
 
-INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 2);
+/*INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 2);*/
 
 INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 3);
 
