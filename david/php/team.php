@@ -92,7 +92,7 @@
 										and c.name = '$name_champ'
 										and c.id_champ = cc.id_champ
 										and cc.id_circuit = ci.id_circuit
-										and ci.name = '$name_circuit''
+										and ci.name = '$name_circuit'
 										and u.id_user = ut.id_user
 										and ut.id_team = t.id_team ";
 			}

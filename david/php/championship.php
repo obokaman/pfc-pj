@@ -77,10 +77,14 @@
 								and  i.id_champ = c.id_champ
 								and c.id_champ = cc.id_champ
 								and cc.id_circuit = ci.id_circuit
-								and ci.name = '$name_circuit''";
+								and ci.name = '$name_circuit'";
 			$result_query = mysql_query($query, $connection) or my_error('GET_MYTEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			
-			$arr = extract_rows($result_query);
+			$arr = array();		
+		while($obj = mysql_fetch_object($result_query)) {
+			$arr[] = $obj;
+		}
+			//$arr = extract_rows($result_query);
 			$res = array();
 			foreach ($arr as $row) {
 				$res[] = $row->name;
