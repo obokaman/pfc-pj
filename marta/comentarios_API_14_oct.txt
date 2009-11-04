@@ -69,15 +69,16 @@ changeUser(name, surname1, surname2, email_user, city,
 
 ==========================
 
-getMyTeams() returns strings[]
+getMyTeams(circuit, championship) returns strings[]
   * Nada si no estamos logeados.
   * Los 'name' de los equipos a los que el usuario pertenece
+  * Championship puede ser vacio y entonces solo filtra teams con circuit 
 
 ==========================
 
-getMyChampionships() returns strings[]
+getMyChampionships(circuit) returns strings[]
   * Nada si no estamos logeados.
-  * Los 'name' de los championships a los que el usuario pertenece
+  * Los 'name' de los championships a los que el usuario pertenece y contienen el circuit
 
 ==========================
 
@@ -87,7 +88,7 @@ getCircuits()
 
 ==========================
 
-getRankings(circuito, team, championship, page, sizepage)
+getRankings(circuit, team, championship, page, sizepage)
   * no es necesario estar logeado
   * circuito, page o sizepage no es NULL, pero team, championship pueden ser NULL
   * si team o championship es NULL, no hay que filtrar por team o championship
@@ -118,4 +119,18 @@ activate(nick, activation_key) returns HTML
    - activated pasa a valer cierto
    - muestra pagina web con el texto "Has sido activado. En cinco segundos te
    redirigimos a la pagina web de inicio" (y que lo haga).
+
+===================================================
+
+newChampionship (name, date_limit, circuits[])
+  * Se crea un nuevo campeonato con nombre name, fecha limite date_limit y contiene los circuitos del array de strings circuits[]
+  * 0: creado con exito
+  * 1: nombre de campeonato ya existe
+  * 2: otros errores
+
+newTeam (name)
+  * Se crea un nuevo equipo al que solo pertenecera el usuario logeado de momento
+  * 0: creado con exito
+  * 1: ya existe equipo con ese nombre
+  * 2: otros errores
 

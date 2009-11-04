@@ -160,6 +160,24 @@ public class JocProg implements EntryPoint {
 					  saveChanges();
 				  }	
 			  });
+	  
+	  /*String html = 
+			"<script language='javascript' type='text/javascript' src='http://localhost/editarea/edit_area/edit_area_full.js'></script>"+
+			"<script language='javascript' type='text/javascript'>"+
+			"editAreaLoader.init({"+
+				"id : 'textarea_1'"+
+				",syntax: 'cpp',start_highlight: true"+
+				",min_width: 900 ,min_height: 200 ,allow_resize: 'no'"+
+				",allow_toggle: true"+
+				",toolbar: 'load,save,|,search,go_to_line,fullscreen,|,undo,redo,|,select_font,|,change_smooth_selection,highlight,reset_highlight,word_wrap,|,help'});"+
+			"</script>"+
+			"<form method='post'>"+
+			"<textarea id='textarea_1' style='height: 100%; width: 100%;' name='content'>"+
+			"</textarea>";
+
+HTMLPanel input = new HTMLPanel(html);
+input.setSize("100%","100%");*/
+
 	    
 	  //Assemble Main panel.
 	  //mainPanel.setAnimationEnabled(true);
@@ -167,6 +185,7 @@ public class JocProg implements EntryPoint {
 	  mainPanel.add(codiPanel,"Corre");
 	  mainPanel.add(rankingVPanel,"Ranking");
 	  mainPanel.add(new HTML("Help Tab"),"Help");
+	  //mainPanel.add(input,"Help");
 	  mainPanel.selectTab(0);
 		  
 	  mainPanel.setSize("100%","100%");
@@ -194,13 +213,18 @@ public class JocProg implements EntryPoint {
 			  }
 			  else if(tabIndex==2){
 				  circuitsDropBox.setSelectedIndex(0);  //y borrar tabla...dejar igual al cambiar entre pestañas??
-				  if(!USER.equals("")) refreshDropBoxs();  //INEFICIENTE!!y si añaden/borran campeonatos/equipos??
+				  champsDropBox.setSelectedIndex(0);
+				  teamsDropBox.setSelectedIndex(0);
+				  champsDropBox.setEnabled(false);
+				  teamsDropBox.setEnabled(false);
+				  //if(!USER.equals("")) refreshDropBoxs();  //INEFICIENTE!!y si añaden/borran campeonatos/equipos??
 			  }
 		  }
 	  });
 	  
 	  //Associate the Main panel with the HTML host page.
 	  RootPanel.get("uiJuego").add(mainPanel);
+	  //RootPanel.get("uiJuego").add(input);
   }
   
   
@@ -367,9 +391,9 @@ public class JocProg implements EntryPoint {
 	  consolaPanel.add(consolaTextArea);
 	  //inputPanel.add(inputTextArea);
 	  
-	  String html = "<html>"+
-	  				"<head>"+
-	  				"<script language='javascript' type='text/javascript' src='jocprog/editarea/edit_area/edit_area_full.js'></script>"+
+	  /*String html = //"<html>"+
+	  				//"<head>"+
+	  				"<script language='javascript' type='text/javascript' src='http://localhost/editarea/edit_area/edit_area_full.js'></script>"+
 	  				"<script language='javascript' type='text/javascript'>"+
 	  				"editAreaLoader.init({"+
 	  					"id : 'textarea_1'"+
@@ -378,16 +402,23 @@ public class JocProg implements EntryPoint {
 	  					",allow_toggle: true"+
 	  					",toolbar: 'load,save,|,search,go_to_line,fullscreen,|,undo,redo,|,select_font,|,change_smooth_selection,highlight,reset_highlight,word_wrap,|,help'});"+
 	  				"</script>"+
-	  				"</head>"+
-	  				"<body>"+
+	  				//"</head>"+
+	  				//"<body>"+
 	  				"<form method='post'>"+
 	  				"<textarea id='textarea_1' style='height: 100%; width: 100%;' name='content'>"+
-	  				"</textarea>"+
-	  				"</body>"+
-	  				"</html>";
+	  				/*	"body, html{"+
+	  						"margin: 0;" +
+	  						"padding: 0;"+
+	  						"height: 100%;"+
+	  						"border: none;"+
+	  						"overflow: hidden;"+
+	  				"}</textarea>";*/
+	  				/*"</textarea>";
+	  				//"</body>"+
+	  				//"</html>";
 
 	  HTMLPanel input = new HTMLPanel(html);
-	  input.setSize("100%","100%");
+	  input.setSize("100%","100%");*/
 		  
 	  //Assemble Split panels.
 	  correPanel.setSize("100%","100%");
@@ -401,14 +432,13 @@ public class JocProg implements EntryPoint {
 	  buttonsPanel.add(img);
 	  //correPanel.setLeftWidget(new Label("CIRCUITO"));
 	  correPanel.setLeftWidget(buttonsPanel);
-	  //correPanel.setLeftWidget(img);
 	  correPanel.setRightWidget(consolaPanel);
 		  
 	  codiPanel.setSize("100%","100%");
 	  codiPanel.setSplitPosition("50%");
 	  codiPanel.setTopWidget(correPanel);
-	  //codiPanel.setBottomWidget(inputPanel);
-	  codiPanel.setBottomWidget(input);
+	  codiPanel.setBottomWidget(inputPanel);
+	  //codiPanel.setBottomWidget(input);
 	  
 	  playButton.addClickHandler( 
 			  new ClickHandler() {
@@ -459,6 +489,8 @@ public class JocProg implements EntryPoint {
 	  rankPagesDropBox.clear();
 	  rankPagesDropBox.addItem("Página");
 	  rankPagesDropBox.setEnabled(false);
+	  //JSpinner size = new JSpinner();
+	  //sizePagesDropBox.clear();
 	  ranking2HPanel.add(rankPagesDropBox);
 	    
 	  rankingVPanel.setSize("100%","100%");
@@ -470,7 +502,8 @@ public class JocProg implements EntryPoint {
 		  public void onChange(ChangeEvent event) {
 			  if(circuitsDropBox.getSelectedIndex()>0){
 				  if(!USER.equals("")){
-					  requestRanking();
+					  //requestRanking();
+					  refreshDropBoxs();
 					  champsDropBox.setEnabled(true);
 					  teamsDropBox.setEnabled(true);
 				  }
@@ -653,21 +686,26 @@ public class JocProg implements EntryPoint {
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
 	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
-
+	  
+if (circuitsDropBox.getSelectedIndex() != 0){
+	String circ = circuitsDropBox.getValue(circuitsDropBox.getSelectedIndex());
 	  try {
 		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("getMyChampionships"), new RequestCallback() {
+		  URL.encodeComponent("getMyChampionships")+"&"+URL.encodeComponent("circuit")+"="+
+		  URL.encodeComponent(circ), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
 		      public void onResponseReceived(Request request, Response response) {
 		    	  if (200 == response.getStatusCode()) {
-		    		  //champsList = asArrayOfString(response.getText());
+		    		  Window.alert(response.getText());
+		    		  JsArrayString res = asJsArrayString(response.getText());
+		    		  for(int i=0;i<res.length();i++) { champsList.add(res.get(i)); }
 		    		  champsDropBox.clear();
 		    		  champsDropBox.addItem("CAMPEONATOS");
 		    		  //for(int i=0;i<champsList.length;i++) { champsDropBox.addItem(champsList[i]); }
 		    		  for(int i=0;i<champsList.size();i++) { champsDropBox.addItem((String)champsList.get(i)); }
-		    		  champsDropBox.setEnabled(false);
+		    		  //champsDropBox.setEnabled(false);
 		          } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 		          }
@@ -676,21 +714,29 @@ public class JocProg implements EntryPoint {
 	  } catch (RequestException e) {
 		  Window.alert("Couldn't retrieve JSON");
 	  }
-	  
+ 
+	  String champ = "";
+	  if(champsDropBox.getSelectedIndex() != 0) champ = champsDropBox.getValue(champsDropBox.getSelectedIndex());
+  
 	  try {
 		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("getMyTeams"), new RequestCallback() {
+		  URL.encodeComponent("getMyTeams")+"&"+URL.encodeComponent("circuit")+"="+
+		  URL.encodeComponent(circ)+"&"+URL.encodeComponent("championship")+"="+
+		  URL.encodeComponent(champ), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
 		      public void onResponseReceived(Request request, Response response) {
 		    	  if (200 == response.getStatusCode()) {
+		    		  Window.alert(response.getText());
+		    		  JsArrayString res = asJsArrayString(response.getText());
+		    		  for(int i=0;i<res.length();i++) { teamsList.add(res.get(i)); }
 		    		  //teamsList = asArrayOfString(response.getText());
 		    		  teamsDropBox.clear();
 		    		  teamsDropBox.addItem("EQUIPOS");
 		    		  //for(int i=0;i<teamsList.length;i++) { teamsDropBox.addItem(teamsList[i]); }
 		    		  for(int i=0;i<teamsList.size();i++) { teamsDropBox.addItem((String)teamsList.get(i)); }
-		    		  teamsDropBox.setEnabled(false);
+		    		  //teamsDropBox.setEnabled(false);
 		          } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 		          }
@@ -699,6 +745,7 @@ public class JocProg implements EntryPoint {
 	  } catch (RequestException e) {
 		  Window.alert("Couldn't retrieve JSON");
 	  }
+}
   }
   
   private void requestRanking(){
@@ -728,7 +775,7 @@ public class JocProg implements EntryPoint {
 
 		  try {
 			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-					  URL.encodeComponent("getRankings")+"&"+URL.encodeComponent("circuito")+"="+
+					  URL.encodeComponent("getRankings")+"&"+URL.encodeComponent("circuit")+"="+
 					  URL.encodeComponent(circuit)+"&"+URL.encodeComponent("team")+"="+
 					  URL.encodeComponent(team)+"&"+URL.encodeComponent("championship")+"="+
 					  URL.encodeComponent(champ)+"&"+URL.encodeComponent("page")+"="+

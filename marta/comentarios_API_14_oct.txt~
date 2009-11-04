@@ -69,13 +69,14 @@ changeUser(name, surname1, surname2, email_user, city,
 
 ==========================
 
-getMyTeams() returns strings[]
+getMyTeams(circuit, championship) returns strings[]
   * Nada si no estamos logeados.
   * Los 'name' de los equipos a los que el usuario pertenece
+  * Championship puede ser vacio y entonces solo filtra teams con circuit 
 
 ==========================
 
-getMyChampionship() returns strings[]
+getMyChampionships(circuit) returns strings[]
   * Nada si no estamos logeados.
   * Los 'name' de los championships a los que el usuario pertenece
 
@@ -87,7 +88,7 @@ getCircuits()
 
 ==========================
 
-getRankings(circuito, team, championship, page, sizepage)
+getRankings(circuit, team, championship, page, sizepage)
   * no es necesario estar logeado
   * circuito, page o sizepage no es NULL, pero team, championship pueden ser NULL
   * si team o championship es NULL, no hay que filtrar por team o championship
