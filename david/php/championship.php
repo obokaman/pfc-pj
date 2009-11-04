@@ -57,7 +57,7 @@
 	/*Post: La función devuelve un array con el objeto campeonato seleccionado por su nombre*/
 	
 	
-	    /*La función devuelve una lista de nombres de campeonatos a los que pertenece el usuario que esta logueado*/
+	    /*La función devuelve una lista de nombres de campeonatos a los que pertenece el usuario que esta logueado, y el circuito */
 	function getMyChampionships($name_circuit){
 	/*Pre: - */	
 		

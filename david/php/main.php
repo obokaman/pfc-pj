@@ -49,12 +49,17 @@ else if ($f == "getUser") {
 }
 else if ($f == "getMyTeams") {	
 		send(
-			getMyTeams()
+			getMyTeams(
+				clean("circuit", "sql"),
+				clean("championship", "sql")			
+			)
 		);
 }
 else if ($f == "getMyChampionships") {	
 		send(
-			getMyChampionships()
+			getMyChampionships(
+				clean("circuit", "sql")			
+			)
 		);
 }
 else if ($f == "getCircuits") {	
