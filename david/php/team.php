@@ -72,8 +72,6 @@
 													user_team ut,
 													team t
 										where u.nick = '$nick_session'
-										and  u.id_user = i.id_user
-										and  i.pendent <> 0
 										and u.id_user = ut.id_user
 										and ut.id_team = t.id_team";
 			}else{

@@ -9,7 +9,7 @@
 						$var = (int) $var;
 					break;
 					case 'string': // trim string
-						$var = trim ( $var );						
+						$var = trim ( $var );	
 					break;
 					case 'sql': // trim string
 						$var = trim ( $var );
@@ -20,6 +20,7 @@
 			return $var;	
 		}else{
 			my_error('ERROR: A variable is not activated to clean', 1);
+			return null;
 		}
 	}
 	
