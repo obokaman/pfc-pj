@@ -97,15 +97,24 @@ else if ($f == "getRankings") {
 			}
 		}
 }*/
-else if ($f == "newTeam") {
+/*else if ($f == "newTeam") {
 		$name = clean("name", "string");			
 		if (exist_team_name($name)){
 			return 1;
 		}else{
-			if(create_team($name, 2))	return 0;// <-- corregir identificador del fundador
+			if(isset($_SESSION['user'])){
+				if(create_team($name, 2))	{			
+					
+					
+					
+					
+					return 0;
+				}
+				else return 2;				
+			}// el usuario no esta logueado
 			else return 2;
 		}; 
-}
+}*/
 //else escribe_log("ADFadskfdashfldsjfdsali");*/
 close_connection($connection);
 	
