@@ -8,12 +8,10 @@
 		$key_act = make_activationkey();
 	    $query = "INSERT INTO user ( nick, name, surname1, surname2, email_user, city, school, email_school, type_user, pass, activation_key)
 						VALUES ('$nick',' $name',' $surname1',' $surname2',' $email_user',' $city',' $school',' $email_school','alumno','$pass', '$key_ac')";
-						
 		if (!mysql_query($query, $connection)) {
 			if (exist_user_nick($nick)) return 1;
 			else{			
 						my_error('CREATE_USER-> '.mysql_errno($connection) . ": " . mysql_error($connection), 1);
-							
 						return 2;
 					}
 		}else	return 0;

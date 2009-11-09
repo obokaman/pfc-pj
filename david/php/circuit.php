@@ -10,10 +10,8 @@
 						
 		if (!mysql_query($query, $connection)) {
 			 my_error('CREATE_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
 			return false;
 		}else{	
-				
 			return true;
 		}
 	}
@@ -48,7 +46,6 @@
 		$query =  "SELECT * FROM circuit WHERE id_circuit = '$id'";
 		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUIT_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-				
 		return(extract_row($result_query));
 	}
 	/*Post: La función nos devuelve una array el objeto circuito seleccionado a partir de su identificador de circuito */
@@ -66,21 +63,7 @@
 		return(extract_row($result_query));
 	}
 	/*Post: La función nos devuelve una array el objeto circuito seleccionado a partir de su nombre */
-	
-	
-	/*La función nos devuelve la información del circuito a partir del nombre corto del circuito*/
-	function get_circuit_short_name($short_name){
-	/*Pre: - */
-		
-		global $connection;
-		
-		$query =  "SELECT * FROM circuit WHERE short_name = '$short_name'";
-		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUIT_SHORT_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-		return(extract_row($result_query));
-	}
-	/*Post: La función nos devuelve una array el objeto circuito seleccionado a partir de su nombre corto */
-	
 	
 	/*Esta función modifica los campos almacenados de un circuito en la BBDD*/
 	function set_circuit($id, $name, $short_name, $level, $n_laps, $time){
@@ -92,10 +75,8 @@
 
 		if (!mysql_query($query, $connection)) {
 			 my_error('SET_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
 			return false;
 		}else{
-				
 			return true;
 		}
 	}

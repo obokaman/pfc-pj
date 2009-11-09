@@ -5,15 +5,12 @@
 	/*Pre: - */	
 		global $connection;
 		
-	    $query = "INSERT INTO user_team ( id_user, id_team, pendent)
-						VALUES ('$id_user',' $id_team', '$pendent')";
-						
+	    $query = "INSERT INTO user_team ( id_user, id_team, pendent) VALUES ('$id_user',' $id_team', '$pendent')";
+
 		if (!mysql_query($query, $connection)) {
 			my_error('ADD_USER_TEAM->  '.mysql_errno($connection) . ": " . mysql_error($connection), 1);
-				
 			return false;
 		}else{	
-				
 			return true;
 		}
 	}
@@ -27,8 +24,7 @@
 		$query =  "SELECT * FROM user_team";
 		$result_query = mysql_query($query, $connection) or my_error('GET_USERS_TEAMS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-			
-		return(extract_row($result_query)); 		
+		return(extract_rows($result_query)); 		
 	}
 	/*Post: La función nos devuelve una array de objetos de todos los usuarios junto con los equipos a los que pertenecen y el estado que estan almacenados en la base de datos*/
 	
@@ -39,9 +35,8 @@
 		global $connection;
 		$query =  "SELECT id_team FROM user_team WHERE id_user = '$id'";
 		$result_query = mysql_query($query, $connection) or  my_error('GET_TEAMS_OF_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-		
-		return(extract_row($result_query)); 
+
+		return(extract_rows($result_query)); 
 		
 	}
 	/*Post: Retorna una array de los identificadores de equipo a los que pertence el usuario de la entrada*/
@@ -54,8 +49,7 @@
 		$query =  "SELECT id_user FROM user_team WHERE id_team = '$id'";
 		$result_query = mysql_query($query, $connection) or  my_error('GET_USERS_OF_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		
-		return(extract_row($result_query)); 		
+		return(extract_rows($result_query)); 		
 	}
 	/*Post: Retorna una array de identificadores de usuarios que pertenecen al identificador de equipo de la entrada en formato JSON*/
 	
@@ -69,10 +63,8 @@
 
 		if (!mysql_query($query, $connection)) {
 			 my_error('GET_STATUS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
 			return null;
 		}else{
-				
 			return $query;
 		}
 	}
@@ -88,10 +80,8 @@
 		
 		if (!mysql_query($query, $connection)) {
 			 my_error('SET_USER_TEAM_STATUS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
 			return false;
 		}else{
-				
 			return true;
 		}	
 	}
@@ -122,7 +112,6 @@
 		
 		if (count(extract_row($result_query))==0)	return false;
 		else return true;
-		
 	}
 	/*Post: Devuelve cierto en caso de que el identificador del usuario y del equipo existe, en caso contrario devuelve falso*/
 ?>

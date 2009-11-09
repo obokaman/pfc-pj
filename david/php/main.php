@@ -73,8 +73,40 @@ else if ($f == "activated") {
 			clean("activation_key", "string")
 		);
 }
-	//else escribe_log("ADFadskfdashfldsjfdsali");*/
+else if ($f == "getRankings") {	
+		send(
+			getRankings(
+				clean("circuit", "string"),
+				clean("team", "string"),
+				clean("championship", "string"),
+				clean("page", "string"),
+				clean("sizepage", "string")
+			)
+		);
+}
+/*else if ($f == "newChampionship") {	
+		$name = clean("name", "string");
+		$date_limit = clean("date_limit", "string");
+		$circuits = clean("circuits", "array");			
+		if(exist_championship_name($name)){
+			return 1;
+		}else{		
+			create_championship($name, $data_limit);
+			for($i = 0; $i < count($circuits); $i++){
+				
+			}
+		}
+}*/
+else if ($f == "newTeam") {
+		$name = clean("name", "string");			
+		if (exist_team_name($name)){
+			return 1;
+		}else{
+			if(create_team($name, 2))	return 0;// <-- corregir identificador del fundador
+			else return 2;
+		}; 
+}
+//else escribe_log("ADFadskfdashfldsjfdsali");*/
 close_connection($connection);
-	
 	
 ?>

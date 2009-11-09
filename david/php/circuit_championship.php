@@ -5,15 +5,12 @@
 	/*Pre: - */	
 		global $connection;
 		
-	    $query = "INSERT INTO circuit_championship ( id_circuit, id_champ)
-						VALUES ('$id_circuit',' $id_champ')";
-						
+	    $query = "INSERT INTO circuit_championship ( id_circuit, id_champ)	VALUES ('$id_circuit',' $id_champ')";
+
 		if (!mysql_query($query, $connection)) {
 			my_error('ADD_CIRCUIT_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
 			return false;
 		}else{	
-				
 			return true;
 		}
 	}
@@ -27,8 +24,7 @@
 		$query =  "SELECT * FROM circuit_championship";
 		$result_query = mysql_query($query, $connection) or my_error('GET_CIRCUIT_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-				
-		return(extract_row($result_query));		
+		return(extract_rows($result_query));		
 	}
 	/*Post: La función nos devuelve una array de todos los circuitos junto con los campeonatos a los que pertenecen y el estado que estan almacenados en la base de datos*/
 
@@ -40,8 +36,7 @@
 		$query =  "SELECT id_champ FROM circuit_championship WHERE id_circuit = '$id'";
 		$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPS_OF_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-				
-		return(extract_row($result_query));
+		return(extract_rows($result_query));
 	}
 	/*Post: Retorna una lista de los identificadores de campeonatos a los que pertenece el circuito de la entrada en formato JSON*/
 	
@@ -53,8 +48,7 @@
 		$query =  "SELECT id_circuit FROM circuit_championship WHERE id_champ = '$id'";
 		$result_query = mysql_query($query, $connection) or my_error('GET_CIRCUITS_OF_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-				
-		return(extract_row($result_query));
+		return(extract_rows($result_query));
 	}
 	/*Post: Retorna una array con los de identificadores de circuitos que pertenecen al identificador de campeonato de la entrada*/
 	
@@ -67,8 +61,6 @@
 	    $query = "DELETE FROM circuit_championship WHERE id_circuit = '$id_circuit' and id_champ='$id_champ'";
 
 		$result_query = mysql_query($query, $connection) or my_error('DELETE_CIRCUIT_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-				
 	}
 	/*Post: La función elimina la instancia en la que aparece relacionado el circuito y el campeonato de la entrada mediante sus identificadores*/
 	

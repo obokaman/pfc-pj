@@ -6,13 +6,11 @@
 		global $connection;
 		
 	    $query = "INSERT INTO championship (name, data_limit, id_founded) VALUES ('$name', '$data_limit', '$id_founded')";
-						
+
 		if (!mysql_query($query, $connection)) {
 			my_error('CREATE_CHAMPIONSHIP-> '.mysql_errno($connection) . ": " . mysql_error($connection), 1);
-				
 			return false;
 		}else{	
-				
 			return true;
 		}
 	}
@@ -26,8 +24,7 @@
 		$query =  "SELECT * FROM championship";
 		$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPIONSHIPS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-				
-		return(extract_row($result_query));		
+		return(extract_rows($result_query));		
 	}
 	/*Post: La función nos devuelve la array con todos los objetos campeonato que estan almacenados en la base de datos*/
 
@@ -39,7 +36,6 @@
 		$query =  "SELECT * FROM championship WHERE id_champ = '$id'";
 		$result_query = mysql_query($query, $connection) or die(mysql_error());
 		
-				
 		return(extract_row($result_query));
 	}
 	/*Post: La función devuelve un array con el objeto campeonato seleccionado por su identificador*/
@@ -99,10 +95,8 @@
 
 		if (!mysql_query($query, $connection)) {
 			my_error('SET_CHAMPIONSHIP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
 			return false;
 		}else{
-				
 			return true;
 		}
 	}
@@ -117,8 +111,6 @@
 	    $query = "DELETE FROM championship WHERE id_champ = '$id'";
 
 		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-				
 	}
 	/*Post: La función borra el circuito de la BBDD*/
 	
@@ -136,5 +128,18 @@
 		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el identificador del campeonato existe, en caso contrario devuelve falso*/
+	
+	/*La función comprueba si el nombre del campeonato existe*/
+	function exist_championship_name($name){	
+	/*Pre: - */
+		global $connection;
+		$query =  "SELECT * FROM championship WHERE name = '$name'";
+	
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_CHAMPIONSHIP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+		
+		if (count(extract_row($result_query))==0)	return false;
+		else return true;
+	}
+	/*Post: Devuelve cierto en caso de que el nombre del campeonato existe, en caso contrario devuelve falso*/
 
 ?>

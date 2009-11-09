@@ -8,11 +8,9 @@
 	    $query = "INSERT INTO team (name, id_founded) VALUES ('$name', '$id_founded')";
 						
 		if (!mysql_query($query, $connection)) {
-			my_error('CREATE_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
+			my_error('CREATE_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);				
 			return false;
-		}else{	
-				
+		}else{					
 			return true;
 		}
 	}
@@ -26,8 +24,7 @@
 		$query =  "SELECT * FROM team";
 		$result_query = mysql_query($query, $connection) or my_error('GET_TEAMS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-				
-		return(extract_row($result_query));	
+		return(extract_rows($result_query));	
 	}
 	/*Post: La función nos devuelve una array de objetos de todos los equipos que estan almacenados en la base de datos*/
 
@@ -39,7 +36,6 @@
 		$query =  "SELECT * FROM team WHERE id_team = '$id'";
 		$result_query = mysql_query($query, $connection) or my_error('GET_TEAM_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-				
 		return(extract_row($result_query));
 	}
 	/*Post: Retorna una array con el objeto equipo que contienen la información del equipo*/
@@ -52,7 +48,6 @@
 		$query =  "SELECT * FROM team WHERE name = '$name'";
 		$result_query = mysql_query($query, $connection) or my_error('GET_TEAM_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-				
 		return(extract_row($result_query));
 	}
 	/*Post: Retorna la información del equipo*/
@@ -118,10 +113,8 @@
 
 		if (!mysql_query($query, $connection)) {
 			my_error('SET_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
 			return false;
 		}else{
-				
 			return true;
 		}
 	}
@@ -136,8 +129,6 @@
 	    $query = "DELETE FROM team WHERE id_team = '$id'";
 
 		$result_query = mysql_query($query, $connection) or my_error('DELETE_TEAM_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-				
 	}
 	/*Post: La función borra el circuito de la BBDD*/
 	
@@ -155,5 +146,18 @@
 		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el identificador del equipo existe, en caso contrario devuelve falso*/
+	
+	/*La función comprueba si el nombre del equipo existe*/
+	function exist_team_name($name){	
+	/*Pre: - */
+		global $connection;
+		$query =  "SELECT t.* FROM team t WHERE t.name = '$name'";
+	
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_TEAM_NAME -> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+
+		if (count(extract_row($result_query))==0)	return false;
+		else return true;
+	}
+	/*Post: Devuelve cierto en caso de que el nombre del equipo existe, en caso contrario devuelve falso*/
 
 ?>

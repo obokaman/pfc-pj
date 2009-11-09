@@ -11,16 +11,16 @@
 	
 		if (!mysql_query($query, $connection)) {
 			my_error('CREATE_GAME_WITH_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
 			return false;
 		}else{	
-				
 			return true;
 		}
 	}
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion de la nueva partida, en caso contrario devuelve falso*/
 	
-	/*La función crea una partida que nos relaciona, mediante identificadores, el usuario que la realizay  el circuito sin tener en cuenta  el campeonato al que participa, finalmente se nos indica el tiempo que el usuario ha estado*/
+	/*La función crea una partida que nos relaciona, mediante identificadores, el usuario que la realizay  el circuito sin tener en cuenta el campeonato al que participa, finalmente se nos indica el tiempo que el usuario ha estado*/
+	
+	
 	function create_game($id_user, $id_circuit, $time){
 	/*Pre: Los identificadores de la entrada de la función existen */	
 		global $connection;
@@ -29,10 +29,8 @@
 	
 		if (!mysql_query($query, $connection)) {
 			my_error('CREATE_GAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
 			return false;
 		}else{	
-				
 			return true;
 		}
 	}
@@ -45,9 +43,8 @@
 		global $connection;
 		$query =  "SELECT * FROM game";
 		$result_query = mysql_query($query, $connection) or my_error('GET_GAMES-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-
-				
-		return(extract_row($result_query));		
+		
+		return(extract_rows($result_query));		
 	}
 	/*Post: La función nos devuelve una array de todos los objetos partida realizadas que estan almacenados en la base de datos*/
 	
@@ -59,7 +56,6 @@
 		$query =  "SELECT * FROM game WHERE id_game = '$id'";
 		$result_query = mysql_query($query, $connection) or my_error('GET_GAME_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-				
 		return(extract_row($result_query));
 	}
 	/*Post: Retorna la información de una partida a partir del identificador de esta */
@@ -74,10 +70,8 @@
 		
 		if (!mysql_query($query, $connection)) {
 			my_error('SET_TIME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
 			return false;
 		}else{
-				
 			return true;
 		}	
 	}
@@ -92,8 +86,6 @@
 	    $query = "DELETE FROM game WHERE id_game = '$id_game'";
 
 		$result_query = mysql_query($query, $connection) or my_error('DELETE_GAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-				
 	}
 	/*Post: La función elimina la partida*/
 	
@@ -110,4 +102,63 @@
 		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el identificador de la partida exista, en caso contrario devuelve falso*/
+
+	
+	function getRankings($circuit, $team, $championship, $page,  $sizepage){
+		
+			//Inicializamos los valores
+			global $connection;			
+			
+			class obj{
+					public $page = 0;
+					public $numpages = 0;
+					public $data = array();
+			}
+			$max = 50;	
+			
+			$result = new obj;
+			
+			if ($sizepage!=0)	$max=$sizepage;
+			
+			//Creamos la query, filtrando los parametros de la entrada
+			$query = "select u.nick, g.time_result from 	circuit c, game g,";			
+			if ($championship!=null) 	$query = $query. "championship ch,";			
+			if ($team!=null) 	$query = $query." team t,	user_team ut,";			
+			$query = $query."user u  where u.id_user = g.id_user	and 	c.name = '$circuit' and 	c.id_circuit = g.id_circuit";			
+			if ($team!=null) 	$query = $query." and  t.name = '$team'	and 	t.id_team = ut.id_team and 	ut.id_user = u.id_user";			
+			if ($championship!=null) 	$query = $query. " and 	ch.name = '$championship' and 	ch.id_champ = g.id_champ";			
+			$query = $query." order by g.time_result" ;			
+			
+			$result_query = mysql_query($query, $connection) or my_error('GET_RANKINGS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+
+			$games = extract_rows($result_query);		
+			
+			if (page == 0){
+					//El usuario esta logueado
+					if (isset($_SESSION['user'])){	
+							$pos = 0;
+							$b = true;
+							while (($pos < count($games))&&($b)){						
+								if ($games[$pos]->nick  == $_SESSION['user'])	$b = false;									
+							}						
+							if ($pos < $max)	$result->page = 1;
+							else {$result->page = $pos / $max;}						
+							$result->data =  array_slice($games, (($result->page-1)*$max) + 1, $max);
+						
+					//El usuario no esta logueado, devolvemos la primera pagina
+					}else{
+							$result->data =  array_slice($games, 1, $max);
+							$result->page = $page;
+						
+					}
+				
+			}else{//Devolvemos la pagina en el caso de que page sea diferente de 0
+					$result->data =  array_slice($games, (($page-1)*$max) + 1, $max);
+					$result->page = $page;
+			}
+			
+			$result->numpages = count($games);
+			
+			return $result;		
+	}
 ?>
