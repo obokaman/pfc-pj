@@ -17,6 +17,20 @@
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion del nuevo campeonato, en caso contrario devuelve falso*/
 	
 	
+	/*La funcion nos retorna el identificador del campeonato a partir del nombre*/
+	function get_id_championship($name){
+	/*Pre: - */
+		global $connection;
+		
+		$query = "SELECT c.id_champ FROM championship c WHERE c.name = '$name'";
+	
+		$result_query = mysql_query($query, $connection) or my_error('GET_ID_CHAMPIONSHIP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+		
+		return extract_row($result_query)->id_champ;		
+	}
+	/*Post: Retorna un entero que representa el identificador del campeonato*/
+	
+	
 	/*La función nos devuelve la lista de todos los campeonatos que estan almacenados en la BBDD*/
 	function get_championships(){
 	/*Pre: - */	
@@ -132,13 +146,7 @@
 	/*La función comprueba si el nombre del campeonato existe*/
 	function exist_championship_name($name){	
 	/*Pre: - */
-		global $connection;
-		$query =  "SELECT * FROM championship WHERE name = '$name'";
-	
-		$result_query = mysql_query($query, $connection) or my_error('EXIST_CHAMPIONSHIP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-		if (count(extract_row($result_query))==0)	return false;
-		else return true;
+		return exist_championship( get_id_championship($name) );
 	}
 	/*Post: Devuelve cierto en caso de que el nombre del campeonato existe, en caso contrario devuelve falso*/
 

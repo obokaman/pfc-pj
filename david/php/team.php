@@ -17,6 +17,20 @@
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion del nuevo equipo, en caso contrario devuelve falso*/
 	
 	
+	/*La funcion nos retorna el identificador del equipo a partir del nombre*/
+	function get_id_team($name){
+	/*Pre: - */
+		global $connection;
+		
+		$query = "SELECT c.id_team FROM team t WHERE t.name = '$name'";
+	
+		$result_query = mysql_query($query, $connection) or my_error('GET_ID_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+		
+		return extract_row($result_query)->id_team;		
+	}
+	/*Post: Retorna un entero que representa el identificador del equipo*/
+	
+	
 	/*La función nos devuelve la lista de todos los equipos que estan almacenados en la BBDD*/
 	function get_teams(){
 	/*Pre: - */	
@@ -150,13 +164,7 @@
 	/*La función comprueba si el nombre del equipo existe*/
 	function exist_team_name($name){	
 	/*Pre: - */
-		global $connection;
-		$query =  "SELECT t.* FROM team t WHERE t.name = '$name'";
-	
-		$result_query = mysql_query($query, $connection) or my_error('EXIST_TEAM_NAME -> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-
-		if (count(extract_row($result_query))==0)	return false;
-		else return true;
+		return exist_team( get_id_team($name) );
 	}
 	/*Post: Devuelve cierto en caso de que el nombre del equipo existe, en caso contrario devuelve falso*/
 

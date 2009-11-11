@@ -22,6 +22,19 @@
 				- Un 1, en caso de que el nick del nuevo usuario ya exista
 				- Un 2 si se ha producido algún error en el momento de insertar en nuevo usuario */
 	
+	/*La funcion nos retorna el identificador del usuario a partir del nick*/
+	function get_id_user($nick){
+	/*Pre: - */
+		global $connection;
+		
+		$query = "SELECT u.id_user FROM user u WHERE u.nick = '$nick'";
+	
+		$result_query = mysql_query($query, $connection) or my_error('GET_ID_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+		
+		return extract_row($result_query)->id_user;		
+	}
+	/*Post: Retorna un entero que representa el identificador del usuario*/
+	
 	
 	/*La función nos devuelve la lista de todos los usuarios que estan almacenados en la BBDD*/
 	function get_users(){
@@ -140,12 +153,7 @@
 	/*La función comprueba si el nick del usuario existe*/
 	function exist_user_nick($nick){	
 	/*Pre: - */
-		global $connection;
-		$query =  "SELECT * FROM user WHERE nick = '$nick'";
-		$result_query = mysql_query($query, $connection) or my_error('EXIST_USER_NICK-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-		if (count(extract_row($result_query))==0)	return false;
-		else return true;
+		return exist_user_id( get_id_user($nick) );
 	}
 	/*Post: Devuelve cierto en caso de que el nick del usuario existe, en caso contrario devuelve falso*/
 	

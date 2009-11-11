@@ -110,7 +110,7 @@ CREATE TABLE game (
   id_user	integer  NOT NULL,
   id_circuit 	integer  NOT NULL,
   id_champ	integer	 DEFAULT NULL,
-  time_result	time	 DEFAULT NULL,  
+  time_result	integer	 DEFAULT NULL,  
 
   PRIMARY KEY (id_game),
 
@@ -186,7 +186,34 @@ INSERT INTO inscription (id_user, id_champ, pendent) VALUES (3, 3, 1);
 
 INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 1);
 
-/*INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 2);*/
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (2, 2);
 
 INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 3);
 
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (2, 1);
+
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (3, 1);
+
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (2, 3);
+
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (3, 3);
+
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (3, 2);
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 1, null, 75320);
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 1, null, 75320);
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 1, 1, 75320);
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 2, null, 75320);
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 2, 2, 75320);
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 3, 1, 75320);
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 3, 2, 75320);
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 3, 2, 75320);
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 2, 3, 75320);

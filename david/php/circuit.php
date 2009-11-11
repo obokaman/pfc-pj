@@ -18,6 +18,20 @@
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion del nuevo circuito, en caso contrario devuelve falso*/
 	
 	
+	/*La funcion nos retorna el identificador del circuito a partir del nombre*/
+	function get_id_circuit($name){
+	/*Pre: - */
+		global $connection;
+		
+		$query = "SELECT c.id_circuit FROM circuit c WHERE c.name = '$name'";
+	
+		$result_query = mysql_query($query, $connection) or my_error('GET_ID_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+		
+		return extract_row($result_query)->id_circuit;		
+	}
+	/*Post: Retorna un entero que representa el identificador del circuito*/
+	
+	
 	/*La función nos devuelve la lista de todos los circuitos que estan almacenados en la BBDD*/
 	function get_circuits(){
 	/*Pre: - */	

@@ -133,7 +133,9 @@
 
 			$games = extract_rows($result_query);		
 			
-			if (page == 0){
+			echo $games[0]->nick;
+			
+			if ($page == 0){
 					//El usuario esta logueado
 					if (isset($_SESSION['user'])){	
 							$pos = 0;
@@ -141,23 +143,23 @@
 							while (($pos < count($games))&&($b)){						
 								if ($games[$pos]->nick  == $_SESSION['user'])	$b = false;									
 							}						
-							if ($pos < $max)	$result->page = 1;
-							else {$result->page = $pos / $max;}						
+							$result->page =intval(($pos-1) / $max)+1;
 							$result->data =  array_slice($games, (($result->page-1)*$max) + 1, $max);
 						
 					//El usuario no esta logueado, devolvemos la primera pagina
 					}else{
-							$result->data =  array_slice($games, 1, $max);
-							$result->page = $page;
-						
+							$result->data =  array_slice($games, 0, $max);
+							$result->page = 1;						
 					}
 				
 			}else{//Devolvemos la pagina en el caso de que page sea diferente de 0
 					$result->data =  array_slice($games, (($page-1)*$max) + 1, $max);
-					$result->page = $page;
+					$result->page = intval($page);
 			}
 			
-			$result->numpages = count($games);
+			$numgames = count($games);
+			if ($numgames == 0) $result->numpages = 0;
+			else $result->numpages = intval(  ($numgames-1)/$max  ) +1;
 			
 			return $result;		
 	}
