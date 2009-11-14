@@ -4,7 +4,7 @@ session_name("PFC");
 session_start();
 $connection = open_connection();
 
-$f = clean("function", "string"); //--------------> Pasar el texto a minusculas ?????
+/*$f = clean("function", "string"); //--------------> Pasar el texto a minusculas ?????
 
 if ($f == "login") {
 	send( login( clean("nick", "string"),	clean("password", "string") ) );
@@ -69,6 +69,11 @@ else if ($f == "activated") {
 		);
 }
 	//else escribe_log("ADFadskfdashfldsjfdsali");*/
+
+
+$name='Circuito20';
+echo exist_team($name);	
+
 close_connection($connection);
 	
 	

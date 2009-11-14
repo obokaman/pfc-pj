@@ -5,7 +5,6 @@ session_start();
 $connection = open_connection();
 
 $f = clean("function", "string"); //--------------> Pasar el texto a minusculas ?????
-
 if ($f == "login") {
 	send( login( clean("nick", "string"),	clean("password", "string") ) );
 }
@@ -98,9 +97,9 @@ else if ($f == "getRankings") {
 		}
 }*/
 else if ($f == "newTeam") {
-		$name = clean("name", "string");			
-		if (exist_team_name($name)){			//comprovamos si existe un equipo con el mismo nombre que la entrada
-			return 1;
+		$name = clean("name", "string");
+		if (exist_team($name)){			//comprovamos si existe un equipo con el mismo nombre que la entrada
+			return  1;
 		}else{
 			if(isset($_SESSION['user'])){		//comprovamos que el usuario esta logueado
 				$nick_session = $_SESSION['user'];
@@ -110,7 +109,7 @@ else if ($f == "newTeam") {
 				}
 				else return 2;				
 			}													    
-			else return 2;								// el usuario no esta logueado
+			else return 2;	// el usuario no esta logueado
 		}; 
 }
 //else escribe_log("ADFadskfdashfldsjfdsali");*/

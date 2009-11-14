@@ -111,18 +111,17 @@
 	
 	
 	
-	/*La función comprueba si el identificador del circuito existe*/
-	function exist_circuit($id){	
-	/*Pre: - */
-		
+	/*La función comprueba si el nombre del circuito existe*/
+	function exist_circuit($name){	
+	/*Pre: - */		
 		global $connection;
 		
-		$query =  "SELECT * FROM circuit WHERE id_circuit = '$id'";
+		$query =  "SELECT * FROM circuit WHERE name = '$name'";
 	
 		$result_query = mysql_query($query, $connection) or my_error('EXIST_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-		if (count(extract_row($result_query))==0)	return false;
+		if (extract_num_rows($result_query) == 0)	return false;
 		else return true;
 	}
-	/*Post: Devuelve cierto en caso de que el identificador del circuito existe, en caso contrario devuelve falso*/
+	/*Post: Devuelve cierto en caso de que el nombre del circuito existe, en caso contrario devuelve falso*/
 ?>

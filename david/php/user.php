@@ -135,25 +135,17 @@
 	}
 	/*Post: La función borra el usuario de la BBDD*/
 	
-	
-	/*La función comprueba si el identificador del usuario existe*/
-	function exist_user_id($id){	
-	/*Pre: - */
-	
-		global $connection;
-		
-		$query =  "SELECT * FROM user WHERE id_user = '$id'";
-		$result_query = mysql_query($query, $connection) or my_error('EXIST_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-		if (count(extract_row($result_query))==0)	return false;
-		else return true;
-	}
-	/*Post: Devuelve cierto en caso de que el identificador del usuario existe, en caso contrario devuelve falso*/
-	
+
 	/*La función comprueba si el nick del usuario existe*/
 	function exist_user_nick($nick){	
-	/*Pre: - */
-		return exist_user_id( get_id_user($nick) );
+	/*Pre: - */	
+		global $connection;
+		
+		$query =  "SELECT * FROM user WHERE nick = '$nick'";
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+		
+		if (extract_num_rows($result_query) == 0)	return false;
+		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el nick del usuario existe, en caso contrario devuelve falso*/
 	

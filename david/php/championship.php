@@ -130,23 +130,16 @@
 	
 	
 	
-	/*La función comprueba si el identificador del campeonato existe*/
-	function exist_championship($id){	
+	/*La función comprueba si el nombre del campeonato existe*/
+	function exist_championship($name){	
 	/*Pre: - */
 		global $connection;
-		$query =  "SELECT * FROM championship WHERE id_champ = '$id'";
+		$query =  "SELECT * FROM championship WHERE name = '$name'";
 	
 		$result_query = mysql_query($query, $connection) or my_error('EXIST_CHAMPIONSHIP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		if (count(extract_row($result_query))==0)	return false;
+		if (extract_num_rows($result_query)==0)	return false;
 		else return true;
-	}
-	/*Post: Devuelve cierto en caso de que el identificador del campeonato existe, en caso contrario devuelve falso*/
-	
-	/*La función comprueba si el nombre del campeonato existe*/
-	function exist_championship_name($name){	
-	/*Pre: - */
-		return exist_championship( get_id_championship($name) );
 	}
 	/*Post: Devuelve cierto en caso de que el nombre del campeonato existe, en caso contrario devuelve falso*/
 

@@ -127,39 +127,49 @@
 			$query = $query."user u  where u.id_user = g.id_user	and 	c.name = '$circuit' and 	c.id_circuit = g.id_circuit";			
 			if ($team!=null) 	$query = $query." and  t.name = '$team'	and 	t.id_team = ut.id_team and 	ut.id_user = u.id_user";			
 			if ($championship!=null) 	$query = $query. " and 	ch.name = '$championship' and 	ch.id_champ = g.id_champ";			
-			$query = $query." order by g.time_result" ;			
+			$query = $query." order by g.time_result, g.id_user" ;			
 			
 			$result_query = mysql_query($query, $connection) or my_error('GET_RANKINGS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-
-			$games = extract_rows($result_query);		
 			
-			echo $games[0]->nick;
-			
-			if ($page == 0){
-					//El usuario esta logueado
-					if (isset($_SESSION['user'])){	
-							$pos = 0;
-							$b = true;
-							while (($pos < count($games))&&($b)){						
-								if ($games[$pos]->nick  == $_SESSION['user'])	$b = false;									
-							}						
-							$result->page =intval(($pos-1) / $max)+1;
-							$result->data =  array_slice($games, (($result->page-1)*$max) + 1, $max);
-						
-					//El usuario no esta logueado, devolvemos la primera pagina
-					}else{
-							$result->data =  array_slice($games, 0, $max);
-							$result->page = 1;						
-					}
-				
-			}else{//Devolvemos la pagina en el caso de que page sea diferente de 0
-					$result->data =  array_slice($games, (($page-1)*$max) + 1, $max);
-					$result->page = intval($page);
-			}
-			
-			$numgames = count($games);
+			 //numero total de partidas(filas en la bae de datos)
+			$numgames = extract_num_rows($result_query);
 			if ($numgames == 0) $result->numpages = 0;
-			else $result->numpages = intval(  ($numgames-1)/$max  ) +1;
+			else $result->numpages = intval(  ($numgames-1)/$max  ) +1;	
+
+			//Comprobamos que el resultado de la consulta no sea nulo y si la pagina que se pide no es mas grande que el total maximo de paginas que hay
+			if((extract_num_rows($result_query) != 0)&&($page <= $result->numpages)){							
+				
+					if ($page == 0){
+							//El usuario esta logueado
+							if (isset($_SESSION['user'])){	
+									$games = extract_rows($result_query);		
+									
+									$pos = 0;
+									$b = true;
+									while (($pos < count($games))&&($b)){						
+										if ($games[$pos]->nick  == $_SESSION['user'])	$b = false;
+										else $pos++;
+									}						
+									$result->page =intval($pos / $max)+1;
+									$result->data =  extract_interval_rows($result_query, (($result->page-1)*$max), $max);
+								
+							//El usuario no esta logueado, devolvemos la primera pagina
+							}else{
+									$result->data =  extract_interval_rows($result_query, 0, $max);
+									$result->page = 1;						
+							}
+						
+					}else{//Devolvemos la pagina en el caso de que page sea diferente de 0					
+							//El segundo parametros debe estar en un intervalo entre 0 y n ya que es el rango que sigue el numero de las filas en la bd
+							$games = extract_interval_rows($result_query, (($page-1)*$max), $max);		
+							$result->data =  $games;
+							$result->page = intval($page);
+					}
+					
+			}else{
+					$result->page = intval($page);
+					$result->data = Array();					
+			}
 			
 			return $result;		
 	}

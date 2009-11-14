@@ -22,7 +22,7 @@
 	/*Pre: - */
 		global $connection;
 		
-		$query = "SELECT c.id_team FROM team t WHERE t.name = '$name'";
+		$query = "SELECT t.id_team FROM team t WHERE t.name = '$name'";
 	
 		$result_query = mysql_query($query, $connection) or my_error('GET_ID_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
@@ -148,23 +148,16 @@
 	
 	
 	
-	/*La función comprueba si el identificador del equipo existe*/
-	function exist_team($id){	
+	/*La función comprueba si el nombre del equipo existe*/
+	function exist_team($name){	
 	/*Pre: - */
 		global $connection;
-		$query =  "SELECT * FROM team WHERE id_team = '$id'";
-	
+		$query =  "SELECT * FROM team WHERE name = '$name'";
+
 		$result_query = mysql_query($query, $connection) or my_error('EXIST_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-		if (count(extract_row($result_query))==0)	return false;
+		if (extract_num_rows($result_query) == 0)	return false;
 		else return true;
-	}
-	/*Post: Devuelve cierto en caso de que el identificador del equipo existe, en caso contrario devuelve falso*/
-	
-	/*La función comprueba si el nombre del equipo existe*/
-	function exist_team_name($name){	
-	/*Pre: - */
-		return exist_team( get_id_team($name) );
 	}
 	/*Post: Devuelve cierto en caso de que el nombre del equipo existe, en caso contrario devuelve falso*/
 

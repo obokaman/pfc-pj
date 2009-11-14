@@ -158,6 +158,10 @@ INSERT INTO user_team (id_user, id_team, pendent) VALUES (1,2,1);
 
 INSERT INTO user_team (id_user, id_team, pendent) VALUES (2,2,1);
 
+INSERT INTO user_team (id_user, id_team, pendent) VALUES (3,1,1);
+
+INSERT INTO user_team (id_user, id_team, pendent) VALUES (3,2,1);
+
 INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('Montmelo', 'MNT', null, 3, null);
 
 INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('Jerez', 'JRZ', null, 3, null);
@@ -200,20 +204,26 @@ INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (3, 3);
 
 INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (3, 2);
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 1, null, 75320);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 1, null, 75321);
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 1, null, 75320);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 1, 1, 75322);
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 1, 1, 75320);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 1, 1, 75323);
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 2, null, 75320);
+/*INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 1, 1, 75321);*/
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 2, 2, 75320);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 1, 1, 75322);
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 3, 1, 75320);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 1, 1, 75323);
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 3, 2, 75320);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 2, null, 75324);
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 3, 2, 75320);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 2, 2, 75325);
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 2, 3, 75320);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 3, 1, 75326);
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 3, 2, 75327);
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 3, 2, 75328);
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 2, 3, 75329);
