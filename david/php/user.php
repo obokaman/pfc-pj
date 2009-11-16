@@ -1,13 +1,13 @@
 <?php
 
-	/*La función crea un usuario en la BBDD con los parametros que le pasamos de entrada*/
+	/*La función crea un usuario en la BBDD*/
 	function create_user($nick, $name, $surname1, $surname2, $email_user, $city, $school, $email_school, $pass){
 	/*Pre: - */	
 		global $connection;
 		
 		$key_act = make_activationkey();
 	    $query = "INSERT INTO user ( nick, name, surname1, surname2, email_user, city, school, email_school, type_user, pass, activation_key)
-						VALUES ('$nick',' $name',' $surname1',' $surname2',' $email_user',' $city',' $school',' $email_school','alumno','$pass', '$key_ac')";
+						VALUES ('$nick',' $name',' $surname1',' $surname2',' $email_user',' $city',' $school',' $email_school','alumno','$pass', '$key_ac')";//<--- ACABAR DE RETOCAR LA QUERY CON EL TIPO DE ALUMNO
 		if (!mysql_query($query, $connection)) {
 			if (exist_user_nick($nick)) return 1;
 			else{			
@@ -21,6 +21,7 @@
 				- Un 0, si el usuario se ha insertado correctamente
 				- Un 1, en caso de que el nick del nuevo usuario ya exista
 				- Un 2 si se ha producido algún error en el momento de insertar en nuevo usuario */
+	
 	
 	/*La funcion nos retorna el identificador del usuario a partir del nick*/
 	function get_id_user($nick){

@@ -21,7 +21,7 @@
 	
 	/*La  función saca todas las filas del resultado de la consulta SQL y los guarda en una array de objetos*/
 	function extract_rows($result_query){
-	/*{Pre:/*Pre: La query no es nula*/}	*/
+	/*{Pre:/*Pre: La query no es nula*/
 		
 		$arr = array();		
 		while($obj = mysql_fetch_object($result_query)) {

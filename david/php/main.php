@@ -99,18 +99,19 @@ else if ($f == "getRankings") {
 else if ($f == "newTeam") {
 		$name = clean("name", "string");
 		if (exist_team($name)){			//comprovamos si existe un equipo con el mismo nombre que la entrada
-			return  1;
+			$result =  1;
 		}else{
 			if(isset($_SESSION['user'])){		//comprovamos que el usuario esta logueado
 				$nick_session = $_SESSION['user'];
 				if(create_team($name, 2))	{	    // comprovamos que se haya creado correctamente el equipo					
-					if(add_user_team( get_id_user($nick_session), get_id_team($name), 0 )	)	return 0;
-					else return 2;
+					if(add_user_team( get_id_user($nick_session), get_id_team($name), 0 )	)	$result = 0;
+					else $result = 2;
 				}
-				else return 2;				
+				else $result = 2;				
 			}													    
-			else return 2;	// el usuario no esta logueado
+			else $result = 2;	// el usuario no esta logueado
 		}; 
+		send($result);
 }
 //else escribe_log("ADFadskfdashfldsjfdsali");*/
 close_connection($connection);

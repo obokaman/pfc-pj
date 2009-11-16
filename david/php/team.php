@@ -1,6 +1,6 @@
 <?php
 
-	/*La función crea un equipo en la BBDD con los parametros que le pasamos de entrada*/
+	/*La función crea un equipo en la BBDD */
 	function create_team($name, $id_founded){
 	/*Pre: 'id_founded' es un identificador de usuario que existe */	
 		global $connection;
