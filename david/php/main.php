@@ -86,14 +86,22 @@ else if ($f == "getRankings") {
 /*else if ($f == "newChampionship") {	
 		$name = clean("name", "string");
 		$date_limit = clean("date_limit", "string");
+		$circuits = Array();
 		$circuits = clean("circuits", "array");			
-		if(exist_championship_name($name)){
-			return 1;
+		if(exist_championship($name)){
+			$result = 1;
 		}else{		
-			create_championship($name, $data_limit);
-			for($i = 0; $i < count($circuits); $i++){
+			if(create_championship($name, $data_limit)){
+				$allCircuits  = Array();
+				$allCircuits  = extract_circuits($circuits);
+				for ($i = 0; $i < count( $allCircuits ); $i++){
+					
+				}
+			}else $result = 2;
 				
-			}
+
+			
+			
 		}
 }*/
 else if ($f == "newTeam") {
@@ -103,7 +111,7 @@ else if ($f == "newTeam") {
 		}else{
 			if(isset($_SESSION['user'])){		//comprovamos que el usuario esta logueado
 				$nick_session = $_SESSION['user'];
-				if(create_team($name, 2))	{	    // comprovamos que se haya creado correctamente el equipo					
+				if(create_team($name, get_id_user($nick_session) ))	{ // comprovamos que se haya creado correctamente el equipo					
 					if(add_user_team( get_id_user($nick_session), get_id_team($name), 0 )	)	$result = 0;
 					else $result = 2;
 				}
