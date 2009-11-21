@@ -12,7 +12,12 @@
 						$var = trim ( $var );	
 					break;
 					case 'array':
-						$var = trim ( $var );	
+						$var = explode(" ",$var);
+					break;
+					case 'date':
+						$arr = Array();
+						$arr = explode("/",$var);
+						$var = date( "Y/m/d", mktime(0, 0, 0, $arr[1],$arr[0],$arr[2]) ); 
 					break;
 					case 'sql': // trim string
 						$var = trim ( $var );

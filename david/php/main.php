@@ -83,27 +83,31 @@ else if ($f == "getRankings") {
 			)
 		);
 }
-/*else if ($f == "newChampionship") {	
+else if ($f == "newChampionship") {	
 		$name = clean("name", "string");
-		$date_limit = clean("date_limit", "string");
+		$date_limit = clean("date_limit", "date");
 		$circuits = Array();
-		$circuits = clean("circuits", "array");			
-		if(exist_championship($name)){
+		$circuits = clean("circuits", "array");	
+		$b = true;
+		
+		if(exist_championship($name)){	//Comprobamos que el nombre del campeonato no exista
 			$result = 1;
 		}else{		
-			if(create_championship($name, $data_limit)){
-				$allCircuits  = Array();
-				$allCircuits  = extract_circuits($circuits);
-				for ($i = 0; $i < count( $allCircuits ); $i++){
-					
-				}
-			}else $result = 2;
+			if(create_championship($name, $date_limit, get_id_user( $_SESSION['user']) ) ){	//Creamos el campeonato
+				foreach ($circuits as $circuit){
+					//Comprobamos que todos los circutos se puede insertan correctamente, ya que todos existen y no estan repetidos.
+					$b = $b and  exist_circuit($circuit) and (!(exist_circuit_champ( get_id_circuit( $circuit), get_id_championship($name) ) ) ) ;
+				}				
 				
-
-			
-			
-		}
-}*/
+				if ( $b ){		//Si todo es correcto los insertamos
+					foreach($circuits as $circuit) add_circuit_champ( get_id_circuit( $circuit), get_id_championship($name) ); 
+					$result = 0;
+				}else $result = 2;					
+				
+			}else $result = 2;
+		}		
+		send($result);
+}
 else if ($f == "newTeam") {
 		$name = clean("name", "string");
 		if (exist_team($name)){			//comprovamos si existe un equipo con el mismo nombre que la entrada

@@ -1,11 +1,11 @@
 <?php
 
 	/*La función crea un campeonato en la BBDD con los parametros que le pasamos de entrada*/
-	function create_championship($name, $data_limit, $id_founded){
+	function create_championship($name, $date_limit, $id_founded){
 	/*Pre: 'id_founded' es un identificador de usuario que existe en la BBDD */	
 		global $connection;
 		
-	    $query = "INSERT INTO championship (name, data_limit, id_founded) VALUES ('$name', '$data_limit', '$id_founded')";
+	    $query = "INSERT INTO championship (name, data_limit, id_founded) VALUES ('$name', '$date_limit', '$id_founded')";
 
 		if (!mysql_query($query, $connection)) {
 			my_error('CREATE_CHAMPIONSHIP-> '.mysql_errno($connection) . ": " . mysql_error($connection), 1);

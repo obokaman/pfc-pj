@@ -60,8 +60,39 @@
 	}
 	/*Post: Devuelve una array de objetos que representan un intervalo de filas desde la posicion pos_ini hasta pos_ini+length*/
 	
+	/*Esta funciona retorna una array de string que hemos recibido todos juntos separados cada uno por espacios*/
+	function extractArray($arr){
+	/*Pre: - */
+		if ($arr != "" ){	
+				$var = Array();
+				$last_pos = 0;
+				$start_pos = 0;
+				$b = true; 
+				$i = 0;
+				
+				while ($b){		
+						$start_pos = strpos($arr, " ", $last_pos);
+						if ( $start_pos != false ) {
+							$var[$i] = substr($arr, $last_pos, ($start_pos - $last_pos)  );
+							$i++;
+							
+						}else{
+							$var[$i] = substr($arr, $last_pos, (strlen($arr) - $last_pos) );
+							$b = false;
+						}
+						$last_pos = $start_pos + 1;
+				}
+				
+				return $var;
+		}else{
+				return null;
+		}
+	}
+	/*Post: Retorna una array de string, donde cada posicion guarda la palabra separada por espacios*/
 	
-	//CONVERSOR DE MICROSEGUNDOS A STRING EN FORMATO MINUTOS:SEGUNDO.MILISEGUNDOS
+	
+	
+	
 	
 	
 ?>

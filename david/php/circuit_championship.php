@@ -73,7 +73,7 @@
 	
 		$result_query = mysql_query($query, $connection) or my_error('EXIST_CIRCUIT_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		if (count(extract_row($result_query))==0)	return false;
+		if (extract_num_rows($result_query)==0)	return false;
 		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el identificador del circuito y del campeonato existe, en caso contrario devuelve falso*/
