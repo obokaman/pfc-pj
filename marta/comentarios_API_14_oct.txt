@@ -134,3 +134,49 @@ newTeam (name)
   * 1: ya existe equipo con ese nombre
   * 2: otros errores
 
+getMyOwnChampionships() returns strings[]   //OJO! dijimos que nos serviria con el otro getMyChampionships pasandole circuit = null pero no es del todo cierto porque el getMyChampionships original retorna los champeonatos a los que pertenece el usuario y en cambio esta tiene que retornar los campeonatos de los que el usuario sea el propietario
+  * Nada si no estamos logeados.
+  * Los 'name' de los championships de los que el usuario es propietario
+
+getMyOwnTeams() returns strings[]   //OJO! igual que en la anterior
+  * Nada si no estamos logeados.
+  * Los 'name' de los equipos de los que el usuario es propietario
+
+getAllNicks() returns strings[]
+  *devuelve todos los nicks existentes en la base de datos
+
+addPlayerToChampionship(name, nick)
+  * crea una invitación pendiente de confirmar del usuario 'nick' en el campeonato 'name'
+  * 0: creado con exito
+  * 1: ya existe la invitacion
+  * 2: no existe el nick introducido
+  * 3: otros errores
+
+addPlayerToTeam(name, nick)
+  * crea una invitación pendiente de confirmar del usuario 'nick' en el equipo 'name'
+  * 0: creado con exito
+  * 1: ya existe la invitacion
+  * 2: no existe el nick introducido
+  * 3: otros errores
+
+getNInvitations() return nChamps, nTeams
+  * nChamps: numero de invitaciones a campeonatos hechas al usuario logeado que estan pendientes de confirmar/rechazar
+  * nTeams: numero de invitaciones a equipos hechas al usuario logeado que estan pendientes de confirmar/rechazar 
+
+getChampionshipsInvitated() return {nick, name}[]
+  * retorna informacion sobre todas las invitaciones a campeonatos hechas al usuario logeado que estan pendientes de confirmar/rechazar:
+     - nick: usuario que ha realizado la invitación (propietario del campeonato)
+     - name: nombre del campeonato al que ha sido invitado el usuario logeado
+
+getTeamsInvitated() return {nick, name}[]
+  * retorna informacion sobre todas las invitaciones a equipos hechas al usuario logeado que estan pendientes de confirmar/rechazar:
+     - nick: usuario que ha realizado la invitación (propietario del equipo)
+     - name: nombre del equipo al que ha sido invitado el usuario logeado
+
+setChampionshipAnswer(name, answer)
+  * answer = 1: el usuario logeado acepta la invitacion al campeonato 'name' (la invitacion deja de estar pendiente)
+  * answer = 0: el usuario logeado rechaza la invitacion al campeonato 'name' (la invitacion se borra de la BD)
+
+setTeamAnswer(name, answer)
+  * answer = 1: el usuario logeado acepta la invitacion al equipo 'name' (la invitacion deja de estar pendiente)
+  * answer = 0: el usuario logeado rechaza la invitacion al equipo 'name' (la invitacion se borra de la BD)

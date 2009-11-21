@@ -1,6 +1,7 @@
 package gwtJuego.client;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.JsArray;
@@ -29,12 +30,12 @@ import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.VerticalSplitPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
+import com.google.gwt.user.datepicker.client.DateBox;
 
 import gwtJuego.client.RankingData;
 
@@ -43,8 +44,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.i18n.client.NumberFormat;
-
+import com.google.gwt.i18n.client.DateTimeFormat;
 
 
 public class JocProg implements EntryPoint {
@@ -66,6 +66,7 @@ public class JocProg implements EntryPoint {
 	private VerticalPanel loginVPanel = new VerticalPanel();
 	private DisclosurePanel registerDisclosure = new DisclosurePanel("¿Aún no estás registrado?");
 	private VerticalPanel perfilVPanel = new VerticalPanel();
+	private VerticalPanel addVPanel = new VerticalPanel();
   
 	private TextArea inputTextArea = new TextArea();
 	private TextArea consolaTextArea = new TextArea();
@@ -73,6 +74,9 @@ public class JocProg implements EntryPoint {
 	private ListBox champsDropBox = new ListBox(false);
 	private ListBox teamsDropBox = new ListBox(false);
 	private ListBox rankPagesDropBox = new ListBox(false);
+	private ListBox sizePagesDropBox = new ListBox(false);
+	private ListBox circuitsMultiBox = new ListBox(true);
+	private ListBox selectedMultiBox = new ListBox(true);
 	private FlexTable rankingFlexTable = new FlexTable();
 	private TextBox loginUserTextBox = new TextBox();
 	private PasswordTextBox loginPassword = new PasswordTextBox();
@@ -87,6 +91,9 @@ public class JocProg implements EntryPoint {
 	private PasswordTextBox regPassword = new PasswordTextBox();
 	private PasswordTextBox regNewPassword = new PasswordTextBox();
 	private PasswordTextBox regConfirmPassword = new PasswordTextBox();
+	private TextBox champNameTextBox = new TextBox();
+	private TextBox teamNameTextBox = new TextBox();
+	private DateBox champDateBox = new DateBox();
 
 	private Button loginButton = new Button("Entrar");
 	private Button logoutButton = new Button("Cerrar sesión");
@@ -95,15 +102,17 @@ public class JocProg implements EntryPoint {
 	private Button saveChangeButton = new Button("Guardar cambios");
 	private Button playButton = new Button("¡Corre!");
 	private Button stopButton = new Button("¡Para!");
-	//private Label msgLabel = new Label();
-  
-	/*private String[] circuitsList;
-   	private String[] champsList;
-   	private String[] teamsList;*/
+	private Button createChampButton = new Button("Crear campeonato");
+	private Button addCircuitsButton = new Button("Añadir circuito -->");
+	private Button deleteCircuitsButton = new Button("Eliminar");
+	private Button createTeamButton = new Button("Crear equipo");
 	
-	private ArrayList circuitsList = new ArrayList();
-   	private ArrayList champsList = new ArrayList();
-   	private ArrayList teamsList = new ArrayList();
+	private ArrayList<String> circuitsList = new ArrayList<String>();
+   	private ArrayList<String> champsList = new ArrayList<String>();
+   	private ArrayList<String> teamsList = new ArrayList<String>();
+   	//private ArrayList<String> addedList = new ArrayList();
+   	//private String[] pageSizes = {"Tamaño","10","25","50","75","100"};
+   	private String[] pageSizes = {"Tamaño","1","2","3","4","5","6","7","8","9","10"};
 	
 	private static String USER = "";
 	private static int modeOn = CODE;
@@ -129,6 +138,7 @@ public class JocProg implements EntryPoint {
 	  }
 	  createCorrePanel();
 	  createRankingPanel();
+	  createAddPanel();
 	    
 	  loginButton.addClickHandler( 
 			  new ClickHandler() {
@@ -161,7 +171,9 @@ public class JocProg implements EntryPoint {
 				  }	
 			  });
 	  
-	  /*String html = 
+	 
+	 /* String html = 
+			"<div id= 'txtare' style = 'width:100%; height: 100%;' >"+
 			"<script language='javascript' type='text/javascript' src='http://localhost/editarea/edit_area/edit_area_full.js'></script>"+
 			"<script language='javascript' type='text/javascript'>"+
 			"editAreaLoader.init({"+
@@ -172,8 +184,10 @@ public class JocProg implements EntryPoint {
 				",toolbar: 'load,save,|,search,go_to_line,fullscreen,|,undo,redo,|,select_font,|,change_smooth_selection,highlight,reset_highlight,word_wrap,|,help'});"+
 			"</script>"+
 			"<form method='post'>"+
-			"<textarea id='textarea_1' style='height: 100%; width: 100%;' name='content'>"+
-			"</textarea>";
+			"<textarea id='textarea_1' style='width: 100%; height:100%;' name='content'>"+
+			"</textarea>"+
+			"</form>"+
+			"</div>";
 
 HTMLPanel input = new HTMLPanel(html);
 input.setSize("100%","100%");*/
@@ -184,6 +198,7 @@ input.setSize("100%","100%");*/
 	  mainPanel.add(multiPanel,"Login/User");
 	  mainPanel.add(codiPanel,"Corre");
 	  mainPanel.add(rankingVPanel,"Ranking");
+	  mainPanel.add(addVPanel,"Crear campeonato/equipo");
 	  mainPanel.add(new HTML("Help Tab"),"Help");
 	  //mainPanel.add(input,"Help");
 	  mainPanel.selectTab(0);
@@ -212,12 +227,17 @@ input.setSize("100%","100%");*/
 				  }
 			  }
 			  else if(tabIndex==2){
-				  circuitsDropBox.setSelectedIndex(0);  //y borrar tabla...dejar igual al cambiar entre pestañas??
+				  circuitsDropBox.setSelectedIndex(0);
 				  champsDropBox.setSelectedIndex(0);
 				  teamsDropBox.setSelectedIndex(0);
+				  rankPagesDropBox.setSelectedIndex(0);
+				  sizePagesDropBox.setSelectedIndex(0);
 				  champsDropBox.setEnabled(false);
 				  teamsDropBox.setEnabled(false);
-				  //if(!USER.equals("")) refreshDropBoxs();  //INEFICIENTE!!y si añaden/borran campeonatos/equipos??
+				  rankPagesDropBox.setEnabled(false);
+				  sizePagesDropBox.setEnabled(false);
+				  int rows = rankingFlexTable.getRowCount();
+				  for (int i=1; i<rows; i++) rankingFlexTable.removeRow(1); 
 			  }
 		  }
 	  });
@@ -309,7 +329,7 @@ input.setSize("100%","100%");*/
 		    		  perfilVPanel.clear();
 		    		  perfilVPanel.add(logoutButton);
 
-		    		  Grid perfilInfo = new Grid(8, 4);
+		    		  Grid perfilInfo = new Grid(8,4);
 		    		  perfilInfo.setCellSpacing(6);
 		    		  perfilInfo.setHTML(0, 0, "Usuario: ");
 		    		  regNickTextBox.setText(res.get("nick"));
@@ -382,14 +402,14 @@ input.setSize("100%","100%");*/
 	  //Text areas
 	  consolaPanel.setSize("100%","100%");
 	  consolaPanel.setSpacing(5);
-	  //inputPanel.setSize("100%","100%");
-	  //inputPanel.setSpacing(5);
+	  inputPanel.setSize("100%","100%");
+	  inputPanel.setSpacing(5);
 	  consolaTextArea.setText("consola de salida");
 	  consolaTextArea.setSize("100%","100%");
-	  //inputTextArea.setText("entrada de código");
-	  //inputTextArea.setSize("100%","100%");
+	  inputTextArea.setText("entrada de código");
+	  inputTextArea.setSize("100%","100%");
 	  consolaPanel.add(consolaTextArea);
-	  //inputPanel.add(inputTextArea);
+	  inputPanel.add(inputTextArea);
 	  
 	  /*String html = //"<html>"+
 	  				//"<head>"+
@@ -423,12 +443,14 @@ input.setSize("100%","100%");*/
 	  //Assemble Split panels.
 	  correPanel.setSize("100%","100%");
 	  correPanel.setSplitPosition("60%");
-	  VerticalPanel buttonsPanel = new VerticalPanel();
-	  buttonsPanel.add(playButton);
+	  HorizontalPanel buttonsPanel = new HorizontalPanel();
+	  //buttonsPanel.add(playButton);
 	  stopButton.setEnabled(false);
-	  buttonsPanel.add(stopButton);
+	  //buttonsPanel.add(stopButton);
 	  Image img = new Image();
 	  img.setUrl("http://localhost/circuito.jpg");
+	  //img.setHeight("100%");
+	  img.setSize("100%","100%");
 	  buttonsPanel.add(img);
 	  //correPanel.setLeftWidget(new Label("CIRCUITO"));
 	  correPanel.setLeftWidget(buttonsPanel);
@@ -468,8 +490,6 @@ input.setSize("100%","100%");*/
 	  // Add drop boxs with the lists
 	  circuitsDropBox.clear();
 	  circuitsDropBox.addItem("CIRCUITOS");
-	  //for (int i=0; i<circuitsList.length; i++) { circuitsDropBox.addItem(circuitsList[i]); }
-	  //for (int i=0; i<circuitsList.size(); i++) { circuitsDropBox.addItem((String)circuitsList.get(i)); }
 	  champsDropBox.clear();
 	  champsDropBox.addItem("CAMPEONATOS");
 	  champsDropBox.setEnabled(false);
@@ -483,15 +503,21 @@ input.setSize("100%","100%");*/
 	  // Create table for ranking data.
 	  rankingFlexTable.setText(0, 0, "Usuario");
 	  rankingFlexTable.setText(0, 1, "Tiempo");
-	  ranking2HPanel.setSize("100%", "70%");
-	  ranking2HPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-	  ranking2HPanel.add(rankingFlexTable);
+	  sizePagesDropBox.clear();
+	  for(int i=0;i<pageSizes.length;i++) { sizePagesDropBox.addItem(pageSizes[i]); }
+	  sizePagesDropBox.setEnabled(false);
 	  rankPagesDropBox.clear();
 	  rankPagesDropBox.addItem("Página");
 	  rankPagesDropBox.setEnabled(false);
-	  //JSpinner size = new JSpinner();
-	  //sizePagesDropBox.clear();
-	  ranking2HPanel.add(rankPagesDropBox);
+	  
+	  Grid dropBoxes = new Grid (2,1);
+	  dropBoxes.setWidget(0,0,sizePagesDropBox);
+	  dropBoxes.setWidget(1,0,rankPagesDropBox);
+	  
+	  ranking2HPanel.setSize("100%", "70%");
+	  ranking2HPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+	  ranking2HPanel.add(rankingFlexTable);
+	  ranking2HPanel.add(dropBoxes);
 	    
 	  rankingVPanel.setSize("100%","100%");
 	  rankingVPanel.add(rankingHPanel);
@@ -502,10 +528,11 @@ input.setSize("100%","100%");*/
 		  public void onChange(ChangeEvent event) {
 			  if(circuitsDropBox.getSelectedIndex()>0){
 				  if(!USER.equals("")){
-					  //requestRanking();
+					  requestRanking();
 					  refreshDropBoxs();
 					  champsDropBox.setEnabled(true);
 					  teamsDropBox.setEnabled(true);
+					  sizePagesDropBox.setEnabled(true);
 				  }
 			  }
 			  else{
@@ -513,28 +540,140 @@ input.setSize("100%","100%");*/
 				  champsDropBox.setEnabled(false);
 				  teamsDropBox.setSelectedIndex(0);
 				  teamsDropBox.setEnabled(false);	
+				  rankPagesDropBox.setSelectedIndex(0);
+				  rankPagesDropBox.setEnabled(false);
+				  sizePagesDropBox.setSelectedIndex(0);
+				  sizePagesDropBox.setEnabled(false);
+				  sizePagesDropBox.setSelectedIndex(0);
+				  sizePagesDropBox.setEnabled(false);
 				  Window.alert("Debes elegir un circuito válido");
 			  }
-			  rankPagesDropBox.clear();
+			  /*rankPagesDropBox.clear();
 			  rankPagesDropBox.addItem("Página");
-			  rankPagesDropBox.setEnabled(false);
+			  rankPagesDropBox.setEnabled(false);*/
 		  }
 	  });
 	  champsDropBox.addChangeHandler(new ChangeHandler() {
 		  public void onChange(ChangeEvent event) {
-			  if(champsDropBox.getSelectedIndex()>0) requestRanking();
+			  //if(champsDropBox.getSelectedIndex()>0) requestRanking();
+			  requestRanking();
 		  }
 	  });
 	  teamsDropBox.addChangeHandler(new ChangeHandler() {
 		  public void onChange(ChangeEvent event) {
-			  if(teamsDropBox.getSelectedIndex()>0) requestRanking();
+			  //if(teamsDropBox.getSelectedIndex()>0) requestRanking();
+			  requestRanking();
 		  }
 	  });
 	  rankPagesDropBox.addChangeHandler(new ChangeHandler() {  //tener en cuenta si esta logeado!!algo de paginas?
 		  public void onChange(ChangeEvent event) {
-			  if(rankPagesDropBox.getSelectedIndex()>0) requestRanking();
+			  //if(rankPagesDropBox.getSelectedIndex()>0) requestRanking();
+			  requestRanking();
 		  }
 	  });
+	  sizePagesDropBox.addChangeHandler(new ChangeHandler() {
+		  public void onChange(ChangeEvent event) {
+			  //if(sizePagesDropBox.getSelectedIndex()>0) requestRanking();
+			  requestRanking();
+		  }
+	  });
+  }
+  
+  private void createAddPanel(){
+	  
+	  VerticalPanel champNameVPanel = new VerticalPanel();
+	  champNameVPanel.setSize("100%","100%");
+	  Grid champNameGrid = new Grid(3,2);
+	  champNameGrid.setWidget(0,0,new HTML("Nombre: "));
+	  champNameGrid.setWidget(0,1,champNameTextBox);
+	  champNameGrid.setWidget(1,0,new HTML("Fecha límite inscripciones: "));
+	  champDateBox.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("dd/MM/yyyy")));
+	  champNameGrid.setWidget(1,1,champDateBox);
+	  //champNameGrid.setWidget(2,1,createChampButton);
+	  champNameVPanel.add(champNameGrid);
+	  //champNameVPanel.add(createChampButton);
+	  champNameVPanel.setCellVerticalAlignment(champNameGrid,HasVerticalAlignment.ALIGN_MIDDLE);
+	  //champNameVPanel.setCellVerticalAlignment(createChampButton,HasVerticalAlignment.ALIGN_BOTTOM);
+	  
+	  VerticalPanel champChooseVPanel = new VerticalPanel();
+	  champChooseVPanel.setSize("100%","100%");
+	  champChooseVPanel.add(new HTML("Circuitos disponibles:"));
+	  Grid dispCircuitsGrid = new Grid(1,2);
+	  circuitsMultiBox.setSize("125px","200px");
+	  dispCircuitsGrid.setWidget(0,0,circuitsMultiBox);
+	  dispCircuitsGrid.setWidget(0,1,addCircuitsButton);
+	  CellFormatter dispCircsCellFormatter = dispCircuitsGrid.getCellFormatter();
+	  dispCircsCellFormatter.setVerticalAlignment(0,1,HasVerticalAlignment.ALIGN_TOP);
+	  champChooseVPanel.add(dispCircuitsGrid);
+	  champChooseVPanel.add(new HTML("(para selección múltiple mantén pulsado 'Ctrl')"));
+	  
+	  VerticalPanel champAddVPanel = new VerticalPanel();
+	  champAddVPanel.setSize("100%","100%");
+	  champAddVPanel.add(new HTML("Circuitos seleccionados:"));
+	  Grid selectedCircuitsGrid = new Grid(1,2);
+	  selectedMultiBox.setSize("125px","200px");
+	  selectedCircuitsGrid.setWidget(0,0,selectedMultiBox);
+	  selectedCircuitsGrid.setWidget(0,1,deleteCircuitsButton);
+	  CellFormatter selectedCircsCellFormatter = selectedCircuitsGrid.getCellFormatter();
+	  selectedCircsCellFormatter.setVerticalAlignment(0,1,HasVerticalAlignment.ALIGN_TOP);
+	  champAddVPanel.add(selectedCircuitsGrid);
+	  champAddVPanel.add(createChampButton);
+	  champAddVPanel.setCellVerticalAlignment(createChampButton,HasVerticalAlignment.ALIGN_BOTTOM);
+	  champAddVPanel.setCellHorizontalAlignment(createChampButton,HasHorizontalAlignment.ALIGN_RIGHT);
+	  
+	  HorizontalPanel newChampHPanel = new HorizontalPanel();
+	  newChampHPanel.setSize("100%","100%");
+	  newChampHPanel.add(champNameVPanel);
+	  newChampHPanel.add(champChooseVPanel);
+	  newChampHPanel.add(champAddVPanel);
+	  
+	  Grid newTeam = new Grid(2,2);
+	  newTeam.setWidget(0,0,new HTML("Nombre: "));
+	  newTeam.setWidget(0,1,teamNameTextBox);
+	  newTeam.setWidget(1,1,createTeamButton);
+	  
+	  addVPanel.setSize("100%","100%");
+	  addVPanel.add(new HTML("Crear nuevo campeonato:"));
+	  addVPanel.add(newChampHPanel);
+	  addVPanel.add(new HTML("Crear nuevo equipo:"));
+	  addVPanel.add(newTeam);
+	  
+	  addCircuitsButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  for(int i=0;i<circuitsMultiBox.getItemCount();i++){
+						  if(circuitsMultiBox.isItemSelected(i)){
+							  selectedMultiBox.addItem(circuitsMultiBox.getItemText(i));
+							  circuitsMultiBox.removeItem(i);
+							  i--;
+						  }
+					  }
+				  }
+			  });
+	  deleteCircuitsButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  for(int i=0;i<selectedMultiBox.getItemCount();i++){
+						  if(selectedMultiBox.isItemSelected(i)){
+							  circuitsMultiBox.addItem(selectedMultiBox.getItemText(i));
+							  selectedMultiBox.removeItem(i);
+							  i--;
+						  }
+					  }
+				  }
+			  });
+	  createChampButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  requestNewChampionship();
+				  }
+			  });
+	  createTeamButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  requestNewTeam();
+				  }
+			  });
   }
   
   
@@ -665,9 +804,13 @@ input.setSize("100%","100%");*/
 		    	  if (200 == response.getStatusCode()) {
 		    		  JsArrayString circs = asJsArrayString(response.getText());
 		    		  circuitsList.clear();
+		    		  circuitsDropBox.clear();
+		    		  circuitsDropBox.addItem("CIRCUITOS");
 		    		  for(int i=0;i<circs.length();i++) { circuitsList.add(circs.get(i)); }
-		    		  for (int i=0; i<circuitsList.size(); i++) { circuitsDropBox.addItem((String)circuitsList.get(i)); }
-		    		  //circuitsList = asArrayOfString(response.getText());
+		    		  for (int i=0; i<circuitsList.size(); i++) { 
+		    			  circuitsDropBox.addItem((String)circuitsList.get(i));
+		    			  circuitsMultiBox.addItem((String)circuitsList.get(i));
+		    		  }
 		          } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 		          }
@@ -681,71 +824,66 @@ input.setSize("100%","100%");*/
 
   private void refreshDropBoxs() {   //cuando se elija la pestaña de ranking
 	  
-	  String url = JSON_URL;
-	  url = URL.encode(url);
-	  //Send request to server and catch any errors.
-	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  if (circuitsDropBox.getSelectedIndex() != 0){
+		  String circ = circuitsDropBox.getValue(circuitsDropBox.getSelectedIndex());
+		  String url = JSON_URL;
+		  url = URL.encode(url);
+		  //Send request to server and catch any errors.
+		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+		
+		  try{
+			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+			  URL.encodeComponent("getMyChampionships")+"&"+URL.encodeComponent("circuit")+"="+
+			  URL.encodeComponent(circ), new RequestCallback() {
+				  public void onError(Request request, Throwable exception) {
+					  Window.alert("Couldn't retrieve JSON");
+				  }
+			      public void onResponseReceived(Request request, Response response) {
+			    	  if (200 == response.getStatusCode()) {
+			    		  JsArrayString res = asJsArrayString(response.getText());
+			    		  champsList.clear();
+			    		  champsDropBox.clear();
+			    		  champsDropBox.addItem("CAMPEONATOS");
+			    		  for(int i=0;i<res.length();i++) { champsList.add(res.get(i)); }
+			    		  for(int i=0;i<champsList.size();i++) { champsDropBox.addItem((String)champsList.get(i)); }
+			          } else {
+			        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+			          }
+			      }
+			  });
+		  } catch (RequestException e) {
+			  Window.alert("Couldn't retrieve JSON");
+		  }
+	 
+		  String champ = "";
+		  if(champsDropBox.getSelectedIndex() != 0) champ = champsDropBox.getValue(champsDropBox.getSelectedIndex());
 	  
-if (circuitsDropBox.getSelectedIndex() != 0){
-	String circ = circuitsDropBox.getValue(circuitsDropBox.getSelectedIndex());
-	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("getMyChampionships")+"&"+URL.encodeComponent("circuit")+"="+
-		  URL.encodeComponent(circ), new RequestCallback() {
-			  public void onError(Request request, Throwable exception) {
-				  Window.alert("Couldn't retrieve JSON");
-			  }
-		      public void onResponseReceived(Request request, Response response) {
-		    	  if (200 == response.getStatusCode()) {
-		    		  Window.alert(response.getText());
-		    		  JsArrayString res = asJsArrayString(response.getText());
-		    		  for(int i=0;i<res.length();i++) { champsList.add(res.get(i)); }
-		    		  champsDropBox.clear();
-		    		  champsDropBox.addItem("CAMPEONATOS");
-		    		  //for(int i=0;i<champsList.length;i++) { champsDropBox.addItem(champsList[i]); }
-		    		  for(int i=0;i<champsList.size();i++) { champsDropBox.addItem((String)champsList.get(i)); }
-		    		  //champsDropBox.setEnabled(false);
-		          } else {
-		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
-		          }
-		      }
-		  });
-	  } catch (RequestException e) {
-		  Window.alert("Couldn't retrieve JSON");
+		  try {
+			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+			  URL.encodeComponent("getMyTeams")+"&"+URL.encodeComponent("circuit")+"="+
+			  URL.encodeComponent(circ)+"&"+URL.encodeComponent("championship")+"="+
+			  URL.encodeComponent(champ), new RequestCallback() {
+				  public void onError(Request request, Throwable exception) {
+					  Window.alert("Couldn't retrieve JSON");
+				  }
+			      public void onResponseReceived(Request request, Response response) {
+			    	  if (200 == response.getStatusCode()) {
+			    		  JsArrayString res = asJsArrayString(response.getText());
+			    		  teamsList.clear();
+			    		  teamsDropBox.clear();
+			    		  teamsDropBox.addItem("EQUIPOS");
+			    		  for(int i=0;i<res.length();i++) { teamsList.add(res.get(i)); }
+			    		  for(int i=0;i<teamsList.size();i++) { teamsDropBox.addItem((String)teamsList.get(i)); }
+			          } else {
+			        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+			          }
+			      }
+			  });
+		  } catch (RequestException e) {
+			  Window.alert("Couldn't retrieve JSON");
+		  }
 	  }
- 
-	  String champ = "";
-	  if(champsDropBox.getSelectedIndex() != 0) champ = champsDropBox.getValue(champsDropBox.getSelectedIndex());
-  
-	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("getMyTeams")+"&"+URL.encodeComponent("circuit")+"="+
-		  URL.encodeComponent(circ)+"&"+URL.encodeComponent("championship")+"="+
-		  URL.encodeComponent(champ), new RequestCallback() {
-			  public void onError(Request request, Throwable exception) {
-				  Window.alert("Couldn't retrieve JSON");
-			  }
-		      public void onResponseReceived(Request request, Response response) {
-		    	  if (200 == response.getStatusCode()) {
-		    		  Window.alert(response.getText());
-		    		  JsArrayString res = asJsArrayString(response.getText());
-		    		  for(int i=0;i<res.length();i++) { teamsList.add(res.get(i)); }
-		    		  //teamsList = asArrayOfString(response.getText());
-		    		  teamsDropBox.clear();
-		    		  teamsDropBox.addItem("EQUIPOS");
-		    		  //for(int i=0;i<teamsList.length;i++) { teamsDropBox.addItem(teamsList[i]); }
-		    		  for(int i=0;i<teamsList.size();i++) { teamsDropBox.addItem((String)teamsList.get(i)); }
-		    		  //teamsDropBox.setEnabled(false);
-		          } else {
-		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
-		          }
-		      }
-		  });
-	  } catch (RequestException e) {
-		  Window.alert("Couldn't retrieve JSON");
-	  }
-}
   }
   
   private void requestRanking(){
@@ -754,17 +892,14 @@ if (circuitsDropBox.getSelectedIndex() != 0){
 		  Window.alert("Debes elegir un circuito válido");
 	  }
 	  else {
-		  int sizepage = 50;
+		  int sizepage = sizePagesDropBox.getSelectedIndex();
 		  int page = rankPagesDropBox.getSelectedIndex();
-		  //String circuit = circuitsList[circuitsDropBox.getSelectedIndex() - 1];
 		  String circuit = (String)circuitsList.get(circuitsDropBox.getSelectedIndex() - 1);
 		  String champ;
 		  if(champsDropBox.getSelectedIndex()==0) champ = "";
-		  //else champ = champsList[champsDropBox.getSelectedIndex() - 1];
 		  else champ = (String)champsList.get(champsDropBox.getSelectedIndex() - 1);
 		  String team;
 		  if(teamsDropBox.getSelectedIndex()==0) team = "";
-		  //else team = teamsList[teamsDropBox.getSelectedIndex() - 1];
 		  else team = (String)teamsList.get(teamsDropBox.getSelectedIndex() - 1);
 
 		  String url = JSON_URL;
@@ -794,8 +929,11 @@ if (circuitsDropBox.getSelectedIndex() != 0){
 						  rankPagesDropBox.clear();
 						  rankPagesDropBox.addItem("Página");
 						  for(int i=1;i<=npag;i++) rankPagesDropBox.addItem(String.valueOf(i));
-						  rankPagesDropBox.setSelectedIndex(pag);
-						  rankPagesDropBox.setEnabled(true);
+						  if(npag != 0) {
+							  rankPagesDropBox.setSelectedIndex(pag);
+							  rankPagesDropBox.setEnabled(true);
+						  }
+						  else rankPagesDropBox.setEnabled(false);
 					  } else {
 						  Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 					  }
@@ -807,6 +945,106 @@ if (circuitsDropBox.getSelectedIndex() != 0){
 	  }
   }
   
+  private void requestNewChampionship() {
+
+	  Date today = new Date(); 
+	  if (champNameTextBox.getText().equals("")){
+		  Window.alert("Debes indicar un nombre para el circuito");
+	  } 
+	 else if (champDateBox.getValue() == null){
+		  Window.alert("Debes indicar una fecha correcta");
+	  }
+	  else if (champDateBox.getValue().before(today)){
+		  Window.alert("Debes seleccionar una fecha límite para las inscripciones posterior al día de creación");
+	  }
+	  else if (selectedMultiBox.getItemCount()==0){
+		  Window.alert("El nuevo campeonato debe constar de al menos un circuito");
+		  
+	  }
+	  else{
+		  String url = JSON_URL;
+		  url = URL.encode(url);
+		  String dateString = DateTimeFormat.getFormat("dd/MM/yyyy").format(champDateBox.getValue());
+		  /*ArrayList<String> addCircs = new ArrayList<String>();
+		  for(int i=0;i<selectedMultiBox.getItemCount();i++) { addCircs.add(selectedMultiBox.getItemText(i)); }
+		  String[] toAdd = new String[addCircs.size()];
+		  for(int i=0;i<toAdd.length;i++) { toAdd[i] = addCircs.get(i); }*/
+		  String arrayCircs = selectedMultiBox.getItemText(0);
+		  for (int i=1;i<selectedMultiBox.getItemCount();i++) { arrayCircs += "+"+selectedMultiBox.getItemText(i); }
+		  //Send request to server and catch any errors.
+		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+		  
+		  try {
+			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+		      URL.encodeComponent("newChampionship")+"&"+URL.encodeComponent("name")+"="+
+		      URL.encodeComponent(champNameTextBox.getText())+"&"+URL.encodeComponent("date_limit")+"="+
+		      URL.encodeComponent(dateString)+"&"+URL.encodeComponent("circuits")+"="+
+		      URL.encodeComponent(arrayCircs), new RequestCallback() {
+		        public void onError(Request request, Throwable exception) {
+		        	Window.alert("Couldn't retrieve JSON");
+		        }
+		        public void onResponseReceived(Request request, Response response) {
+		          if (200 == response.getStatusCode()) {
+		        	  int res = asInt(response.getText());
+		        	  if(res==1) Window.alert("El nombre de campeonato elegido ya existe");
+		        	  else if(res==2) Window.alert("Se ha producido un error. Por favor, inténtalo de nuevo");
+		        	  else if (res==0){
+		        		  Window.alert("El nuevo campeonato se ha creado con éxito");
+		        		  champNameTextBox.setText("");
+		        		  champDateBox.setValue(null);
+		        		  circuitsMultiBox.clear();
+		        		  for (int i=0; i<circuitsList.size(); i++) { circuitsMultiBox.addItem((String)circuitsList.get(i)); }
+		        		  selectedMultiBox.clear();
+		        	  }
+		          } else {
+		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+		          }
+		        }
+		      });
+		    } catch (RequestException e) {
+		    	Window.alert("Couldn't retrieve JSON");
+		    }
+	  }
+  }
+  
+  private void requestNewTeam() {
+	  if (teamNameTextBox.getText().equals("")){
+		  Window.alert("Debes indicar un nombre para el equipo");
+	  }
+	  else{
+		  String url = JSON_URL;
+		  url = URL.encode(url);
+		  //Send request to server and catch any errors.
+		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+
+		  try {
+			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+		      URL.encodeComponent("newTeam")+"&"+URL.encodeComponent("name")+"="+
+		      URL.encodeComponent(teamNameTextBox.getText()), new RequestCallback() {
+		        public void onError(Request request, Throwable exception) {
+		        	Window.alert("Couldn't retrieve JSON");
+		        }
+		        public void onResponseReceived(Request request, Response response) {
+		          if (200 == response.getStatusCode()) {
+		        	  int res = asInt(response.getText());
+		        	  if(res==1) Window.alert("El nombre de equipo elegido ya existe");
+		        	  else if(res==2) Window.alert("Se ha producido un error. Por favor, inténtalo de nuevo");
+		        	  else if (res==0){
+		        		  Window.alert("El nuevo equipo se ha creado con éxito");
+		        		  teamNameTextBox.setText("");
+		        	  }
+		          } else {
+		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+		          }
+		        }
+		      });
+		    } catch (RequestException e) {
+		    	Window.alert("Couldn't retrieve JSON");
+		    }
+	  }
+  }
   
   
   private void logout(){
@@ -929,10 +1167,10 @@ if (circuitsDropBox.getSelectedIndex() != 0){
 				          }
 				        }
 				      });
-				    } catch (RequestException e) {
-				    	Window.alert("Couldn't retrieve JSON");
-				    }
-			  }
+		  } catch (RequestException e) {
+			  Window.alert("Couldn't retrieve JSON");
+		  }
+	  }
   }
   
   private void changeMode(){
@@ -963,6 +1201,10 @@ if (circuitsDropBox.getSelectedIndex() != 0){
    * @param ranking data for all rows.
    */
   private void updateTable(JsArray<RankingUserData> rankInfo) {
+	int rows = rankingFlexTable.getRowCount();
+    for (int i=1; i<rows; i++) rankingFlexTable.removeRow(1);    
+	//rankingFlexTable.setText(0, 0, "Usuario");
+	//rankingFlexTable.setText(0, 1, "Tiempo");
     for (int i=0; i<rankInfo.length(); i++) updateTable(rankInfo.get(i));
   }
   

@@ -8,5 +8,5 @@ class RankingUserData extends JavaScriptObject {
 	  
 	  // JSNI methods to get ranking user data.
 	  public final native String getNick() /*-{ return this.nick; }-*/;
-	  public final native String getTiempo() /*-{ return this.tiempo; }-*/;	  
+	  public final native String getTiempo() /*-{ return this.time_result; }-*/;	  
 }
