@@ -3,6 +3,7 @@
 <module rename-to='jocprog'>
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User'/>
+  
 
   <!-- Inherit the default GWT style sheet.  You can change       -->
   <!-- the theme of your GWT application by uncommenting          -->
@@ -15,4 +16,5 @@
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='gwtJuego.client.JocProg'/>
+  
 </module>

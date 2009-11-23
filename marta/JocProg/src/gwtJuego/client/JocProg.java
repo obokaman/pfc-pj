@@ -10,8 +10,11 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.DecoratedStackPanel;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
@@ -22,14 +25,19 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.TreeListener;
 import com.google.gwt.user.client.ui.VerticalSplitPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -66,8 +74,14 @@ public class JocProg implements EntryPoint {
 	private VerticalPanel loginVPanel = new VerticalPanel();
 	private DisclosurePanel registerDisclosure = new DisclosurePanel("¿Aún no estás registrado?");
 	private VerticalPanel perfilVPanel = new VerticalPanel();
-	private VerticalPanel addVPanel = new VerticalPanel();
-  
+	//private VerticalPanel addVPanel = new VerticalPanel();
+	private HorizontalPanel adminHPanel = new HorizontalPanel();
+	private DecoratedStackPanel adminStckPanel = new DecoratedStackPanel();
+	private VerticalPanel newChampVPanel = new VerticalPanel();
+	private VerticalPanel newTeamVPanel = new VerticalPanel();
+	private VerticalPanel addPlayersVPanel = new VerticalPanel();
+
+	
 	private TextArea inputTextArea = new TextArea();
 	private TextArea consolaTextArea = new TextArea();
 	private ListBox circuitsDropBox = new ListBox(false);
@@ -94,6 +108,18 @@ public class JocProg implements EntryPoint {
 	private TextBox champNameTextBox = new TextBox();
 	private TextBox teamNameTextBox = new TextBox();
 	private DateBox champDateBox = new DateBox();
+	private Tree ChampsTree = new Tree();
+	private TreeItem ItemNewChamp = new TreeItem();
+	private TreeItem ItemAddChamp = new TreeItem();
+	private Tree TeamsTree = new Tree();
+	private TreeItem ItemNewTeam = new TreeItem();
+	private TreeItem ItemAddTeam = new TreeItem();
+	private Tree InvitationsTree = new Tree();
+	private TreeItem ItemChampInvitations = new TreeItem();
+	private TreeItem ItemTeamInvitations = new TreeItem();
+	private SuggestBox suggestNickBox;
+	private ListBox addPlayersDropBox = new ListBox(false);
+	private Label addPlayersLabel = new Label();
 
 	private Button loginButton = new Button("Entrar");
 	private Button logoutButton = new Button("Cerrar sesión");
@@ -106,13 +132,18 @@ public class JocProg implements EntryPoint {
 	private Button addCircuitsButton = new Button("Añadir circuito -->");
 	private Button deleteCircuitsButton = new Button("Eliminar");
 	private Button createTeamButton = new Button("Crear equipo");
+	private Button addPlayersButton = new Button("Invitar");
 	
 	private ArrayList<String> circuitsList = new ArrayList<String>();
    	private ArrayList<String> champsList = new ArrayList<String>();
    	private ArrayList<String> teamsList = new ArrayList<String>();
+   	//private ArrayList<String> allNicksList = new ArrayList<String>();
+   	//private ArrayList<String> myChampsList = new ArrayList<String>();
+   	//private ArrayList<String> myTeamsList = new ArrayList<String>();
    	//private ArrayList<String> addedList = new ArrayList();
    	//private String[] pageSizes = {"Tamaño","10","25","50","75","100"};
    	private String[] pageSizes = {"Tamaño","1","2","3","4","5","6","7","8","9","10"};
+   	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 	
 	private static String USER = "";
 	private static int modeOn = CODE;
@@ -138,7 +169,8 @@ public class JocProg implements EntryPoint {
 	  }
 	  createCorrePanel();
 	  createRankingPanel();
-	  createAddPanel();
+	  createAdminPanel();
+
 	    
 	  loginButton.addClickHandler( 
 			  new ClickHandler() {
@@ -170,37 +202,16 @@ public class JocProg implements EntryPoint {
 					  saveChanges();
 				  }	
 			  });
-	  
-	 
-	 /* String html = 
-			"<div id= 'txtare' style = 'width:100%; height: 100%;' >"+
-			"<script language='javascript' type='text/javascript' src='http://localhost/editarea/edit_area/edit_area_full.js'></script>"+
-			"<script language='javascript' type='text/javascript'>"+
-			"editAreaLoader.init({"+
-				"id : 'textarea_1'"+
-				",syntax: 'cpp',start_highlight: true"+
-				",min_width: 900 ,min_height: 200 ,allow_resize: 'no'"+
-				",allow_toggle: true"+
-				",toolbar: 'load,save,|,search,go_to_line,fullscreen,|,undo,redo,|,select_font,|,change_smooth_selection,highlight,reset_highlight,word_wrap,|,help'});"+
-			"</script>"+
-			"<form method='post'>"+
-			"<textarea id='textarea_1' style='width: 100%; height:100%;' name='content'>"+
-			"</textarea>"+
-			"</form>"+
-			"</div>";
 
-HTMLPanel input = new HTMLPanel(html);
-input.setSize("100%","100%");*/
 
-	    
 	  //Assemble Main panel.
 	  //mainPanel.setAnimationEnabled(true);
 	  mainPanel.add(multiPanel,"Login/User");
 	  mainPanel.add(codiPanel,"Corre");
 	  mainPanel.add(rankingVPanel,"Ranking");
-	  mainPanel.add(addVPanel,"Crear campeonato/equipo");
 	  mainPanel.add(new HTML("Help Tab"),"Help");
-	  //mainPanel.add(input,"Help");
+	  //mainPanel.add(prueba,"Help");
+	  mainPanel.add(adminHPanel,"Administración");
 	  mainPanel.selectTab(0);
 		  
 	  mainPanel.setSize("100%","100%");
@@ -244,7 +255,7 @@ input.setSize("100%","100%");*/
 	  
 	  //Associate the Main panel with the HTML host page.
 	  RootPanel.get("uiJuego").add(mainPanel);
-	  //RootPanel.get("uiJuego").add(input);
+	  //RootPanel.get("uiJuego").add(adminVPanel);
   }
   
   
@@ -579,7 +590,79 @@ input.setSize("100%","100%");*/
 	  });
   }
   
-  private void createAddPanel(){
+  private void createAdminPanel(){
+
+	  createNewChampPanel();
+	  createNewTeamPanel();
+	  createAddPlayersPanel();
+  
+	  adminHPanel.setSize("100%","100%");
+	  adminStckPanel.setSize("205px","50%");
+	  ItemNewChamp = ChampsTree.addItem("Crear nuevo");
+	  ItemAddChamp = ChampsTree.addItem("Invitar a jugadores");
+	  ChampsTree.addSelectionHandler(new SelectionHandler<TreeItem>(){
+		  public void onSelection(SelectionEvent<TreeItem> event){
+			  TreeItem it = ChampsTree.getSelectedItem();
+			  if(it.equals(ItemNewChamp)){
+				  int n = adminHPanel.getWidgetCount();
+				  if (n == 2) adminHPanel.remove(n-1);
+				  adminHPanel.add(newChampVPanel);
+			  }
+			  else if(it.equals(ItemAddChamp)){
+				  int n = adminHPanel.getWidgetCount();
+				  if (n == 2) adminHPanel.remove(n-1);
+				  addPlayersLabel.setText("¡ Invita a tus amigos a participar en tus campeonatos !");
+				  refreshAddPlayersDropBox(1);
+				  adminHPanel.add(addPlayersVPanel);
+			  }
+		  }
+	  });
+	
+	  ItemNewTeam = TeamsTree.addItem("Crear nuevo");
+	  ItemAddTeam = TeamsTree.addItem("Invitar a jugadores");
+	  TeamsTree.addSelectionHandler(new SelectionHandler<TreeItem>(){
+		  public void onSelection(SelectionEvent<TreeItem> event){
+			  TreeItem it = TeamsTree.getSelectedItem();
+			  if(it.equals(ItemNewTeam)){
+				  int n = adminHPanel.getWidgetCount();
+				  if (n == 2) adminHPanel.remove(n-1);
+				  adminHPanel.add(newTeamVPanel);
+			  }
+			  else if(it.equals(ItemAddTeam)){
+				  int n = adminHPanel.getWidgetCount();
+				  if (n == 2) adminHPanel.remove(n-1);
+				  addPlayersLabel.setText("¡ Invita a tus amigos a unirse a tus equipos !");
+				  refreshAddPlayersDropBox(2);
+				  adminHPanel.add(addPlayersVPanel);
+			  }
+		  }
+	  });
+	
+	  ItemChampInvitations = InvitationsTree.addItem("A campeonatos");
+	  ItemTeamInvitations = InvitationsTree.addItem("A equipos");
+	  InvitationsTree.addSelectionHandler(new SelectionHandler<TreeItem>(){
+		  public void onSelection(SelectionEvent<TreeItem> event){
+			  TreeItem it = InvitationsTree.getSelectedItem();
+			  if(it.equals(ItemChampInvitations)){
+				  int n = adminHPanel.getWidgetCount();
+				  if (n == 2) adminHPanel.remove(n-1);
+				  //adminHPanel.add(newChampVPanel);
+			  }
+			  else if(it.equals(ItemTeamInvitations)){
+				  int n = adminHPanel.getWidgetCount();
+				  if (n == 2) adminHPanel.remove(n-1);
+				  //adminHPanel.add(newTeamVPanel);
+			  }
+		  }
+	  });
+	
+	  adminStckPanel.add(ChampsTree, "Campeonatos");
+	  adminStckPanel.add(TeamsTree, "Equipos");
+	  adminStckPanel.add(InvitationsTree, "Invitaciones");
+	  adminHPanel.add(adminStckPanel);
+  }
+  
+  private void createNewChampPanel(){
 	  
 	  VerticalPanel champNameVPanel = new VerticalPanel();
 	  champNameVPanel.setSize("100%","100%");
@@ -599,7 +682,7 @@ input.setSize("100%","100%");*/
 	  champChooseVPanel.setSize("100%","100%");
 	  champChooseVPanel.add(new HTML("Circuitos disponibles:"));
 	  Grid dispCircuitsGrid = new Grid(1,2);
-	  circuitsMultiBox.setSize("125px","200px");
+	  circuitsMultiBox.setSize("130px","200px");
 	  dispCircuitsGrid.setWidget(0,0,circuitsMultiBox);
 	  dispCircuitsGrid.setWidget(0,1,addCircuitsButton);
 	  CellFormatter dispCircsCellFormatter = dispCircuitsGrid.getCellFormatter();
@@ -611,7 +694,7 @@ input.setSize("100%","100%");*/
 	  champAddVPanel.setSize("100%","100%");
 	  champAddVPanel.add(new HTML("Circuitos seleccionados:"));
 	  Grid selectedCircuitsGrid = new Grid(1,2);
-	  selectedMultiBox.setSize("125px","200px");
+	  selectedMultiBox.setSize("130px","200px");
 	  selectedCircuitsGrid.setWidget(0,0,selectedMultiBox);
 	  selectedCircuitsGrid.setWidget(0,1,deleteCircuitsButton);
 	  CellFormatter selectedCircsCellFormatter = selectedCircuitsGrid.getCellFormatter();
@@ -627,16 +710,10 @@ input.setSize("100%","100%");*/
 	  newChampHPanel.add(champChooseVPanel);
 	  newChampHPanel.add(champAddVPanel);
 	  
-	  Grid newTeam = new Grid(2,2);
-	  newTeam.setWidget(0,0,new HTML("Nombre: "));
-	  newTeam.setWidget(0,1,teamNameTextBox);
-	  newTeam.setWidget(1,1,createTeamButton);
-	  
-	  addVPanel.setSize("100%","100%");
-	  addVPanel.add(new HTML("Crear nuevo campeonato:"));
-	  addVPanel.add(newChampHPanel);
-	  addVPanel.add(new HTML("Crear nuevo equipo:"));
-	  addVPanel.add(newTeam);
+	  newChampVPanel.setSize("100%","100%");
+	  newChampVPanel.add(new HTML("Crear nuevo campeonato:"));
+	  newChampVPanel.add(newChampHPanel);
+
 	  
 	  addCircuitsButton.addClickHandler( 
 			  new ClickHandler() {
@@ -668,12 +745,55 @@ input.setSize("100%","100%");*/
 					  requestNewChampionship();
 				  }
 			  });
+
+  }
+  
+  private void createNewTeamPanel(){
+	  
+	  Grid newTeam = new Grid(2,2);
+	  newTeam.setWidget(0,0,new HTML("Nombre: "));
+	  newTeam.setWidget(0,1,teamNameTextBox);
+	  newTeam.setWidget(1,1,createTeamButton);
+	  
+	  newTeamVPanel.setSize("100%","100%");
+	  newTeamVPanel.add(new HTML("¡Crea un nuevo equipo del que serás propietario!:"));
+	  newTeamVPanel.add(newTeam);
+	  
 	  createTeamButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
 					  requestNewTeam();
 				  }
 			  });
+  }
+  
+  private void createAddPlayersPanel(){
+	  
+	  requestAllNicks();
+	  //for(int i=0;i<allNicksList.size();i++) oracle.add(allNicksList.get(i));
+	  suggestNickBox = new SuggestBox(oracle);
+	  
+	  HorizontalPanel addPlayersHPanel = new HorizontalPanel();
+	  addPlayersHPanel.add(addPlayersDropBox);
+	  addPlayersHPanel.add(suggestNickBox);
+	  addPlayersHPanel.add(addPlayersButton);
+	  
+	  addPlayersVPanel.setSize("100%","100%");
+	  addPlayersVPanel.add(addPlayersLabel);
+	  addPlayersVPanel.add(addPlayersHPanel);
+	  
+	  addPlayersButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  if(addPlayersDropBox.getValue(0).equals("CAMPEONATOS")){
+						  requestAddPlayerToChamp();
+					  }
+					  else if(addPlayersDropBox.getValue(0).equals("EQUIPOS")){
+						  requestAddPlayerToTeam();
+					  }
+				  }
+			  });
+	  
   }
   
   
@@ -1045,6 +1165,187 @@ input.setSize("100%","100%");*/
 		    }
 	  }
   }
+  
+  
+  private void requestAllNicks() {    //al iniciar la aplicacion una sola vez
+	  
+	  String url = JSON_URL;
+	  url = URL.encode(url);
+	  //Send request to server and catch any errors.
+	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+
+	  try {
+		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+		  URL.encodeComponent("getAllNicks"), new RequestCallback() {
+			  public void onError(Request request, Throwable exception) {
+				  Window.alert("Couldn't retrieve JSON");
+			  }
+		      public void onResponseReceived(Request request, Response response) {
+		    	  if (200 == response.getStatusCode()) {
+		    		  JsArrayString nicks = asJsArrayString(response.getText());
+		    		  for(int i=0;i<nicks.length();i++) { oracle.add(nicks.get(i)); }
+		          } else {
+		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+		          }
+		      }
+		  });
+	  } catch (RequestException e) {
+		  Window.alert("Couldn't retrieve JSON");
+	  }
+  }
+
+  private void refreshAddPlayersDropBox(int op) {    //al iniciar la aplicacion una sola vez
+	  
+	  String url = JSON_URL;
+	  url = URL.encode(url);
+	  //Send request to server and catch any errors.
+	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+
+	  try {
+		  if(op == 1){
+    		  addPlayersDropBox.clear();
+    		  addPlayersDropBox.addItem("CAMPEONATOS");
+			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+					  URL.encodeComponent("getMyOwnChampionships"), new RequestCallback() {
+				  public void onError(Request request, Throwable exception) {
+					  Window.alert("Couldn't retrieve JSON");
+				  }
+			      public void onResponseReceived(Request request, Response response) {
+			    	  if (200 == response.getStatusCode()) {
+			    		  JsArrayString champs = asJsArrayString(response.getText());
+			    		  //for(int i=0;i<circs.length();i++) { circuitsList.add(circs.get(i)); }
+			    		  for (int i=0; i<champs.length(); i++) { 
+			    			  addPlayersDropBox.addItem(champs.get(i));
+			    		  }
+			          } else {
+			        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+			          }
+			      }
+			  });
+		  }
+		  else if(op == 2){
+			  addPlayersDropBox.clear();
+			  addPlayersDropBox.addItem("EQUIPOS");
+			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+					  URL.encodeComponent("getMyOwnTeams"), new RequestCallback() {
+				  public void onError(Request request, Throwable exception) {
+					  Window.alert("Couldn't retrieve JSON");
+				  }
+				  public void onResponseReceived(Request request, Response response) {
+					  if (200 == response.getStatusCode()) {
+						  JsArrayString teams = asJsArrayString(response.getText());
+						  //for(int i=0;i<circs.length();i++) { circuitsList.add(circs.get(i)); }
+						  for (int i=0; i<teams.length(); i++) { 
+							  addPlayersDropBox.addItem((String)circuitsList.get(i));
+						  }
+					  } else {
+						  Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+					  }
+				  }
+			  });  
+		  }
+	  } catch (RequestException e) {
+		  Window.alert("Couldn't retrieve JSON");
+	  }
+}
+
+
+  private void requestAddPlayerToChamp() {
+	  if (addPlayersDropBox.getSelectedIndex() == 0){
+		  Window.alert("Debes elegir un campeonato");
+	  }
+	  else if (suggestNickBox.getText().equals("")){
+		  Window.alert("Debes introducir el nombre del usuario al que quieres invitar");
+	  }
+	  else{
+		  String url = JSON_URL;
+		  url = URL.encode(url);
+		  //Send request to server and catch any errors.
+		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+		  String name = addPlayersDropBox.getValue(addPlayersDropBox.getSelectedIndex());
+		  String nick = suggestNickBox.getText();
+
+		  try {
+			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+		      URL.encodeComponent("addPlayerToChampionship")+"&"+URL.encodeComponent("name")+"="+
+		      URL.encodeComponent(name)+"&"+URL.encodeComponent("nick")+"="+
+		      URL.encodeComponent(nick), new RequestCallback() {
+		        public void onError(Request request, Throwable exception) {
+		        	Window.alert("Couldn't retrieve JSON");
+		        }
+		        public void onResponseReceived(Request request, Response response) {
+		          if (200 == response.getStatusCode()) {
+		        	  int res = asInt(response.getText());
+		    		  String name = addPlayersDropBox.getValue(addPlayersDropBox.getSelectedIndex());
+		    		  String nick = suggestNickBox.getText();
+		        	  if(res==1) Window.alert("No se ha enviado la invitación porque el usuario "+nick+" ya había sido invitado al campeonato "+name);
+		        	  else if(res==2) Window.alert("El nick introducido no corresponde con ningún usuario existente");
+		        	  else if(res==3) Window.alert("Se ha producido un error. Por favor, inténtalo de nuevo");
+		        	  else if (res==0){
+		        		  Window.alert("La invitación para el usuario "+nick+" al campeonato "+name+" se ha enviado con éxito");
+		        		  suggestNickBox.setText("");
+		        	  }
+		          } else {
+		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+		          }
+		        }
+		      });
+		    } catch (RequestException e) {
+		    	Window.alert("Couldn't retrieve JSON");
+		    }
+	  }
+}
+
+
+  private void requestAddPlayerToTeam() {
+	  if (addPlayersDropBox.getSelectedIndex() == 0){
+		  Window.alert("Debes elegir un equipo");
+	  }
+	  else if (suggestNickBox.getText().equals("")){
+		  Window.alert("Debes introducir el nombre del usuario al que quieres invitar");
+	  }
+	  else{
+		  String url = JSON_URL;
+		  url = URL.encode(url);
+		  //Send request to server and catch any errors.
+		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+		  String name = addPlayersDropBox.getValue(addPlayersDropBox.getSelectedIndex());
+		  String nick = suggestNickBox.getText();
+
+		  try {
+			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+		      URL.encodeComponent("addPlayerToTeam")+"&"+URL.encodeComponent("name")+"="+
+		      URL.encodeComponent(name)+"&"+URL.encodeComponent("nick")+"="+
+		      URL.encodeComponent(nick), new RequestCallback() {
+		        public void onError(Request request, Throwable exception) {
+		        	Window.alert("Couldn't retrieve JSON");
+		        }
+		        public void onResponseReceived(Request request, Response response) {
+		          if (200 == response.getStatusCode()) {
+		        	  int res = asInt(response.getText());
+		    		  String name = addPlayersDropBox.getValue(addPlayersDropBox.getSelectedIndex());
+		    		  String nick = suggestNickBox.getText();
+		        	  if(res==1) Window.alert("No se ha enviado la invitación porque el usuario "+nick+" ya había sido invitado al equipo "+name);
+		        	  else if(res==2) Window.alert("El nick introducido no corresponde con ningún usuario existente");
+		        	  else if(res==3) Window.alert("Se ha producido un error. Por favor, inténtalo de nuevo");
+		        	  else if (res==0){
+		        		  Window.alert("La invitación para el usuario "+nick+" al equipo "+name+" se ha enviado con éxito");
+		        		  suggestNickBox.setText("");
+		        	  }
+		          } else {
+		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+		          }
+		        }
+		      });
+		    } catch (RequestException e) {
+		    	Window.alert("Couldn't retrieve JSON");
+		    }
+	  }
+}
   
   
   private void logout(){
