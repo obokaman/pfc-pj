@@ -37,17 +37,22 @@
 	/*Post: Retorna un entero que representa el identificador del usuario*/
 	
 	
-	/*La función nos devuelve la lista de todos los usuarios que estan almacenados en la BBDD*/
+	/*La función nos devuelve la lista de todos los nicks de los usuarios que estan almacenados en la BBDD*/
 	function get_users(){
 	/*Pre: - */	
 		global $connection;
 		
-		$query =  "SELECT * FROM user";
+		$query =  "SELECT u.nick FROM user u";
 		$result_query = mysql_query($query, $connection) or my_error('GET_USERS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-		return(extract_rows($result_query));	
+		$arr = extract_rows($result_query);
+		$res = array();
+		foreach ($arr as $row) {
+			$res[] = $row->nick;
+		}
+		return $res;
 	}
-	/*Post: La función nos devuelve una array de objetos de todos los usuarios que estan almacenados en la base de datos*/
+	/*Post: La función nos devuelve una array de strings de todos los nicks de los  usuarios que estan almacenados en la base de datos*/
 
 	
 	/*La función nos devuelve la información del usuario a partir del identificador que tiene en la BBDD*/
@@ -138,12 +143,12 @@
 	
 
 	/*La función comprueba si el nick del usuario existe*/
-	function exist_user_nick($nick){	
+	function exist_user($nick){	
 	/*Pre: - */	
 		global $connection;
 		
 		$query =  "SELECT * FROM user WHERE nick = '$nick'";
-		$result_query = mysql_query($query, $connection) or my_error('EXIST_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('EXIST_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		if (extract_num_rows($result_query) == 0)	return false;
 		else return true;

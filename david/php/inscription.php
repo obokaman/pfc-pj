@@ -1,21 +1,17 @@
 <?php
 
 	/*La función crea una instancia que relaciona un usuario con un campeonato mediante sus identificadores*/
-	function create_inscription($id_user, $id_champ, $pendent){
+	function create_inscription($id_user, $id_champ){
 	/*Pre: - */	
 		global $connection;
 		
 	    $query = "INSERT INTO inscription ( id_user, id_champ, pendent)
-						VALUES ('$id_user',' $id_champ', '$pendent')";
+						VALUES ('$id_user',' $id_champ', 0 )";
 						
 		if (!mysql_query($query, $connection)) {
-			my_error('CREATE_INSCRIPTION-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
+			my_error('CREATE_INSCRIPTION-> '.mysql_errno($connection).": ".mysql_error($connection), 1);				
 			return false;
-		}else{	
-				
-			return true;
-		}
+		}else	return true;		
 	}
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion de la nueva instancia entre el usuario y el campeonato, en caso contrario devuelve falso*/
 	
@@ -65,15 +61,10 @@
 		global $connection;
 		
 	    $query = "SELECT pendent FROM inscription WHERE id_user='$id_user' AND id_champ='$id_champ'";
+		$result_query = mysql_query($query, $connection) or my_error('GET_STATUS_INSCRIPTION-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-		if (!mysql_query($query, $connection)) {
-			my_error('GET_STATUS_INSCRIPTION-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
-			return null;
-		}else{
-				
-			return $query;
-		}
+		return( extract_row($result_query)->pendent );
+		
 	}
 	/*Post: La función nos retorna el valor del estado del usuario en el campeonato, en caso de que no exista relación entre el usuario y el campeonato se retorna valor nulo*/
 	
@@ -87,12 +78,9 @@
 		
 		if (!mysql_query($query, $connection)) {
 			my_error('SET_INSCRIPTION_STATUS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
 			return false;
-		}else{
-				
-			return true;
-		}	
+		}else return true;	
+		
 	}
 	/*Post: Devuelve cierto si ha realizado la modificacion correctamente, en caso contrario devuelve falso*/
 	
@@ -119,7 +107,7 @@
 	
 		$result_query = mysql_query($query, $connection) or my_error('EXIST_INSCRIPTION-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		if (count(extract_row($result_query))==0)	return false;
+		if (extract_num_rows($result_query)==0)	return false;
 		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el identificador del usuario y del campeonato existe, en caso contrario devuelve falso*/

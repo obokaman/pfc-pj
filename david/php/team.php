@@ -55,16 +55,30 @@
 	/*Post: Retorna una array con el objeto equipo que contienen la información del equipo*/
 	
 	
-	/*La función nos devuelve la información del equipo a partir del nombre del campeonato*/
-	function get_team_name($name){
+	/*La función retorna todos los nombres de los equipos que ha fundado el usuario de la entrada*/
+	function get_teams_by_founded(){
 	/*Pre: - */
-		global $connection;
-		$query =  "SELECT * FROM team WHERE name = '$name'";
-		$result_query = mysql_query($query, $connection) or my_error('GET_TEAM_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+		if ( isset($_SESSION['user']) ) {
+			
+			global $connection;
+			
+			$id_user_founded = get_id_user($_SESSION['user']);
+			
+			$query =  "SELECT t.name FROM team t WHERE t.id_founded = '$id_user_founded'";		
+			$result_query = mysql_query($query, $connection) or my_error('GET_TEAMS_BY_FOUNDED-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
-		return(extract_row($result_query));
+			$arr = extract_rows($result_query);
+			$res = array();
+			foreach ($arr as $row) {
+				$res[] = $row->name;
+			}
+			
+			return $res;	
+			
+		}else return null;
+			
 	}
-	/*Post: Retorna la información del equipo*/
+	/*Post: Devuelve una array de string con los nombres de los equipos a los que pertencen el usuario con el identificador igual al de la entrada*/	
 	
 	
 	/*La función devuelve una lista de nombres de equipos a los que pertenece el usuario que esta logueado*/

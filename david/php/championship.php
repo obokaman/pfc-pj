@@ -54,17 +54,31 @@
 	}
 	/*Post: La función devuelve un array con el objeto campeonato seleccionado por su identificador*/
 	
-	
-	/*La función nos devuelve la información del campeonato en formato JSON a partir del nombre del campeonato*/
-	function get_championship_name($name){
+	/*La función retorna todos los nombres de los campeonatos que ha fundado el usuario de la entrada*/
+	function get_championships_by_founded(){
 	/*Pre: - */
-		global $connection;
-		$query =  "SELECT * FROM championship WHERE name = '$name'";
-		$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPIONSHIP_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-				
-		return(extract_row($result_query));
+		if ( isset($_SESSION['user']) ) {
+			
+			global $connection;
+			
+			$id_user_founded = get_id_user($_SESSION['user']);
+			
+			$query =  "SELECT c.name FROM championship c WHERE c.id_founded = '$id_user_founded'";		
+			$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPIONSHIPS_BY_FOUNDED-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+
+			$arr = extract_rows($result_query);
+			$res = array();
+			foreach ($arr as $row) {
+				$res[] = $row->name;
+			}
+			
+			return $res;	
+			
+		}else return null;
+			
 	}
-	/*Post: La función devuelve un array con el objeto campeonato seleccionado por su nombre*/
+	/*Post: Devuelve una array de string con los nombres de los campeonatos que ha fundado el usuario con el identificador igual al de la entrada*/	
+	
 	
 	
 	    /*La función devuelve una lista de nombres de campeonatos a los que pertenece el usuario que esta logueado, y el circuito */

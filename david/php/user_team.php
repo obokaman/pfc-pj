@@ -1,18 +1,16 @@
 <?php
 
 	/*La función crea nua instancia que relaciona un usuario con un equipo mediante sus identificadores*/
-	function add_user_team($id_user, $id_team, $pendent){
+	function add_user_team($id_user, $id_team){
 	/*Pre: - */	
 		global $connection;
 		
-	    $query = "INSERT INTO user_team ( id_user, id_team, pendent) VALUES ('$id_user',' $id_team', '$pendent')";
+	    $query = "INSERT INTO user_team ( id_user, id_team, pendent) VALUES ('$id_user',' $id_team', 0)";
 
 		if (!mysql_query($query, $connection)) {
 			my_error('ADD_USER_TEAM->  '.mysql_errno($connection) . ": " . mysql_error($connection), 1);
 			return false;
-		}else{	
-			return true;
-		}
+		}else return true;
 	}
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion de la nueva instancia entre el usuario y el equipo, en caso contrario devuelve falso*/
 	
@@ -110,7 +108,7 @@
 	
 		$result_query = mysql_query($query, $connection) or  my_error('EXIST_USER_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		if (count(extract_row($result_query))==0)	return false;
+		if (extract_num_rows($result_query)==0)	return false;
 		else return true;
 	}
 	/*Post: Devuelve cierto en caso de que el identificador del usuario y del equipo existe, en caso contrario devuelve falso*/

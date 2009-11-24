@@ -4,7 +4,8 @@ session_name("PFC");
 session_start();
 $connection = open_connection();
 
-$f = clean("function", "string"); //--------------> Pasar el texto a minusculas ?????
+$f = clean("function", "string");
+
 if ($f == "login") {
 	send( login( clean("nick", "string"),	clean("password", "string") ) );
 }
@@ -84,6 +85,7 @@ else if ($f == "getRankings") {
 		);
 }
 else if ($f == "newChampionship") {	
+
 		$name = clean("name", "string");
 		$date_limit = clean("date_limit", "date");
 		$circuits = Array();
@@ -125,6 +127,53 @@ else if ($f == "newTeam") {
 		}; 
 		send($result);
 }
+else if ($f == "getMyOwnChampionships") {	
+		send(
+			get_championships_by_founded()
+		);
+}
+else if ($f == "getMyOwnTeams") {	
+		send(
+			get_teams_by_founded()
+		);
+}
+else if ($f == "getAllNicks") {	
+		send(
+			get_users()
+		);
+}
+else if ($f == "addPlayerToChampionship") {
+		$name_champ = clean("name", "string");
+		$nick_user = clean("nick", "string");
+		
+		if ( ( exist_championship($name_champ) ) and ( exist_user($nick_user) ) ){ // Existe el nombre del campeonato y del usuario
+			if ( !exist_inscription( get_id_user ($nick_user), get_id_championship($name_champ) ) ) { //No existe invitacion  				
+				if (create_inscription( get_id_user ($nick_user), get_id_championship($name_champ) ) ) $res = 0;
+				else $res = 3;
+				
+			}else $res = 1;
+			
+		}else $res = 2;
+		
+		send($res);
+}
+else if ($f == "addPlayerToTeam") {
+		$name_team = clean("name", "string");
+		$nick_user = clean("nick", "string");
+		
+		if ( ( exist_team($name_team) ) and ( exist_user($nick_user) ) ){ // Existe el nombre del equipo y del usuario
+			if ( !exist_user_team( get_id_user ($nick_user), get_id_team($name_team) ) ) { //No existe invitacion  				
+				if (add_user_team( get_id_user ($nick_user), get_id_team($name_team) ) ) $res = 0;
+				else $res = 3;
+				
+			}else $res = 1;
+			
+		}else $res = 2;
+		
+		send($res);
+}
+
+
 //else escribe_log("ADFadskfdashfldsjfdsali");*/
 close_connection($connection);
 	
