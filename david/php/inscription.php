@@ -1,12 +1,12 @@
 <?php
 
 	/*La función crea una instancia que relaciona un usuario con un campeonato mediante sus identificadores*/
-	function create_inscription($id_user, $id_champ){
+	function create_inscription($id_user, $id_champ. $pendent){
 	/*Pre: - */	
 		global $connection;
 		
 	    $query = "INSERT INTO inscription ( id_user, id_champ, pendent)
-						VALUES ('$id_user',' $id_champ', 0 )";
+						VALUES ('$id_user',' $id_champ', '$pendent' )";
 						
 		if (!mysql_query($query, $connection)) {
 			my_error('CREATE_INSCRIPTION-> '.mysql_errno($connection).": ".mysql_error($connection), 1);				

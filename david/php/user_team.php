@@ -1,11 +1,11 @@
 <?php
 
 	/*La función crea nua instancia que relaciona un usuario con un equipo mediante sus identificadores*/
-	function add_user_team($id_user, $id_team){
+	function add_user_team($id_user, $id_team, $pendent){
 	/*Pre: - */	
 		global $connection;
 		
-	    $query = "INSERT INTO user_team ( id_user, id_team, pendent) VALUES ('$id_user',' $id_team', 0)";
+	    $query = "INSERT INTO user_team ( id_user, id_team, pendent) VALUES ('$id_user',' $id_team', '$pendent')";
 
 		if (!mysql_query($query, $connection)) {
 			my_error('ADD_USER_TEAM->  '.mysql_errno($connection) . ": " . mysql_error($connection), 1);
