@@ -12,6 +12,7 @@
 						$var = trim ( $var );	
 					break;
 					case 'array':
+						my_error($var, 1);
 						$var = explode(" ",$var);
 					break;
 					case 'date':

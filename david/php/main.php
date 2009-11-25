@@ -92,6 +92,8 @@ else if ($f == "newChampionship") {
 		$circuits = clean("circuits", "array");	
 		$b = true;
 		
+	 
+		
 		if(exist_championship($name)){	//Comprobamos que el nombre del campeonato no exista
 			$result = 1;
 		}else{		
