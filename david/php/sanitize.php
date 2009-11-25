@@ -13,7 +13,7 @@
 					break;
 					case 'array':
 						my_error($var, 1);
-						$var = explode(" ",$var);
+						$var = explode("+",$var);
 					break;
 					case 'date':
 						$arr = Array();
