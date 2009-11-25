@@ -1,7 +1,7 @@
 <?php
 
 	/*La función crea una instancia que relaciona un usuario con un campeonato mediante sus identificadores*/
-	function create_inscription($id_user, $id_champ. $pendent){
+	function create_inscription($id_user, $id_champ, $pendent){
 	/*Pre: - */	
 		global $connection;
 		
