@@ -108,7 +108,7 @@
 													team t
 										where u.nick = '$nick_session'
 										and  u.id_user = i.id_user
-										and  i.pendent <> 0
+										and  i.active <> 0
 										and  i.id_champ = c.id_champ
 										and c.name = '$name_champ'
 										and c.id_champ = cc.id_champ

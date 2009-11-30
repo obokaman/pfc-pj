@@ -40,7 +40,7 @@ DROP TABLE IF EXISTS user_team;
 CREATE TABLE user_team (
   id_user	integer	 NOT NULL,
   id_team 	integer  NOT NULL,
-  pendent 	integer  DEFAULT 0,
+  active 	integer  DEFAULT 0,
 
   PRIMARY KEY (id_user, id_team),
   FOREIGN KEY (id_user) REFERENCES user (id_user) ON DELETE CASCADE,
@@ -66,7 +66,7 @@ DROP TABLE IF EXISTS inscription;
 CREATE TABLE inscription (
   id_champ	integer	 NOT NULL,
   id_user	integer  NOT NULL,
-  pendent 	integer  DEFAULT 0,
+  active 	integer  DEFAULT 0,
 
   PRIMARY KEY (id_champ, id_user),
 
@@ -150,17 +150,17 @@ INSERT INTO team (name, id_founded) VALUES ('Escuderia2', 3);
 
 INSERT INTO team (name, id_founded) VALUES ('Escuderia3', 3);
 
-INSERT INTO user_team (id_user, id_team, pendent) VALUES (1,1,1);
+INSERT INTO user_team (id_user, id_team, active) VALUES (1,1,1);
 
-INSERT INTO user_team (id_user, id_team, pendent) VALUES (2,1,1);
+INSERT INTO user_team (id_user, id_team, active) VALUES (2,1,1);
 
-INSERT INTO user_team (id_user, id_team, pendent) VALUES (1,2,1);
+INSERT INTO user_team (id_user, id_team, active) VALUES (1,2,1);
 
-INSERT INTO user_team (id_user, id_team, pendent) VALUES (2,2,1);
+INSERT INTO user_team (id_user, id_team, active) VALUES (2,2,0);
 
-INSERT INTO user_team (id_user, id_team, pendent) VALUES (3,1,1);
+INSERT INTO user_team (id_user, id_team, active) VALUES (3,1,1);
 
-INSERT INTO user_team (id_user, id_team, pendent) VALUES (3,2,1);
+INSERT INTO user_team (id_user, id_team, active) VALUES (3,2,1);
 
 INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('Montmelo', 'MNT', null, 3, null);
 
@@ -174,19 +174,19 @@ INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato2', '
 
 INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato3', '2010-01-31', 3);
 
-INSERT INTO inscription (id_user, id_champ, pendent) VALUES (1, 1, 1);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (1, 1, 1);
 
-INSERT INTO inscription (id_user, id_champ, pendent) VALUES (2, 1, 1);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (2, 1, 1);
 
-INSERT INTO inscription (id_user, id_champ, pendent) VALUES (2, 2, 1);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (2, 2, 1);
 
-INSERT INTO inscription (id_user, id_champ, pendent) VALUES (2, 3, 0);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (2, 3, 0);
 
-INSERT INTO inscription (id_user, id_champ, pendent) VALUES (3, 1, 1);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (3, 1, 1);
 
-INSERT INTO inscription (id_user, id_champ, pendent) VALUES (3, 2, 1);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (3, 2, 1);
 
-INSERT INTO inscription (id_user, id_champ, pendent) VALUES (3, 3, 1);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (3, 3, 1);
 
 INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 1);
 

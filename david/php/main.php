@@ -175,6 +175,55 @@ else if ($f == "addPlayerToTeam") {
 		
 		send($res);
 }
+else if ($f == "getNInvitations") {
+		
+		class obj{
+				public $nChamps;
+				public $nTeams;					
+		}
+			
+		$result = new obj;
+		
+		$obj->nChamps = get_num_inscriptions_pendents( get_id_user( $_SESSION[ 'user' ] ) );
+		$obj->nTeams = get_num_userteam_pendents( get_id_user( $_SESSION[ 'user' ] ) );
+		
+		send($obj);
+}
+else if ($f == "getChampionshipsInvited") {
+			send( get_championships_invited() );		
+}
+else if ($f == "getTeamsInvitated") {
+			send( get_teams_invited() );		
+}
+else if ($f == "setChampionshipAnswer") {
+	
+		$name_champ = clean("name", "string");
+		$answer = clean("answer", "int");
+		
+		//Comprovamos que el usuario este logueado y exista una instancia de inscripcion con el nombre del campeonato y el usuario
+		if( ( isset( $_SESSION[ 'user' ] ) ) and ( exist_inscription( get_id_user( $_SESSION[ 'user' ] ), get_id_championship ( $name_champ ) ) ) ){			
+			//Peticion aceptada
+			if ( $answer == 1 ) set_inscription_status( get_id_user( $_SESSION[ 'user' ] ), get_id_championship ( $name_champ ), 1);
+			//Peticion rechazada
+			if ( ( $answer == 0 ) and ( get_status_inscription( get_id_user( $_SESSION[ 'user' ] ), get_id_championship ( $name_champ ) ) == 0 ) )  delete_inscription( get_id_user( $_SESSION[ 'user' ] ), get_id_championship ( $name_champ ) );			
+		}
+}
+else if ($f == "setTeamAnswer") {
+	
+		$name_team = clean("name", "string");
+		$answer = clean("answer", "int");
+		
+		//Comprovamos que el usuario este logueado y exista una instancia de inscripcion con el nombre del campeonato y el usuario
+		if( ( isset( $_SESSION[ 'user' ] ) ) and ( exist_user_team( get_id_user( $_SESSION[ 'user' ] ), get_id_team ( $name_team ) ) ) ){			
+			//Peticion aceptada
+			if ( $answer == 1 ) set_user_team_status( get_id_user( $_SESSION[ 'user' ] ), get_id_team ( $name_team ), 1);
+			//Peticion rechazada
+			if ( ( $answer == 0 ) and ( get_status( get_id_user( $_SESSION[ 'user' ] ), get_id_team ( $name_team ) ) == 0 ) )  delete_user_team( get_id_user( $_SESSION[ 'user' ] ), get_id_team ( $name_team ) );			
+		}
+}
+
+
+
 
 
 //else escribe_log("ADFadskfdashfldsjfdsali");*/
