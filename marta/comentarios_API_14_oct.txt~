@@ -159,16 +159,24 @@ addPlayerToTeam(name, nick)
   * 2: no existe el nick introducido
   * 3: otros errores
 
-getNPendientes() return nChamps, nTeams
+getNInvitations() return nChamps, nTeams
   * nChamps: numero de invitaciones a campeonatos hechas al usuario logeado que estan pendientes de confirmar/rechazar
   * nTeams: numero de invitaciones a equipos hechas al usuario logeado que estan pendientes de confirmar/rechazar 
 
-getChampionshipsPendientes() return {nick, name}[]
+getChampionshipsInvitated() return {nick, name}[]
   * retorna informacion sobre todas las invitaciones a campeonatos hechas al usuario logeado que estan pendientes de confirmar/rechazar:
      - nick: usuario que ha realizado la invitación (propietario del campeonato)
      - name: nombre del campeonato al que ha sido invitado el usuario logeado
 
-getTeamsPendientes() return {nick, name}[]
+getTeamsInvitated() return {nick, name}[]
   * retorna informacion sobre todas las invitaciones a equipos hechas al usuario logeado que estan pendientes de confirmar/rechazar:
      - nick: usuario que ha realizado la invitación (propietario del equipo)
      - name: nombre del equipo al que ha sido invitado el usuario logeado
+
+setChampionshipAnswer(name, answer)
+  * answer = 1: el usuario logeado acepta la invitacion al campeonato 'name' (la invitacion deja de estar pendiente)
+  * answer = 0: el usuario logeado rechaza la invitacion al campeonato 'name' (la invitacion se borra de la BD)
+
+setTeamAnswer(name, answer)
+  * answer = 1: el usuario logeado acepta la invitacion al equipo 'name' (la invitacion deja de estar pendiente)
+  * answer = 0: el usuario logeado rechaza la invitacion al equipo 'name' (la invitacion se borra de la BD)

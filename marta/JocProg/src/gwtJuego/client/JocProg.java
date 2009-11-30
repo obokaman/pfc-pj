@@ -80,6 +80,7 @@ public class JocProg implements EntryPoint {
 	private VerticalPanel newChampVPanel = new VerticalPanel();
 	private VerticalPanel newTeamVPanel = new VerticalPanel();
 	private VerticalPanel addPlayersVPanel = new VerticalPanel();
+	private VerticalPanel invitationsVPanel = new VerticalPanel();
 
 	
 	private TextArea inputTextArea = new TextArea();
@@ -120,6 +121,7 @@ public class JocProg implements EntryPoint {
 	private SuggestBox suggestNickBox;
 	private ListBox addPlayersDropBox = new ListBox(false);
 	private Label addPlayersLabel = new Label();
+	private FlexTable invitationsFlexTable = new FlexTable();
 
 	private Button loginButton = new Button("Entrar");
 	private Button logoutButton = new Button("Cerrar sesión");
@@ -137,10 +139,7 @@ public class JocProg implements EntryPoint {
 	private ArrayList<String> circuitsList = new ArrayList<String>();
    	private ArrayList<String> champsList = new ArrayList<String>();
    	private ArrayList<String> teamsList = new ArrayList<String>();
-   	//private ArrayList<String> allNicksList = new ArrayList<String>();
-   	//private ArrayList<String> myChampsList = new ArrayList<String>();
-   	//private ArrayList<String> myTeamsList = new ArrayList<String>();
-   	//private ArrayList<String> addedList = new ArrayList();
+   	private ArrayList<String> invitationsList = new ArrayList<String>();
    	//private String[] pageSizes = {"Tamaño","10","25","50","75","100"};
    	private String[] pageSizes = {"Tamaño","1","2","3","4","5","6","7","8","9","10"};
    	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
@@ -249,6 +248,9 @@ public class JocProg implements EntryPoint {
 				  sizePagesDropBox.setEnabled(false);
 				  int rows = rankingFlexTable.getRowCount();
 				  for (int i=1; i<rows; i++) rankingFlexTable.removeRow(1); 
+			  }
+			  else if(tabIndex==4){ 
+				  requestNInvitations();
 			  }
 		  }
 	  });
@@ -595,6 +597,7 @@ public class JocProg implements EntryPoint {
 	  createNewChampPanel();
 	  createNewTeamPanel();
 	  createAddPlayersPanel();
+	  createInvitationsPanel();
   
 	  adminHPanel.setSize("100%","100%");
 	  adminStckPanel.setSize("205px","50%");
@@ -613,6 +616,8 @@ public class JocProg implements EntryPoint {
 				  if (n == 2) adminHPanel.remove(n-1);
 				  addPlayersLabel.setText("¡ Invita a tus amigos a participar en tus campeonatos !");
 				  refreshAddPlayersDropBox(1);
+				  requestAllNicks();
+				  suggestNickBox = new SuggestBox(oracle);
 				  adminHPanel.add(addPlayersVPanel);
 			  }
 		  }
@@ -633,6 +638,8 @@ public class JocProg implements EntryPoint {
 				  if (n == 2) adminHPanel.remove(n-1);
 				  addPlayersLabel.setText("¡ Invita a tus amigos a unirse a tus equipos !");
 				  refreshAddPlayersDropBox(2);
+				  requestAllNicks();
+				  suggestNickBox = new SuggestBox(oracle);
 				  adminHPanel.add(addPlayersVPanel);
 			  }
 		  }
@@ -646,12 +653,16 @@ public class JocProg implements EntryPoint {
 			  if(it.equals(ItemChampInvitations)){
 				  int n = adminHPanel.getWidgetCount();
 				  if (n == 2) adminHPanel.remove(n-1);
-				  //adminHPanel.add(newChampVPanel);
+				  refreshInvitationsTable("champs");
+				  requestNInvitations();
+				  adminHPanel.add(invitationsVPanel);
 			  }
 			  else if(it.equals(ItemTeamInvitations)){
 				  int n = adminHPanel.getWidgetCount();
 				  if (n == 2) adminHPanel.remove(n-1);
-				  //adminHPanel.add(newTeamVPanel);
+				  refreshInvitationsTable("teams");
+				  requestNInvitations();
+				  adminHPanel.add(invitationsVPanel);
 			  }
 		  }
 	  });
@@ -770,7 +781,6 @@ public class JocProg implements EntryPoint {
   private void createAddPlayersPanel(){
 	  
 	  requestAllNicks();
-	  //for(int i=0;i<allNicksList.size();i++) oracle.add(allNicksList.get(i));
 	  suggestNickBox = new SuggestBox(oracle);
 	  
 	  HorizontalPanel addPlayersHPanel = new HorizontalPanel();
@@ -792,8 +802,17 @@ public class JocProg implements EntryPoint {
 						  requestAddPlayerToTeam();
 					  }
 				  }
-			  });
+			  });  
+  }
+  
+  private void createInvitationsPanel() {
 	  
+	  invitationsVPanel.setSize("100%", "100%");
+	  invitationsVPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+	  
+	  invitationsFlexTable.setText(0, 0, "Invitación");
+	  invitationsFlexTable.setText(0, 1, "Respuesta");
+	  invitationsVPanel.add(invitationsFlexTable);
   }
   
   
@@ -1094,6 +1113,7 @@ public class JocProg implements EntryPoint {
 		  //Send request to server and catch any errors.
 		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
 		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+		  Window.alert(arrayCircs);
 		  
 		  try {
 			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
@@ -1167,7 +1187,7 @@ public class JocProg implements EntryPoint {
   }
   
   
-  private void requestAllNicks() {    //al iniciar la aplicacion una sola vez
+  private void requestAllNicks() {
 	  
 	  String url = JSON_URL;
 	  url = URL.encode(url);
@@ -1195,7 +1215,7 @@ public class JocProg implements EntryPoint {
 	  }
   }
 
-  private void refreshAddPlayersDropBox(int op) {    //al iniciar la aplicacion una sola vez
+  private void refreshAddPlayersDropBox(int op) {
 	  
 	  String url = JSON_URL;
 	  url = URL.encode(url);
@@ -1205,8 +1225,6 @@ public class JocProg implements EntryPoint {
 
 	  try {
 		  if(op == 1){
-    		  addPlayersDropBox.clear();
-    		  addPlayersDropBox.addItem("CAMPEONATOS");
 			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
 					  URL.encodeComponent("getMyOwnChampionships"), new RequestCallback() {
 				  public void onError(Request request, Throwable exception) {
@@ -1215,7 +1233,8 @@ public class JocProg implements EntryPoint {
 			      public void onResponseReceived(Request request, Response response) {
 			    	  if (200 == response.getStatusCode()) {
 			    		  JsArrayString champs = asJsArrayString(response.getText());
-			    		  //for(int i=0;i<circs.length();i++) { circuitsList.add(circs.get(i)); }
+			    		  addPlayersDropBox.clear();
+			    		  addPlayersDropBox.addItem("CAMPEONATOS");
 			    		  for (int i=0; i<champs.length(); i++) { 
 			    			  addPlayersDropBox.addItem(champs.get(i));
 			    		  }
@@ -1226,8 +1245,6 @@ public class JocProg implements EntryPoint {
 			  });
 		  }
 		  else if(op == 2){
-			  addPlayersDropBox.clear();
-			  addPlayersDropBox.addItem("EQUIPOS");
 			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
 					  URL.encodeComponent("getMyOwnTeams"), new RequestCallback() {
 				  public void onError(Request request, Throwable exception) {
@@ -1236,9 +1253,10 @@ public class JocProg implements EntryPoint {
 				  public void onResponseReceived(Request request, Response response) {
 					  if (200 == response.getStatusCode()) {
 						  JsArrayString teams = asJsArrayString(response.getText());
-						  //for(int i=0;i<circs.length();i++) { circuitsList.add(circs.get(i)); }
+						  addPlayersDropBox.clear();
+						  addPlayersDropBox.addItem("EQUIPOS");
 						  for (int i=0; i<teams.length(); i++) { 
-							  addPlayersDropBox.addItem((String)circuitsList.get(i));
+							  addPlayersDropBox.addItem((String)teams.get(i));
 						  }
 					  } else {
 						  Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
@@ -1250,8 +1268,7 @@ public class JocProg implements EntryPoint {
 		  Window.alert("Couldn't retrieve JSON");
 	  }
 }
-
-
+  
   private void requestAddPlayerToChamp() {
 	  if (addPlayersDropBox.getSelectedIndex() == 0){
 		  Window.alert("Debes elegir un campeonato");
@@ -1299,7 +1316,6 @@ public class JocProg implements EntryPoint {
 	  }
 }
 
-
   private void requestAddPlayerToTeam() {
 	  if (addPlayersDropBox.getSelectedIndex() == 0){
 		  Window.alert("Debes elegir un equipo");
@@ -1346,6 +1362,134 @@ public class JocProg implements EntryPoint {
 		    }
 	  }
 }
+  
+  private void requestNInvitations() {
+	  
+	  String url = JSON_URL;
+	  url = URL.encode(url);
+	  //Send request to server and catch any errors.
+	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+
+	  try {
+		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+				  URL.encodeComponent("getNInvitations"), new RequestCallback() {
+			  public void onError(Request request, Throwable exception) {
+				  Window.alert("Couldn't retrieve JSON");
+			  }
+			  public void onResponseReceived(Request request, Response response) {
+				  if (200 == response.getStatusCode()) {
+					  JSonArrayData res = asJSonArrayData(response.getText());
+					  int nToChamps = res.getInt("nChamps");
+					  int nToTeams = res.getInt("nTeams");
+					  int total = nToChamps + nToTeams;
+					  adminStckPanel.setStackText(2, "Invitaciones ("+total+")");
+					  ItemChampInvitations.setText("A campeonatos ("+nToChamps+")");
+					  ItemTeamInvitations.setText("A equipos ("+nToTeams+")");
+
+				  } else {
+		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+		          }
+			  }
+		  });
+	  } catch (RequestException e) {
+		  Window.alert("Couldn't retrieve JSON");
+	  }
+  }
+  
+  private void refreshInvitationsTable(String what) {
+
+	  String url = JSON_URL;
+	  url = URL.encode(url);
+	  // Send request to server and catch any errors.
+	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+
+	  try {
+		  if (what.equals("champs")){
+			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+					  URL.encodeComponent("getChampionshipsInvitated"), new RequestCallback() {
+				  public void onError(Request request, Throwable exception) {
+					  Window.alert("Couldn't retrieve JSON");
+				  }
+				  public void onResponseReceived(Request request, Response response) {
+					  if (200 == response.getStatusCode()) {
+						  JSonArrayData res = asJSonArrayData(response.getText());
+						  updateTable(res.getData(),"campeonato");
+					  } else {
+						  Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+					  }
+				  }
+			  });
+		  }
+		  else if (what.equals("teams")) {
+			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+					  URL.encodeComponent("getTeamsInvitated"), new RequestCallback() {
+				  public void onError(Request request, Throwable exception) {
+					  Window.alert("Couldn't retrieve JSON");
+				  }
+				  public void onResponseReceived(Request request, Response response) {
+					  if (200 == response.getStatusCode()) {
+						  JSonArrayData res = asJSonArrayData(response.getText());
+						  updateTable(res.getData(), "equipo");
+					  } else {
+						  Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+					  }
+				  }
+			  });
+		  }
+	  } catch (RequestException e) {
+		  Window.alert("Couldn't retrieve JSON");
+	  }  
+  }
+  
+  private void setInvitationAnswer(String what, String name, int answer) {
+	  
+	  String url = JSON_URL;
+	  url = URL.encode(url);
+	  //Send request to server and catch any errors.
+	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  
+	  try {
+		  if(what.equals("campeonato")){
+			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+					  URL.encodeComponent("setChampionshipAnswer")+"&"+URL.encodeComponent("name")+"="+
+					  URL.encodeComponent(name)+"&"+URL.encodeComponent("answer")+"="+
+					  URL.encodeComponent(String.valueOf(answer)), new RequestCallback() {
+				  public void onError(Request request, Throwable exception) {
+					  Window.alert("Couldn't retrieve JSON");
+				  }
+			      public void onResponseReceived(Request request, Response response) {
+			    	  if (200 == response.getStatusCode()) {
+			    		  //retornara algo??
+			          } else {
+			        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+			          }
+			      }
+			  });
+		  }
+		  else if(what.equals("equipo")){
+			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+					  URL.encodeComponent("setTeamAnswer")+"&"+URL.encodeComponent("name")+"="+
+					  URL.encodeComponent(name)+"&"+URL.encodeComponent("answer")+"="+
+					  URL.encodeComponent(String.valueOf(answer)), new RequestCallback() {
+				  public void onError(Request request, Throwable exception) {
+					  Window.alert("Couldn't retrieve JSON");
+				  }
+			      public void onResponseReceived(Request request, Response response) {
+			    	  if (200 == response.getStatusCode()) {
+			    		  //retornara algo??
+			          } else {
+			        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+			          }
+			      }
+			  }); 
+		  }
+	  } catch (RequestException e) {
+		  Window.alert("Couldn't retrieve JSON");
+	  }
+  }
   
   
   private void logout(){
@@ -1509,6 +1653,13 @@ public class JocProg implements EntryPoint {
     for (int i=0; i<rankInfo.length(); i++) updateTable(rankInfo.get(i));
   }
   
+  private void updateTable(JsArray<JSonData> invitationsInfo, String what) {
+	  int rows = invitationsFlexTable.getRowCount();
+	  for (int i=1; i<rows; i++) invitationsFlexTable.removeRow(1);
+	  invitationsList.clear();
+	  for (int i=0; i<invitationsInfo.length(); i++) updateTable(invitationsInfo.get(i),what);
+  }
+  
   /**
    * Update a single row in the ranking table.
    * @param ranking data for a single row.
@@ -1518,6 +1669,40 @@ public class JocProg implements EntryPoint {
      // Populate the "Usuario" and "Tiempo" fields with new data.
      rankingFlexTable.setText(row, 0, info.getNick());
      rankingFlexTable.setText(row, 1, info.getTiempo());
+  }
+  
+  private void updateTable(JSonData info, String what) { 
+	  int row = invitationsFlexTable.getRowCount();
+	  // Populate the "Invitacion" and "Respuesta" fields with new data.
+	  String text = "Has sido invitado al "+what+" '"+info.get("name")+"' por el usuario '"+info.get("nick");
+	  invitationsFlexTable.setText(row, 0, text);
+	  final String name = info.get("name");
+	  final String whatTo = what;
+	  invitationsList.add(name);
+	  
+	  // Add buttons to accept or deny this invitation from the table.
+	  Button acceptInvitationButton = new Button("Aceptar");
+	  acceptInvitationButton.addClickHandler(new ClickHandler() {
+		  public void onClick(ClickEvent event) {
+	        int removedIndex = invitationsList.indexOf(name);
+	        setInvitationAnswer(whatTo,name,1);
+	        invitationsList.remove(removedIndex);
+	        invitationsFlexTable.removeRow(removedIndex + 1);
+	      }
+	    });
+	  Button denyInvitationButton = new Button("Rechazar");
+	  denyInvitationButton.addClickHandler(new ClickHandler() {
+		  public void onClick(ClickEvent event) {
+	        int removedIndex = invitationsList.indexOf(name);
+	        setInvitationAnswer(whatTo,name,0);
+	        invitationsList.remove(removedIndex);
+	        invitationsFlexTable.removeRow(removedIndex + 1);
+	      }
+	    });
+	  HorizontalPanel buttonsHPanel = new HorizontalPanel();
+	  buttonsHPanel.add(acceptInvitationButton);
+	  buttonsHPanel.add(denyInvitationButton);
+	  invitationsFlexTable.setWidget(row, 1, buttonsHPanel);
   }
   
   
@@ -1532,12 +1717,14 @@ public class JocProg implements EntryPoint {
 	return eval('('+json+')');
   }-*/;
   
+  private final native JSonArrayData asJSonArrayData(String json) /*-{
+	return eval('('+json+')');
+}-*/;
+  
   private final native int asInt(String json) /*-{
   	return eval('('+json+')');
   }-*/;
  
-  //private final native String[] asArrayOfString(String json) /*-{
-  //private final native ArrayList asArrayOfString(String json) /*-{
   private final native JsArrayString asJsArrayString(String json) /*-{
   	return eval('('+json+')');
   }-*/;

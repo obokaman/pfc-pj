@@ -180,3 +180,16 @@ setChampionshipAnswer(name, answer)
 setTeamAnswer(name, answer)
   * answer = 1: el usuario logeado acepta la invitacion al equipo 'name' (la invitacion deja de estar pendiente)
   * answer = 0: el usuario logeado rechaza la invitacion al equipo 'name' (la invitacion se borra de la BD)
+
+=========================================================================
+
+saveCode(String code, String name)
+  * 0: ok. se ha guardado el code con el nombre name para el usuario logeado en la fecha actual
+  * 1: ya existe el nombre (?? o no avisa y sobreescribe?)
+  * 2: otros errores
+
+loadCode(String name) return String
+  * retorna un string correspondiente al codigo guardado por el usuario loegado bajo el nombre name
+
+getSavedCodes() return (String name, String date)[]
+  * devuelve el name de todos los codigos guardados por el usuario y la fecha en que fue guardado
