@@ -105,7 +105,10 @@ else if ($f == "newChampionship") {
 					if ( $b ){		//Si todo es correcto los insertamos
 						foreach($circuits as $circuit) add_circuit_champ( get_id_circuit( $circuit), get_id_championship($name) ); 
 						$result = 0;
-					}else $result = 2;
+					}else{ // En caso de que un circuito no se pueda insertar cancelamos la operacion de insercion de un campeonato.
+						delete_championship_id( get_id_championship( $name ) );
+						$result = 2;
+					}
 					
 				}else $result = 2;
 				
@@ -222,11 +225,6 @@ else if ($f == "setTeamAnswer") {
 		}
 }
 
-
-
-
-
-//else escribe_log("ADFadskfdashfldsjfdsali");*/
 close_connection($connection);
 	
 ?>
