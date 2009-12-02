@@ -18,9 +18,19 @@ public:
   void load(const Circuit &extc);
   void drawCircuit(QPainter *painter);
   Circuit getCircuit();
+  void setCar(double x, double y, double alpha) {
+    carx = x, cary = y, caralpha = alpha;
+    update();
+  }
+  void drawCar(bool flag) {
+    drawcar = flag;
+    update();
+  }
+	      
 
 protected:
   void mousePressEvent(QMouseEvent *event);
+  void mouseMoveEvent(QMouseEvent *event);
   void mouseReleaseEvent(QMouseEvent *event);
   void paintEvent(QPaintEvent *);
   void resizeEvent(QResizeEvent *event);
@@ -32,6 +42,9 @@ private:
   bool pressed;
   int pressx, pressy;
   int presspoint;
+
+  double carx, cary, caralpha;
+  bool drawcar;
 };
 
 #endif

@@ -1,5 +1,6 @@
 // -*- mode: c++; -*-
 #include <QtGui>
+#include <sstream>
 #include "QCircuitView.h"
 #include "common.h"
 
@@ -7,6 +8,8 @@ CircuitView::CircuitView(QWidget *parent): QWidget(parent) {
   setMinimumSize(500,500);
   showControlPoints = true;
   pressed = false;
+  setMouseTracking(true);
+  drawcar = false;
 }
 
 Circuit CircuitView::getCircuit() {return c;}
@@ -137,6 +140,17 @@ void CircuitView::paintEvent(QPaintEvent *) {
     painter.setPen(QPen(QColor(0,255,255), 2));
     painter.drawEllipse(QRectF(pressx-5, pressy-5, 10, 10));
   }
+  if (drawcar) {
+    Punt p1, p2;
+    transform.map(carx, cary,
+		  &p1.x, &p1.y);
+    transform.map(carx+8*cos(caralpha), cary+8*sin(caralpha),
+		  &p2.x, &p2.y);
+
+    painter.setPen(QPen(QColor(255,0,0), 5));
+
+    painter.drawLine(p1.x, p1.y, p2.x, p2.y);
+  }
 }
 
 
@@ -162,6 +176,8 @@ void CircuitView::updateImage(const QSize &newSize) {
 }
 
 void CircuitView::mousePressEvent(QMouseEvent *event) {
+  if (c.empty()) return;
+
   pressed = false;
   pressx = event->x();
   pressy = event->y();
@@ -187,7 +203,41 @@ void CircuitView::mousePressEvent(QMouseEvent *event) {
 
 }
 
+string show_info(const Circuit &c, double d) {
+  stringstream ss;
+  Punt p = c.getPos(d);
+  ss << "(" << int(p.x) << "," << int(p.y) << ")";
+  ss << " a=" << c.getDir(d);
+  ss << " R=" << 1/(c.getCurv(d)+0.00000001);
+  return ss.str();
+}
+
+void CircuitView::mouseMoveEvent(QMouseEvent *event) {
+  if (c.empty()) return;
+
+  if (!pressed) {
+    int x = event->x(), y = event->y();
+    int mapx, mapy;
+    transform.inverted().map(x, y, &mapx, &mapy);
+
+    double dist = c.getDist();
+    double d = 0;
+    while (d < dist) {
+      Punt p = c.getPos(d);
+      if ((p.x - mapx)*(p.x - mapx) + 
+	  (p.y - mapy)*(p.y - mapy) < 2500) {
+	setToolTip(QString(show_info(c, d).c_str()));
+	update();
+	break;
+      }
+      d += 50.0; //prova cada 50 metres
+    }
+  }
+}
+
 void CircuitView::mouseReleaseEvent(QMouseEvent *event) {
+  if (c.empty()) return;
+
   if (pressed) {
     int mapx, mapy;
     transform.inverted().map(event->x(), event->y(), &mapx, &mapy);

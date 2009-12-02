@@ -179,17 +179,21 @@ double Circuit::getCurv(int k, double t) const {
   double t2 = 1-t;
   Punt gammaP = -3*t2*t2*vp[3*k] + (-6*t2*t+3*t2*t2)*vp[3*k+1]
     +(-3*t*t+6*t2*t)*vp[3*k+2] + 3*t*t*vp[3*k+3];
-  Punt gammaPP = -6*t2*vp[3*k] + (6*t-12*t2)*vp[3*k+1]
+  Punt gammaPP = 6*t2*vp[3*k] + (6*t-12*t2)*vp[3*k+1]
     +(-12*t+6*t2)*vp[3*k+2] + 6*t*vp[3*k+3];
 
   double lengP = gammaP.mida();
   double lengPP = gammaPP.mida();
   
   double gPgPP = gammaP*gammaPP;
-  double sign = gammaP.x*gammaPP.y - gammaP.y*gammaPP.x < 0 ? -1:1;
+  //double sign = gammaP.x*gammaPP.y - gammaP.y*gammaPP.x < 0 ? -1:1;
 
-  return sign*sqrt(lengP*lengP*lengPP*lengPP-gPgPP*gPgPP)/
-                  (lengP*lengP*lengP);
+  //  Punt e1p = (1/lengP)*gammaPP+2*gPgPP/(lengP*lengP*lengP)*gammaP;
+  //  Punt e2 = gammaPP-gPgPP/(lengP*lengP)*gammaP;
+  
+  return abs(gammaP.x*gammaPP.y - gammaP.y*gammaPP.x)/
+    (lengP*lengP*lengP);
+    // return (e1p*e2)/e2.mida()/lengP;
 }
 
 Punt Circuit::getPos(double d) const {

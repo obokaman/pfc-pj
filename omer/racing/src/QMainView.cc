@@ -1,7 +1,9 @@
 // -*- mode: c++; -*-
 #include <fstream>
 #include <QMenuBar>
+#include <QTimer>
 #include <QFileDialog>
+#include <QPainter>
 #include "QMainView.h"
 #include "corbes.h"
 
@@ -27,9 +29,64 @@ MainView::MainView() {
   saveAct->setStatusTip(tr("Save the current circuit"));
   connect(saveAct, SIGNAL(triggered()), this, SLOT(saveFile()));
 
+  playAct = new QAction(tr("&Play trace"), this);
+  playAct->setShortcut(tr("Ctrl+P"));
+  playAct->setStatusTip(tr("Play a trace"));
+  connect(playAct, SIGNAL(triggered()), this, SLOT(playTrace()));
+
   fileMenu = menuBar()->addMenu(tr("&File"));
   fileMenu->addAction(loadAct);
   fileMenu->addAction(saveAct);
+  fileMenu->addAction(playAct);
+
+  timer = new QTimer(this);
+  connect(timer, SIGNAL(timeout()), this, SLOT(avanzaCar()));
+  
+}
+
+void MainView::savePNG(const string &name, int width, int height) {
+  QPixmap qp(width, height);
+  qp.fill( qRgb(128, 255, 128) );
+
+  QPainter p(&qp);
+  qcv->drawCircuit(&p);
+
+  qp.save(QString(name.c_str())); 
+}
+
+void MainView::avanzaCar() {
+  if (icar>=traceToPlay.x.size()) {
+    icar = 0;
+  }
+  qcv->setCar( traceToPlay.x[icar],
+	       traceToPlay.y[icar],
+	       traceToPlay.alpha[icar] );     
+  ++icar;
+  update();
+}
+
+void MainView::playTrace() {
+  QString traceFileName =
+    QFileDialog::getOpenFileName(this,
+				 tr("Load Trace"),
+				 "",
+				 tr("Trace files (*.trc)"));
+  loadTrace(traceFileName.toStdString());
+
+  qcv->setCar( traceToPlay.x[0], traceToPlay.y[0], traceToPlay.alpha[0] );
+  icar = 1;
+  qcv->drawCar(true);
+  timer->start(traceToPlay.timestep); 
+}
+
+void MainView::loadTrace(const string &trace) {
+  ifstream ifs(trace.c_str());
+  if (not ifs) {
+    cerr << "Trace file '" << trace << "' does not exist." << endl;
+    return;
+  }
+  ifs >> traceToPlay;
+  timer->start(traceToPlay.timestep);
 }
 
 void MainView::loadFile() {

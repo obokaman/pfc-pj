@@ -87,6 +87,8 @@ struct Circuit {
   double getDir(double d) const; //0-2Pi
   double getCurv(double d) const;
   double getDist() const;
+  
+  bool empty() const {return n==0;}
 };
 istream &operator>>(istream &is, Circuit &c);
 ostream &operator<<(ostream &os, const Circuit &c);

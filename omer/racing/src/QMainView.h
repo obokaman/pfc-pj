@@ -8,6 +8,7 @@
 #include <QMenu>
 #include <iostream>
 #include "QCircuitView.h"
+#include "trace.h"
 
 using namespace std;
 
@@ -18,18 +19,27 @@ public:
   MainView();
   void loadCircuit(const string &fname);
   void saveCircuit(const string &fname);
+  void loadTrace(const string &trace);
+
+  void savePNG(const string &name, int width, int height);
 
 private:
   string filename;
   CircuitView *qcv;
+  Trace traceToPlay;
 
   QMenu *fileMenu;
   QAction *loadAct;
   QAction *saveAct;
+  QAction *playAct;
+  QTimer *timer;
+  int icar;
 
 private slots:
   void loadFile();
   void saveFile();
+  void playTrace();
+  void avanzaCar();
 };
 
 #endif

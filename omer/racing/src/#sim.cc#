@@ -18,7 +18,7 @@ void Sim::responde(int i, string s, double par1) {
   else if (s=="Espera") vqs[i]->respVoid();
 }
 
-//si todo el mundo est√° m√°s adelantado que la simulacion,
+//si todo el mundo estÅ· mÅ·s adelantado que la simulacion,
 //avanzamos hasta atrapar a alguien.
 // Retorna el numero de ms. de tiempo que se ha avanzado
 
