@@ -195,7 +195,7 @@ else if ($f == "getNInvitations") {
 else if ($f == "getChampionshipsInvited") {
 			send( get_championships_invited() );		
 }
-else if ($f == "getTeamsInvitated") {
+else if ($f == "getTeamsInvited") {
 			send( get_teams_invited() );		
 }
 else if ($f == "setChampionshipAnswer") {
