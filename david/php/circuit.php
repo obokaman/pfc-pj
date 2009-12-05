@@ -32,6 +32,18 @@
 	/*Post: Retorna un entero que representa el identificador del circuito*/
 	
 	
+	function get_short_name_circuit($id){
+		
+		global $connection;
+		
+		$query = "SELECT c.short_name FROM  circuit c WHERE c.id_circuit = '$id'";
+		$result_query = mysql_query($query, $connection) or my_error('GET_SHORT_NAME_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+		
+		return extract_row($result_query)->short_name;	
+		
+	}
+	
+	
 	/*La función nos devuelve la lista de todos los circuitos que estan almacenados en la BBDD*/
 	function get_circuits(){
 	/*Pre: - */	
@@ -64,19 +76,6 @@
 	}
 	/*Post: La función nos devuelve una array el objeto circuito seleccionado a partir de su identificador de circuito */
 	
-	
-	/*La función nos devuelve la información del circuito a partir del nick del usuario*/
-	function get_circuit_name($name){
-	/*Pre: - */
-		
-		global $connection;
-		
-		$query =  "SELECT * FROM circuit WHERE name = '$name'";
-		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUIT_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-
-		return(extract_row($result_query));
-	}
-	/*Post: La función nos devuelve una array el objeto circuito seleccionado a partir de su nombre */
 
 	
 	/*Esta función modifica los campos almacenados de un circuito en la BBDD*/

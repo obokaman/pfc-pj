@@ -91,7 +91,26 @@
 	/*Post: Retorna una array de string, donde cada posicion guarda la palabra separada por espacios*/
 	
 	
-	
+	function create_circuit_image($name_circuit, $width, $height){
+		
+			global $path;
+			
+			$short_name = get_short_name_circuit( get_id_circuit( $name_circuit) );
+			$call = $path['bin']."/racing-view ".$path['circuits']."/".$short_name.".txt /tmp/".$short_name."-".$width."x".$height.".jpg ".$width."x".$height;
+			my_error($call, 1);
+			system("xhost +", $result);
+			system($call, $result);
+			my_error($result, 1);
+//			if (!$result)
+//				return 0; //Llamada ala funcion que crea la imagen del circuito fallida
+//			else{
+				
+				
+//			}
+			
+		
+		
+	}
 	
 	
 	

@@ -1,3 +1,4 @@
+<?php include("/var/www/conf/conf.php");?>
 <?php include("connection.php");?>
 <?php include("error.php");?>
 <?php include("circuit_championship.php");?>
@@ -10,3 +11,4 @@
 <?php include("game.php");?>
 <?php include("sanitize.php");?>
 <?php include("others.php");?>
+<?php include("code.php");?>

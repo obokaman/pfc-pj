@@ -81,6 +81,7 @@ CREATE TABLE circuit (
   id_circuit	integer	 NOT NULL AUTO_INCREMENT,
   name		varchar(20)  NOT NULL,
   short_name 	varchar(20)  NOT NULL,
+  code_description text ,
   level		integer ,
   n_laps	integer ,
   time		time	DEFAULT NULL,
@@ -135,6 +136,19 @@ CREATE TABLE cup (
 ENGINE = InnoDB
 CHARACTER SET utf8 COLLATE utf8_general_ci;
 
+DROP TABLE IF EXISTS code;
+CREATE TABLE code (
+	file_name	varchar(20),
+	file_date	date,
+	code		text,
+	id_user		integer,
+
+	PRIMARY KEY (file_name, id_user),
+	FOREIGN KEY (id_user)  REFERENCES user (id_user)
+)
+ENGINE = InnoDB
+CHARACTER SET utf8 COLLATE utf8_general_ci;
+
 INSERT INTO user (nick, name, surname1, surname2, email_user,
 city, school, email_school, type_user, pass) VALUES ('dgb', 'David', 'Garcia', 'Bautista', 'dvdgarcia.83@gmail.com', 'Blanes', 'Colegio1', 'cole@colegio1.com', 'alumno', '123');
 
@@ -162,7 +176,7 @@ INSERT INTO user_team (id_user, id_team, active) VALUES (3,1,1);
 
 INSERT INTO user_team (id_user, id_team, active) VALUES (3,2,1);
 
-INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('Montmelo', 'MNT', null, 3, null);
+INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('Montmelo', 'basic', null, 3, null);
 
 INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('Jerez', 'JRZ', null, 3, null);
 

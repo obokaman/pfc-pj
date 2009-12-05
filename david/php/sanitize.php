@@ -26,9 +26,10 @@
 	ademas de colocar barras en caracteres especiales*/
 					break;
 					case 'email':
-						$var = trim ( $var );
-						$var = mysql_real_escape_string($var); /*limpia el parametros evitando la inyección de codigo SQL
-	ademas de colocar barras en caracteres especiales*/
+						//buscar que tenga un formato con @
+					break;
+					case 'json':
+						$var = json_decode($var);						
 					break;
 			}
 			return $var;	
