@@ -96,7 +96,18 @@
 			global $path;
 			
 			$short_name = get_short_name_circuit( get_id_circuit( $name_circuit) );
-			$call = $path['bin']."/racing-view ".$path['circuits']."/".$short_name.".txt /tmp/".$short_name."-".$width."x".$height.".jpg ".$width."x".$height;
+			$name_image = $short_name."-".$width."x".$height.".jpg";
+			if ( file_exists($path['images']."/".$short_name) )				return $name_image;
+			$command = "convert ".$path['circuits'].$short_name.".jpg -background rgb\(128, 255, 128\) -resize ".$width."x".$height." -gravity center -extent ".$width."x".$height." ".$path['images']."/".$name_image;
+			my_error($command, 1);
+			system($command);
+			
+			return $name_image;
+			
+			
+			
+/*			$call = $path['bin']."/racing-view ".$path['circuits']."/".$short_name.".txt /tmp/".$name_image." ".$width."x".$height;
+			file_
 			my_error($call, 1);
 			system("xhost +", $result);
 			system($call, $result);
@@ -108,7 +119,7 @@
 				
 //			}
 			
-		
+		*/
 		
 	}
 	

@@ -241,7 +241,7 @@ else if( $f == "saveCode" ) {
 	$date = date("l,M d, Y g:i:s");
 	
 	if ( !exist_file_name( $file_name) ){
-		if ( new_code( $file_name, $code, $date, $_SESSION[ 'user' ] ) )	$result = 0;
+		if ( new_code( $file_name, $code, $date, get_id_user( $_SESSION[ 'user' ] ) ) )	$result = 0;
 		else $result = 2;
 	}else $result = 1;
 	
