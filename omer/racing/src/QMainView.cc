@@ -44,11 +44,12 @@ MainView::MainView() {
   
 }
 
-void MainView::savePNG(const string &name, int width, int height) {
+void MainView::saveImage(const string &name, int width, int height) {
   QPixmap qp(width, height);
   qp.fill( qRgb(128, 255, 128) );
 
   QPainter p(&qp);
+  qcv->showControlPoints = false;
   qcv->drawCircuit(&p);
 
   qp.save(QString(name.c_str())); 

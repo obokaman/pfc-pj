@@ -18,7 +18,7 @@ class MonoCar {
 
   static double curv2maxvel(double curv) {
     double radi = 1/(curv+0.00001); // en metres
-    return sqrt(radi);  //G = vel*vel/radi; G<=1: segur
+    return sqrt(1.1*10*radi);  //sqrt(mu * G * r); mu=1.1
   }
 
   //velocidad actual: vel (m/s)
@@ -67,7 +67,7 @@ public:
     timeSal = -1;
     os = os_;
     alpha = 0;
-    (*os) << TIMESTEP << endl;
+    (*os) << PRINTSTEP << endl;
   }
 
 
@@ -156,12 +156,11 @@ public:
       //miramos si hay accidente
       
       //calculamos la G de los neumaticos
-      double radi = 1/(c->getCurv(p)+0.00001); // en metres
-      double G = vel*vel/radi;
+      double curv = c->getCurv(p);
+      //      double G = vel*vel/radi;
       alpha = c->getDir(p);
       
-      //G<1: segur; G>1 insegur
-      if (G>1) {  //malaSuerte(G)
+      if (vel > curv2maxvel(curv)) {  //malaSuerte(G)
 	//durante un tiempo, el coche no avanza
 	//2 seg. de penalizacion (min)
 	timeSal = time + max(2000, int(1000*vel/20.0)); 
@@ -182,6 +181,9 @@ public:
       if (vueTimes.size()==numvueltas) {
 	ostringstream oss;
 	oss << "Race ended: ";
+	for (int i=0;i<numvueltas;++i) {
+	  cerr << vueTimes[i] << endl;
+	}
 	int t = vueTimes[numvueltas-1];
 	oss << setfill('0') << setw(2) << (t/60000) << ":";
 	t %= 60000;

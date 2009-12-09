@@ -11,9 +11,10 @@ class CircuitView: public QWidget {
   Q_OBJECT
   
   Circuit c;
-  bool showControlPoints;
 
 public:
+  bool showControlPoints;
+
   CircuitView(QWidget *parent = 0);
   void load(const Circuit &extc);
   void drawCircuit(QPainter *painter);

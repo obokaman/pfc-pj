@@ -21,7 +21,7 @@ public:
   void saveCircuit(const string &fname);
   void loadTrace(const string &trace);
 
-  void savePNG(const string &name, int width, int height);
+  void saveImage(const string &name, int width, int height);
 
 private:
   string filename;
