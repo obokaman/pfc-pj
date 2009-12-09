@@ -6,6 +6,8 @@ $connection = open_connection();
 
 $f = clean("function", "string");
 
+
+
 if ($f == "login") {
 	send( login( clean("nick", "string"),	clean("password", "string") ) );
 }
@@ -223,6 +225,42 @@ else if ($f == "setTeamAnswer") {
 			//Peticion rechazada
 			if ( ( $answer == 0 ) and ( get_status( get_id_user( $_SESSION[ 'user' ] ), get_id_team ( $name_team ) ) == 0 ) )  delete_user_team( get_id_user( $_SESSION[ 'user' ] ), get_id_team ( $name_team ) );			
 		}
+}
+else if ($f == "createCircuitImage") {	
+		send(
+			create_circuit_image(
+				clean("name", "string"),
+				clean("width", "int"),
+				clean("height", "int")
+			)
+		);
+}
+else if( $f == "saveCode" ) {	
+	$code = clean ( "code", "json" );
+	$file_name = clean ( "name", "string" );
+	$date = date("l,M d, Y g:i:s");
+	
+	if ( !exist_file_name( $file_name) ){
+		if ( new_code( $file_name, $code, $date, get_id_user( $_SESSION[ 'user' ] ) ) )	$result = 0;
+		else $result = 2;
+	}else $result = 1;
+	
+	send($result);
+}
+else if( $f == "loadCode" ) {	
+	send(
+		get_code ( 
+			clean( "name", "string" ),
+			get_id_user( $_SESSION['user'] )
+		)
+	);	
+}
+else if( $f == "getSavedCodes" ) {	
+	send(
+		get_saved_codes ( 			
+			get_id_user( $_SESSION['user'] )
+		)
+	);	
 }
 
 close_connection($connection);

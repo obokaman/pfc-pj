@@ -4,7 +4,7 @@
 	function my_error( $message, $option){	
 			if ($option == 1){
 					$x = fopen("/tmp/pfc.php.log", "a+");
-					fwrite($x,  $message."\n");	
+					fwrite($x,  $message." ".date("l,M d, Y g:i:s")."\n");	
 					fclose($x);
 				}
 	}
