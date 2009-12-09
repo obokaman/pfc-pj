@@ -228,8 +228,16 @@ else if ($f == "setTeamAnswer") {
 }
 else if ($f == "createCircuitImage") {	
 		send(
-			create_circuit_image(
+			get_circuit_image(
 				clean("name", "string"),
+				clean("width", "int"),
+				clean("height", "int")
+			)
+		);
+}
+else if ($f == "getCarImage") {	
+		send(
+			get_car_image(
 				clean("width", "int"),
 				clean("height", "int")
 			)
@@ -253,7 +261,7 @@ else if( $f == "loadCode" ) {
 			clean( "name", "string" ),
 			get_id_user( $_SESSION['user'] )
 		)
-	);	
+	);
 }
 else if( $f == "getSavedCodes" ) {	
 	send(
