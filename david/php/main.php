@@ -226,7 +226,7 @@ else if ($f == "setTeamAnswer") {
 			if ( ( $answer == 0 ) and ( get_status( get_id_user( $_SESSION[ 'user' ] ), get_id_team ( $name_team ) ) == 0 ) )  delete_user_team( get_id_user( $_SESSION[ 'user' ] ), get_id_team ( $name_team ) );			
 		}
 }
-else if ($f == "createCircuitImage") {	
+else if ($f == "getCircuitImage") {	
 		send(
 			get_circuit_image(
 				clean("name", "string"),
