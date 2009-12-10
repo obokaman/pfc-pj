@@ -90,39 +90,40 @@
 	}
 	/*Post: Retorna una array de string, donde cada posicion guarda la palabra separada por espacios*/
 	
-	
-	function create_circuit_image($name_circuit, $width, $height){
-		
+	/*La función crea la imagen según el tamaño que se le haya pasado por la entrada*/
+	function get_circuit_image($name_circuit, $width, $height){
+	/*Pre: El short_name del circuito ha de existir, junto con el ancho y la altura*/	
 			global $path;
 			
 			$short_name = get_short_name_circuit( get_id_circuit( $name_circuit) );
-			$name_image = $short_name."-".$width."x".$height.".jpg";
-			if ( file_exists($path['images']."/".$short_name) )				return $name_image;
-			$command = "convert ".$path['circuits'].$short_name.".jpg -background rgb\(128, 255, 128\) -resize ".$width."x".$height." -gravity center -extent ".$width."x".$height." ".$path['images']."/".$name_image;
-			my_error($command, 1);
+			$name_image = $short_name."-".$width."x".$height.".png";
+			if ( file_exists($path['images']."/".$name_image) )				return $name_image;
+			$command = "convert ".$path['circuits'].$short_name.".png -background rgb\(128,255,128\) -resize ".$width."x".$height." -gravity center -extent ".$width."x".$height." ".$path['images']."/".$name_image;
+			//my_error($command, 1);
 			system($command);
 			
 			return $name_image;
 			
-			
-			
-/*			$call = $path['bin']."/racing-view ".$path['circuits']."/".$short_name.".txt /tmp/".$name_image." ".$width."x".$height;
-			file_
-			my_error($call, 1);
-			system("xhost +", $result);
-			system($call, $result);
-			my_error($result, 1);
-//			if (!$result)
-//				return 0; //Llamada ala funcion que crea la imagen del circuito fallida
-//			else{
-				
-				
-//			}
-			
-		*/
-		
 	}
+	/*Post: */
 	
+	
+	function get_car_image($width, $height){
+	/*Pre: */	
+			
+			$arr = Array ( 20, 24, 28, 32, 36, 40, 50 , 60 );
+			
+			//$name_image = $short_name."-".$width."x".$height.".png";
+			$size = ( ( min( $width, $height))/1000 ) * 40;
+			
+			$aux = 99999;
+			
+			foreach ( $arr as $v ){
+				if (abs($size - $v) < $aux ) {$aux = abs($size - $v) ; $res = $v;}				
+			} 
+			
+			return "car-".$res.".gif";
+	}
 	
 	
 ?>
