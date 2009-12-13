@@ -163,12 +163,12 @@ getNInvitations() return nChamps, nTeams
   * nChamps: numero de invitaciones a campeonatos hechas al usuario logeado que estan pendientes de confirmar/rechazar
   * nTeams: numero de invitaciones a equipos hechas al usuario logeado que estan pendientes de confirmar/rechazar 
 
-getChampionshipsInvitated() return {nick, name}[]
+getChampionshipsInvited() return {nick, name}[]
   * retorna informacion sobre todas las invitaciones a campeonatos hechas al usuario logeado que estan pendientes de confirmar/rechazar:
      - nick: usuario que ha realizado la invitación (propietario del campeonato)
      - name: nombre del campeonato al que ha sido invitado el usuario logeado
 
-getTeamsInvitated() return {nick, name}[]
+getTeamsInvited() return {nick, name}[]
   * retorna informacion sobre todas las invitaciones a equipos hechas al usuario logeado que estan pendientes de confirmar/rechazar:
      - nick: usuario que ha realizado la invitación (propietario del equipo)
      - name: nombre del equipo al que ha sido invitado el usuario logeado
@@ -189,7 +189,15 @@ saveCode(String code, String name)
   * 2: otros errores
 
 loadCode(String name) return String
-  * retorna un string correspondiente al codigo guardado por el usuario loegado bajo el nombre name
+  * retorna un string correspondiente al codigo guardado por el usuario logeado bajo el nombre name
 
 getSavedCodes() return (String name, String date)[]
   * devuelve el name de todos los codigos guardados por el usuario y la fecha en que fue guardado
+
+==========================================================================
+
+getCircuitImage (name, width, height)
+  * retorna string con el nombre de la imagen del circuito 'name' (para el url donde habrá q recogerla)
+
+getCarImage (width, height)
+  * retorna string con el nombre de la imagen (para el url donde habrá q recogerla)

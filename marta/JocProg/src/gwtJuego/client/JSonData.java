@@ -8,4 +8,5 @@ class JSonData extends JavaScriptObject {
 	  
 	  // JSNI methods to get JSon data. 
 	  public final native String get(String s) /*-{ return this[s] ; }-*/; 
+	  public final native int getInt(String s) /*-{ return this[s] ; }-*/;
 }
