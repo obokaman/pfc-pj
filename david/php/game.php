@@ -110,9 +110,9 @@
 			global $connection;			
 			
 			class obj{
-					public $page = 0;
-					public $numpages = 0;
-					public $data = array();
+				public $page = 0;
+				public $numpages = 0;
+				public $data = array();
 			}
 			$max = 50;	
 			
@@ -172,5 +172,30 @@
 			}
 			
 			return $result;		
+	}
+	
+	
+	
+	function get_trace_fragment( $id_game, $start_byte, $length ){
+		//$game = $path['games'].$id_game.'/race.trc';
+		$game = "/etc/passwd";
+		
+		class result{
+			public $read_bytes = 0;
+			public $data = "";
+		}
+		
+		$result = new result;
+		
+		if (filesize($game) >=  $start_byte ) {		
+			$handle = fopen( $game, "r" );		
+			fseek( $handle, $start_byte);
+					
+			$result->data = fread( $handle, $length );
+			
+			if ( filesize($game) >= ($start_byte + $length) ) $result->read_bytes = $length;
+			else $result->read_bytes = filesize($game) - $start_byte;
+		}
+		return $result;
 	}
 ?>

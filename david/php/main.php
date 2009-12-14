@@ -248,15 +248,19 @@ else if( $f == "saveCode" ) {
 	$file_name = clean ( "name", "string" );
 	$date = date("l,M d, Y g:i:s");
 	
-	if ( !exist_file_name( $file_name) ){
-		if ( new_code( $file_name, $code, $date, get_id_user( $_SESSION[ 'user' ] ) ) )	$result = 0;
+	if ( ! isset($_SESSION['user']) ) $result = 3;
+	else {
+		$id_user = get_id_user( $_SESSION[ 'user' ] );
+		
+		if ( exist_file_name( $file_name, $id_user ) ) $result = 1;
+		else if ( new_code( $file_name, $code, $date, $id_user) ) $result = 0;
 		else $result = 2;
-	}else $result = 1;
-	
+	}
 	send($result);
 }
 else if( $f == "loadCode" ) {	
-	send(
+	if ( ! isset($_SESSION['user']) ) send(3);
+	else send(
 		get_code ( 
 			clean( "name", "string" ),
 			get_id_user( $_SESSION['user'] )
@@ -270,6 +274,23 @@ else if( $f == "getSavedCodes" ) {
 		)
 	);	
 }
+else if( $f == "getTraceFragment" ) {	
+	send(
+		get_trace_fragment( 			
+			clean("id_game", "int"),
+			clean("start_byte", "int"),
+			clean("length", "int")
+		)
+	);	
+}/*
+else if( $f == "run" ) {	
+	send(
+		run( 			
+			clean("code", "json"),
+			clean("circuit", "string")
+		)
+	);	
+}*/
 
 close_connection($connection);
 	

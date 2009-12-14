@@ -46,11 +46,11 @@
 
 
 	/*La funcion comprueba que el nombre del fichero no este repetido en la base de datos*/
-	function exist_file_name( $name ){
+	function exist_file_name( $name, $id_user ){
 	/*Pre: - */
 			global $connection;
 			
-			$query =  "SELECT * FROM code WHERE file_name = '$name'";
+			$query =  "SELECT * FROM code WHERE file_name = '$name' AND id_user = '$id_user'";
 		$result_query = mysql_query($query, $connection) or my_error('EXIST_FILE_NAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		if (extract_num_rows($result_query) == 0)	return false;
