@@ -25,13 +25,15 @@
 	/*Pre: Los identificadores de la entrada de la función existen */	
 		global $connection;
 
-		$query = "INSERT INTO game ( id_user, id_circuit, time_result) VALUES ('$id_user',' $id_circuit', '$time')";
-	
-		if (!mysql_query($query, $connection)) {
+		$query = "INSERT INTO game ( id_user, id_circuit, time_result) VALUES ('$id_user',' $id_circuit', '$time');\n SELECT LAST_INSERT_ID();";
+	    
+		$result_query = mysql_query($query, $connection);
+		
+		if (!$result_query) {
 			my_error('CREATE_GAME-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			return false;
 		}else{	
-			return true;
+			return extract_row($result_query)->id;			
 		}
 	}
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion de la nueva partida, en caso contrario devuelve falso*/

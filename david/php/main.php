@@ -282,7 +282,7 @@ else if( $f == "getTraceFragment" ) {
 			clean("length", "int")
 		)
 	);	
-}/*
+}
 else if( $f == "run" ) {	
 	send(
 		run( 			
@@ -290,7 +290,7 @@ else if( $f == "run" ) {
 			clean("circuit", "string")
 		)
 	);	
-}*/
+}
 
 close_connection($connection);
 	

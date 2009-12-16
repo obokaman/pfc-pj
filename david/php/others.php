@@ -125,32 +125,51 @@
 			return "car-".$res.".gif";
 	}
 	
-	/*
+	
 	function run( $code, $circuit ){
 		
 		global $path;
 		
-		$dir_tmp = "/tmp/pfc_prueba/";
+		$dir_tmp = `mktemp -d`;	
 		
-		//$dir_tmp = "/tmp/pfc_".md5(uniqid(rand(), TRUE))."/";
+		echo trim($dir_tmp);
 		
-		//if ( !mkdir($dir_tmp) ) my_error( "RUN: No se ha podido crear el directorio temporal", 1 );
+		$dir_tmp = trim($dir_tmp);
+		
+		if ( !$dir_tmp ) my_error( "RUN: No se ha podido crear el directorio temporal", 1 );
 		
 		$short_name = get_short_name_circuit( get_id_circuit( $circuit) );
-
-		//if ( !copy( $path['circuits'].$short_name.".txt", $dir_tmp.$short_name.".txt" )) my_error( "RUN: No se ha podido copiar el txt del circuito", 1 );
-
-		$file = fopen($dir_tmp."codigo.cc", "a+");
+		
+		`cp ${path['circuits']}$short_name.txt $dir_tmp/circuit.txt`; 
+		
+		/*$file = fopen($dir_tmp."studentcode.h", "a+");
 		fwrite($file, $code);
-		fclose($file); 
+		fclose($file); */
 
+		`cp ${path['pack']}/* $dir_tmp`;	/**/
+
+		`cp /home/dvd/Escritorio/pfc-pj/omer/racing/src/studentcode.h $dir_tmp`;
+
+		chdir($dir_tmp);
+		$res =`python run.py`;
+		
+		$obj_result = json_decode ($res, true);
+		
+		if($obj_result['code']<0) return $obj_result;
+		
+		$file = fopen("trace.out", "r");
+		$time = fscanf($file, "%d");
+		//echo " ".$time[0]."//";
+		fclose($file);
+		
+		$id_user = get_id_user( $_SESSION['user'] );
+		
+		$id_game = create_game( $id_user, get_id_circuit($circuit), $time);
+		/*DEVOLVER EL IDENTIFICADOR DE LA PARTIDA QUE ACABAS DE INSERTAR,
+		, TENIENDO EN CUENTA QUE NO INTERFIERA OTRO USUARIO QUE ACABA DE REALIZAR
+		UNA INSERCION*/
+		echo " -> ".$id_game;		
 		
 		
-		
-		
-		
-		
-		
-		
-	}*/
+	}
 ?>
