@@ -125,5 +125,32 @@
 			return "car-".$res.".gif";
 	}
 	
-	
+	/*
+	function run( $code, $circuit ){
+		
+		global $path;
+		
+		$dir_tmp = "/tmp/pfc_prueba/";
+		
+		//$dir_tmp = "/tmp/pfc_".md5(uniqid(rand(), TRUE))."/";
+		
+		//if ( !mkdir($dir_tmp) ) my_error( "RUN: No se ha podido crear el directorio temporal", 1 );
+		
+		$short_name = get_short_name_circuit( get_id_circuit( $circuit) );
+
+		//if ( !copy( $path['circuits'].$short_name.".txt", $dir_tmp.$short_name.".txt" )) my_error( "RUN: No se ha podido copiar el txt del circuito", 1 );
+
+		$file = fopen($dir_tmp."codigo.cc", "a+");
+		fwrite($file, $code);
+		fclose($file); 
+
+		
+		
+		
+		
+		
+		
+		
+		
+	}*/
 ?>
