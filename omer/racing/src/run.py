@@ -61,6 +61,7 @@ res = compila()
 if res[0]==0: res = corre("circuit.txt")
 
 if res[0]<0:
-    print json.dumps( {"code": res[0], "message": res[1]} )
+    file = open(res[1], 'r')
+    print json.dumps( {"code": res[0], "message": file.read()} )
 else:
     print json.dumps( {"code": 0, "message": "Ok"} )
