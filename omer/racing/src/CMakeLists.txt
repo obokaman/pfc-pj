@@ -10,9 +10,11 @@ set(VIEW_FILES mainview.cc QMainView.cc QMainView.h
                            common.h)
 add_executable(racing-view ${VIEW_FILES} ${MOC_FILES})
 
-set(MONOCAR_FILES mainsim.cc monocar.cc monocar.h
-                             corbes.cc corbes.h
-                             common.h)
+set(MONOCAR_FILES mainsim.cc
+                  monocar.h
+                  proxycar.cc proxycar.h studentcode.h
+                  corbes.cc corbes.h
+                  common.h)
 add_executable(monosim ${MONOCAR_FILES})
 
 target_link_libraries(racing-view ${QT_LIBRARIES})

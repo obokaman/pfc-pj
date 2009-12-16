@@ -15,14 +15,19 @@ int main(int argc, char *argv[])
   if (argc>=2) {
     window.loadCircuit(string(argv[1]));
   }
-  if (argc==3 or argc>4) {
+  if (argc>4) {
     cerr << "Usage: " << argv[0] << " <circuit.txt> <capture.png> <width x height>" << endl;
   }
-  if (argc==4) {
-    istringstream iss(argv[3]);
+  else if (argc>=3) {
     int width, height;
-    char kk;
-    iss >> width >> kk >> height;
+    if (argc==3) {
+      window.getCircuitSize(width, height);
+    }
+    else {
+      istringstream iss(argv[3]);
+      char kk;
+      iss >> width >> kk >> height;
+    }
     assert(width>10 and height>10 and width<10000 and height<10000);
     window.saveImage(string(argv[2]), width, height);
     return 0;

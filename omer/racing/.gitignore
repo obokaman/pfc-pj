@@ -5,4 +5,5 @@ CMakeFiles/
 install_manifest.txt
 *~
 bin/
+images/
 *.trc

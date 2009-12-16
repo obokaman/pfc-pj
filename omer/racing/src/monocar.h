@@ -12,10 +12,14 @@ using namespace std;
 
 
 class MonoCar {
- 
+
+public: 
+  friend class ProxyCar;
   static const int TIMESTEP = 10; //10 ms
   static const int PRINTSTEP = 10*TIMESTEP; //must be TIMESTEP multiple
+  static const int EXTRARACETIME = 5000; //must be TIMESTEP multiple
 
+private:
   static double curv2maxvel(double curv) {
     double radi = 1/(curv+0.00001); // en metres
     return sqrt(1.1*10*radi);  //sqrt(mu * G * r); mu=1.1
@@ -38,16 +42,14 @@ class MonoCar {
     }
     else {
       if (vel < 20) newvel = vel + time*10*0.5;
-      else newvel = vel + time*10*max(0.0, 0.5 - 0.5*(vel-20)*(vel-20)/1600.0);
+      else newvel = vel + time*10*max(0.0, 0.5 - 0.5*(vel-20)
+				      *(vel-20)/1600.0);
       if (newvel>vo) return vo;
       return newvel;
     }
   }
 
-
   ostream *os;
-
-private:
   Circuit *c;
   int numvueltas;
   double alpha;
@@ -56,6 +58,9 @@ private:
   vector<int> vueTimes;  //ms (tantas como vueltas completadas)
   int time;
   int timeSal;  //tiempo donde el coche se esta saliendo.
+
+public:
+  int ticks;    //ticks de rellotge de la simulacio
 
 public:
   MonoCar(Circuit *_c, int nv, ostream *os_) {
@@ -67,23 +72,19 @@ public:
     timeSal = -1;
     os = os_;
     alpha = 0;
-    (*os) << PRINTSTEP << endl;
   }
 
 
 protected:
   double getLongCircuito() { ///<longitud circuito (en metros)
-    avanza();
     return c->getDist();
   }
-  int geNumVueltas() {       ///<num vueltas
-    avanza();
+  int getNumVueltas() {       ///<num vueltas
     return numvueltas;
   }
 
   int getVuelta() {         ///<vuelta actual (1-numvueltas)
     int res = int(pos/c->getDist())+1;
-    avanza();
     return res;
   }
 
@@ -92,30 +93,25 @@ protected:
   ///devuelve 0.
   double getCronoVuelta(int vuelta) {
     double res;
-    if (vuelta<1 or vuelta-1>=vueTimes.size()) res = 0;
+    if (vuelta<1 or vuelta-1>=int(vueTimes.size())) res = 0;
     else res = vueTimes[vuelta-1]*0.001;
-    avanza();
     return res;
   }
 
   double getCrono() {       ///<tiempo actual (en segundos)
     double res = time*0.001;
-    avanza();
     return res;
   }
   double getPos() {         ///<posicion actual (en km)
     double res = pos*0.001;
-    avanza();
     return res;
   }
   double getVel() {         ///<velocidad actual (en km/h)
     double res = vel*3.6;
-    avanza();
     return res;
   }
   double getVelObjetivo() {  ///<velocidad objetivo (en km/h)
     double res = velObj*3.6;
-    avanza();
     return res;
   }
 
@@ -124,13 +120,11 @@ protected:
     double res;
     if (x<0 or x>200) res = -1;
     else res = curv2maxvel(c->getCurv(pos+x))*3.6;
-    avanza();
     return res;
   }
 
   void setVel(double v) {   ///<velocidad objetivo (en km/h)
     velObj = v/3.6;
-    avanza();
   }
   void espera(double s) {   ///<espera s segundos
     int steps = int((s*1000)/TIMESTEP+0.00001);
@@ -147,9 +141,10 @@ public:
     double p = pos;
     p -= dist*int(pos/dist);
     assert(p>=0 and p<=dist);
-    
-    if (timeSal>time) {
-      vo = 0;  //estamos dando vueltas de campana ("salida")
+
+
+    if (timeSal>time) {  //estamos dando vueltas de campana ("salida")
+      vo = 0;  
       alpha += 2*M_PI * (TIMESTEP/1000.0);
     }
     else {
@@ -162,11 +157,14 @@ public:
       
       if (vel > curv2maxvel(curv)) {  //malaSuerte(G)
 	//durante un tiempo, el coche no avanza
-	//2 seg. de penalizacion (min)
-	timeSal = time + max(2000, int(1000*vel/20.0)); 
+	//5 seg. de penalizacion
+	timeSal = time + 5000; 
 	vo = 0;
       }
-      else vo = velObj;
+      else {
+	vo = velObj;
+	if (finished()) vo = 20;  //vuelta de honor
+      }
     }
     
     double newvel = acelera(vel, vo, TIMESTEP/1000.0);  //(m/s)
@@ -177,28 +175,26 @@ public:
       //primero: calculo el tiempo de entrada en meta
       double ratio = (dist-p)/advDist;
       vueTimes.push_back(time+int(ratio*TIMESTEP));
-
-      if (vueTimes.size()==numvueltas) {
-	ostringstream oss;
-	oss << "Race ended: ";
-	for (int i=0;i<numvueltas;++i) {
-	  cerr << vueTimes[i] << endl;
-	}
-	int t = vueTimes[numvueltas-1];
-	oss << setfill('0') << setw(2) << (t/60000) << ":";
-	t %= 60000;
-	oss << setfill('0') << setw(2) << (t/1000) << ":";
-	t %= 1000;
-	oss << setfill('0') << setw(3) << t;
-	oss << endl;
-	throw oss.str();
-      }
     }
+    if (finished() and total_time()+EXTRARACETIME<time) {
+      ostringstream oss;
+      oss << "Race ended: ";
+      int t = total_time();
+      oss << setfill('0') << setw(2) << (t/60000) << ":";
+      t %= 60000;
+      oss << setfill('0') << setw(2) << (t/1000) << ":";
+      t %= 1000;
+      oss << setfill('0') << setw(3) << t;
+      oss << endl;
+      throw oss.str();
+    }
+
     pos += advDist;
     
     Punt punt = c->getPos(pos);
     if (time % PRINTSTEP == 0) {
       (*os) << punt.x << " " << punt.y << " " << alpha << endl;
+      ++ticks;
     }
  
     //finalmente: aceleracion, y cambio de tiempo
@@ -206,5 +202,10 @@ public:
     time += TIMESTEP;
   }
 
-  void corre();
+  bool finished() {
+    return numvueltas==int(vueTimes.size());
+  }
+  int total_time() {
+    return vueTimes[numvueltas-1];
+  }
 };

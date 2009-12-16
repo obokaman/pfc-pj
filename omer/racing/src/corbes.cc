@@ -49,7 +49,7 @@ istream &operator>>(istream &is, PuntDir &pd) {
 }
 ostream &operator<<(ostream &os, const PuntDir &pd) {
   return os << pd.p << " " << pd.alpha/(2*M_PI) << " "
-	    << pd.fpre <<  " " << pd.fpost << endl;
+	    << pd.fpre <<  " " << pd.fpost;
 }
 
 
@@ -210,6 +210,8 @@ double Circuit::getCurv(double d) const {
 }
 
 istream &operator>>(istream &is, Circuit &c) {
+  if (not (is >> c.width >> c.height)) return is;
+
   if (not (is >> c.n)) return is;
 
   c.vpd.resize(c.n);
@@ -221,6 +223,7 @@ istream &operator>>(istream &is, Circuit &c) {
 }
 
 ostream &operator<<(ostream &os, const Circuit &c) {
+  os << c.width << " " << c.height << endl;
   os << c.n << endl;
   For(i, c.n) os << c.vpd[i] << endl;
   return os;

@@ -4,6 +4,7 @@
 #include "common.h"
 #include "corbes.h"
 #include "monocar.h"
+#include "proxycar.h"
 
 using namespace std;
 
@@ -25,15 +26,24 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  
-  MonoCar car(&c, 3, &cout);
+  ostringstream oss;
+  MonoCar car(&c, 3, &oss);
+  ProxyCarInherited proxycar(&car);
   try{
     while (1) {
-      car.corre();
+      proxycar.corre();
       car.avanza();
     }
   }
   catch (string s) {
     cerr << endl << "[END] " << s << endl;
+  }
+
+  if (car.finished()) {
+    cout << car.total_time() << " "      //temps en ms
+	 << c.width << " " << c.height << " " //mida del canvas
+	 << car.PRINTSTEP << " "   //ms entre cada parell de dades
+	 << car.ticks << endl     //nombre de dades
+	 << oss.str();   // les dades en si    
   }
 }

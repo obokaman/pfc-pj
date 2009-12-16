@@ -22,6 +22,7 @@ public:
   void loadTrace(const string &trace);
 
   void saveImage(const string &name, int width, int height);
+  void getCircuitSize(int &width, int &height);
 
 private:
   string filename;

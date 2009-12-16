@@ -46,12 +46,14 @@ ostream &operator<<(ostream &os, const PuntDir &pd);
 // Informacio basica circuit + pre-calcul
 struct Circuit {
 
-  Circuit(): n(0) {}
+  Circuit(): n(0), width(1000), height(1000) {}
 
   static const double MAXDISTSUBTRAM = 20;
   static const int MINSEGSCORBA = 5;
 
   int n;               //num trams
+  int width, height;   //mida (en metres) del canvas del circuit
+
   vector<PuntDir> vpd; //punts definint els trams (n)
 
   //Informacio que es precalcula:

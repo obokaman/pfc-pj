@@ -40,12 +40,21 @@ void CircuitView::drawCircuit(QPainter *painter) {
   pfullblack.setColor(QColor("black"));
   pfullblack.setWidth(ANCHO_BORDILLO/4.0);
 
-  int side = min(painter->device()->width(),
-		 painter->device()->height());
+  double scalex = painter->device()->width()/double(c.width);
+  double scaley = painter->device()->height()/double(c.height);
+  double scale = min(scalex, scaley);
+
+  //  int side = min(painter->device()->width(),
+  //		 painter->device()->height());
   
-  painter->translate((painter->device()->width()-side)/2,
-		     (painter->device()->height()-side)/2);
-  painter->scale(side/1000.0, side/1000.0);
+  //  painter->translate((painter->device()->width()-side)/2,
+  //		     (painter->device()->height()-side)/2)
+  painter->translate((painter->device()->width() - int(scale*c.width))/2,
+		     (painter->device()->height() - int(scale*c.height))/2);
+
+  
+  //  painter->scale(side/double(c.width), side/double(c.height));
+  painter->scale(scale, scale);
 
   double STEP = 2.5;
   double d = STEP;
@@ -117,6 +126,11 @@ void CircuitView::drawCircuit(QPainter *painter) {
       p1 = c.vp[3*i+2], p2 = c.vp[3*i+3];
       painter->drawLine(p1.x, p1.y, p2.x, p2.y);
 
+      painter->setPen(pred);
+      painter->drawLine(0, 0, c.width, 0);
+      painter->drawLine(0, 0, 0, c.height);
+      painter->drawLine(0, c.height, c.width, c.height);
+      painter->drawLine(c.width, 0, c.width, c.height);
       //      painter.setPen(pred);
       //      p1 = c.vp[3*i+1], p2 = c.vp[3*i+2];
       //      painter.drawLine(p1.x, p1.y, p2.x, p2.y);

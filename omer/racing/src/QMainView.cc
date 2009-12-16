@@ -9,6 +9,13 @@
 
 using namespace std;
 
+//ineficient, pero nomes es un parxe
+void MainView::getCircuitSize(int &width, int &height) {
+  Circuit c = qcv->getCircuit();
+  width = c.width;
+  height = c.height;
+}
+
 MainView::MainView() {
   filename = "";
 

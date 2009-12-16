@@ -4,7 +4,13 @@
 using namespace std;
 
 istream &operator>>(istream &is, Trace &t) {
-  is >> t.timestep;  //10 ms
+  
+  int kk;
+  is >> kk;  //totaltime
+  is >> kk;  //width
+  is >> kk;  //height
+  is >> t.timestep;  //100 ms
+  is >> kk;  //numlineas
 
   double x, y, alpha;
   while (is >> x >> y >> alpha) {
