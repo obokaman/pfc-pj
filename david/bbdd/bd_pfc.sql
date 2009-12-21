@@ -112,6 +112,7 @@ CREATE TABLE game (
   id_circuit 	integer  NOT NULL,
   id_champ	integer	 DEFAULT NULL,
   time_result	integer	 DEFAULT NULL,  
+  time_insertion datetime DEFAULT NULL,
 
   PRIMARY KEY (id_game),
 
@@ -218,25 +219,25 @@ INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (3, 3);
 
 INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (3, 2);
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 1, null, 75321);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 1, null, 75321, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 1, 1, 75322);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 1, 1, 75322, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 1, 1, 75323);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 1, 1, 75323, NOW());
 
 /*INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 1, 1, 75321);*/
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 1, 1, 75322);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (3, 1, 1, 75322, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 1, 1, 75323);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (3, 1, 1, 75323, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 2, null, 75324);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 2, null, 75324, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 2, 2, 75325);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 2, 2, 75325, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (2, 3, 1, 75326);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 3, 1, 75326, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 3, 2, 75327);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (3, 3, 2, 75327, NOW());
 
 INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 3, 2, 75328);
 

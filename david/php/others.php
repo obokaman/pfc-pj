@@ -132,7 +132,7 @@
 		
 		$dir_tmp = `mktemp -d`;	
 		
-		echo trim($dir_tmp);
+		//echo trim($dir_tmp);
 		
 		$dir_tmp = trim($dir_tmp);
 		
@@ -159,17 +159,22 @@
 		
 		$file = fopen("trace.out", "r");
 		$time = fscanf($file, "%d");
-		//echo " ".$time[0]."//";
 		fclose($file);
 		
 		$id_user = get_id_user( $_SESSION['user'] );
 		
-		$id_game = create_game( $id_user, get_id_circuit($circuit), $time);
-		/*DEVOLVER EL IDENTIFICADOR DE LA PARTIDA QUE ACABAS DE INSERTAR,
-		, TENIENDO EN CUENTA QUE NO INTERFIERA OTRO USUARIO QUE ACABA DE REALIZAR
-		UNA INSERCION*/
-		echo " -> ".$id_game;		
+		$time_insertion = date("y-m-d h:i:s");
 		
+		if (!create_game( $id_user, get_id_circuit($circuit), $time[0], $time_insertion)) my_error( "RUN: No se ha insertar la partida correctamente", 1 );
 		
+		$id_game = get_id_by_date_user( $id_user, $time_insertion);
+	
+		echo " -> ".$id_game;	
+		
+		mkdir ($path['games'].$id_game);
+		
+		`cp $dir_tmp/* ${path['games']}/$id_game`;   /**/		
+		
+		return $obj_result;
 	}
 ?>
