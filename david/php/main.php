@@ -233,14 +233,6 @@ else if ($f == "getCircuitInfo") {
 			)
 		);
 }
-else if ($f == "getCarImage") {	
-		send(
-			get_car_image(
-				clean("width", "int"),
-				clean("height", "int")
-			)
-		);
-}
 else if( $f == "saveCode" ) {	
 	$code = clean ( "code", "json" );
 	$file_name = clean ( "name", "string" );

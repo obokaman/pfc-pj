@@ -97,23 +97,6 @@
 	/*Post: Retorna una array de string, donde cada posicion guarda la palabra separada por espacios*/
 	
 	
-	function get_car_image($width, $height){
-	/*Pre: */	
-			
-			$arr = Array ( 20, 24, 28, 32, 36, 40, 50 , 60 );
-			
-			//$name_image = $short_name."-".$width."x".$height.".png";
-			$size = ( ( min( $width, $height))/1000 ) * 40;
-			
-			$aux = 99999;
-			
-			foreach ( $arr as $v ){
-				if (abs($size - $v) < $aux ) {$aux = abs($size - $v) ; $res = $v;}				
-			} 
-			
-			return "car-".$res.".gif";
-	}
-	
 	
 	function run( $code, $circuit ){
 		
@@ -131,10 +114,10 @@
 		
 		`cp ${path['circuits']}$short_name.txt $dir_tmp/circuit.txt`; 
 		
-		/*$file = fopen($dir_tmp."/studentcode.h", "w");
+		$file = fopen($dir_tmp."/studentcode.h", "w");
 		fwrite($file, $code);
-		fclose($file); */
-		`cp /home/dvd/Escritorio/pfc-pj/omer/racing/src/studentcode.h $dir_tmp`;
+		fclose($file); 
+		//`cp /home/dvd/Escritorio/pfc-pj/omer/racing/src/studentcode.h $dir_tmp`;
 		
 		`cp ${path['pack']}/* $dir_tmp`;	/**/
 
