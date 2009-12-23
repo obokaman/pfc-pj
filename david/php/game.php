@@ -191,7 +191,7 @@
 	
 	function get_trace_fragment( $id_game, $start_byte, $length ){
 		
-		global path;
+		global $path;
 		
 		$game = $path['games'].$id_game.'/trace.out';
 		//$game = "/etc/passwd";
