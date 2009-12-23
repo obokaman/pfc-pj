@@ -226,12 +226,10 @@ else if ($f == "setTeamAnswer") {
 			if ( ( $answer == 0 ) and ( get_status( get_id_user( $_SESSION[ 'user' ] ), get_id_team ( $name_team ) ) == 0 ) )  delete_user_team( get_id_user( $_SESSION[ 'user' ] ), get_id_team ( $name_team ) );			
 		}
 }
-else if ($f == "getCircuitImage") {	
+else if ($f == "getCircuitInfo") {	
 		send(
-			get_circuit_image(
-				clean("name", "string"),
-				clean("width", "int"),
-				clean("height", "int")
+			get_circuit(
+				clean("name", "string")
 			)
 		);
 }

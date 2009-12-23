@@ -32,6 +32,12 @@
 	}
 	/*Devuelve una array de objetos donde cada objeto representa una fila del resultado de la consulta SQL de la entrada*/
 	
+	/*La funcion devuelve un objeto que representa una fila del resultado de la consulta*/
+	function extract_array($result_query) {
+	/*Pre: La query no es nula y tiene una fila en el resultado*/
+		return mysql_fetch_array($result_query);
+	}	
+	/*Post: Devuelve un objeto que representa la fila del resultado de la consulta*/
 	
 	/*La funcion devuelve un objeto que representa una fila del resultado de la consulta*/
 	function extract_row($result_query) {
@@ -89,23 +95,6 @@
 		}
 	}
 	/*Post: Retorna una array de string, donde cada posicion guarda la palabra separada por espacios*/
-	
-	/*La función crea la imagen según el tamaño que se le haya pasado por la entrada*/
-	function get_circuit_image($name_circuit, $width, $height){
-	/*Pre: El short_name del circuito ha de existir, junto con el ancho y la altura*/	
-			global $path;
-			
-			$short_name = get_short_name_circuit( get_id_circuit( $name_circuit) );
-			$name_image = $short_name."-".$width."x".$height.".png";
-			if ( file_exists($path['images']."/".$name_image) )				return $name_image;
-			$command = "convert ".$path['circuits'].$short_name.".png -background rgb\(128,255,128\) -resize ".$width."x".$height." -gravity center -extent ".$width."x".$height." ".$path['images']."/".$name_image;
-			//my_error($command, 1);
-			system($command);
-			
-			return $name_image;
-			
-	}
-	/*Post: */
 	
 	
 	function get_car_image($width, $height){

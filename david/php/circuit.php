@@ -64,15 +64,25 @@
 
 	
 	/*La función nos devuelve la información del circuito a partir del identificador que tiene en la BBDD*/
-	function get_circuit_id($id){
+	function get_circuit($name){
 	/*Pre: - */
 		
-		global $connection;
+		global $connection, $path;
 		
-		$query =  "SELECT * FROM circuit WHERE id_circuit = '$id'";
-		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUIT_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+		$query =  "SELECT *  FROM circuit WHERE name = '$name'";
+		$result_query = mysql_query($query, $connection) or  my_error('GET_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
-		return(extract_row($result_query));
+		$obj = extract_row($result_query);
+		
+		$arr = Array ( 'url' => $path['url-images'].$obj->short_name.".png",
+								'width' => $obj->width,
+								'height' => $obj->height,
+								'level' => $obj->level,
+								'n_laps' => $obj->n_laps);
+		
+		$arr['url'] = $path['url-images'].$arr['short-name'].".png"; 
+		
+		return $arr;
 	}
 	/*Post: La función nos devuelve una array el objeto circuito seleccionado a partir de su identificador de circuito */
 	
