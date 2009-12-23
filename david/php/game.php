@@ -190,8 +190,8 @@
 	
 	
 	function get_trace_fragment( $id_game, $start_byte, $length ){
-		//$game = $path['games'].$id_game.'/trace.out';
-		$game = "/etc/passwd";
+		$game = $path['games'].$id_game.'/trace.out';
+		//$game = "/etc/passwd";
 		
 		class result{
 			public $read_bytes = 0;
