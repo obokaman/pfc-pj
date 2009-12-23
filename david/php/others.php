@@ -131,10 +131,10 @@
 		
 		`cp ${path['circuits']}$short_name.txt $dir_tmp/circuit.txt`; 
 		
-		$file = fopen($dir_tmp."/studentcode.h", "w");
+		/*$file = fopen($dir_tmp."/studentcode.h", "w");
 		fwrite($file, $code);
-		fclose($file); 
-		//`cp /home/dvd/Escritorio/pfc-pj/omer/racing/src/studentcode.h $dir_tmp`;
+		fclose($file); */
+		`cp /home/dvd/Escritorio/pfc-pj/omer/racing/src/studentcode.h $dir_tmp`;
 		
 		`cp ${path['pack']}/* $dir_tmp`;	/**/
 
@@ -161,7 +161,7 @@
 		
 		`cp $dir_tmp/* ${path['games']}/$id_game`;   /**/		
 		
-		$obj_result['id_game'] = $id_game;
+		$obj_result['id_game'] = (int)$id_game;
 		
 		return $obj_result;
 	}
