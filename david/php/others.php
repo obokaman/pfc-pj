@@ -131,8 +131,6 @@
 		
 		`cp ${path['circuits']}$short_name.txt $dir_tmp/circuit.txt`; 
 		
-		echo $dir_tmp;
-		
 		$file = fopen($dir_tmp."/studentcode.h", "w");
 		fwrite($file, $code);
 		fclose($file); 
