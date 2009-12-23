@@ -283,6 +283,15 @@ else if( $f == "getTraceFragment" ) {
 		)
 	);	
 }
+else if( $f == "getFullTrace" ) {	
+	send(
+		get_trace_fragment( 			
+			clean("id_game", "int"),
+			0,
+			-1
+		)
+	);	
+}
 else if( $f == "run" ) {	
 	send(
 		run( 			

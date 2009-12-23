@@ -200,10 +200,14 @@
 		
 		$result = new result;
 		
-		if (filesize($game) >=  $start_byte ) {		
+		$size_file = filesize($game);
+		
+		if ($length == -1) $length = $size_file;
+		
+		if ($size_file >=  $start_byte ) {		
 			$handle = fopen( $game, "r" );		
 			fseek( $handle, $start_byte);
-					
+			
 			$result->data = fread( $handle, $length );
 			
 			if ( filesize($game) >= ($start_byte + $length) ) $result->read_bytes = $length;

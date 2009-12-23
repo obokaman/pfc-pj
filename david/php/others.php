@@ -142,13 +142,14 @@
 		
 		`cp ${path['circuits']}$short_name.txt $dir_tmp/circuit.txt`; 
 		
-		/*$file = fopen($dir_tmp."studentcode.h", "a+");
+		echo $dir_tmp;
+		
+		$file = fopen($dir_tmp."/studentcode.h", "w");
 		fwrite($file, $code);
-		fclose($file); */
-
+		fclose($file); 
+		//`cp /home/dvd/Escritorio/pfc-pj/omer/racing/src/studentcode.h $dir_tmp`;
+		
 		`cp ${path['pack']}/* $dir_tmp`;	/**/
-
-		`cp /home/dvd/Escritorio/pfc-pj/omer/racing/src/studentcode.h $dir_tmp`;
 
 		chdir($dir_tmp);
 		$res =`python run.py`;
@@ -168,12 +169,12 @@
 		if (!create_game( $id_user, get_id_circuit($circuit), $time[0], $time_insertion)) my_error( "RUN: No se ha insertar la partida correctamente", 1 );
 		
 		$id_game = get_id_by_date_user( $id_user, $time_insertion);
-	
-		echo " -> ".$id_game;	
 		
 		mkdir ($path['games'].$id_game);
 		
 		`cp $dir_tmp/* ${path['games']}/$id_game`;   /**/		
+		
+		$obj_result['id_game'] = $id_game;
 		
 		return $obj_result;
 	}

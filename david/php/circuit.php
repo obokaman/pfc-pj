@@ -5,9 +5,9 @@
 	/*Pre: - */	
 	
 		global $connection;
-		
+			
 	    $query = "INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('$name', '$short_name', '$level', '$n_laps', '$time')";
-						
+			
 		if (!mysql_query($query, $connection)) {
 			 my_error('CREATE_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			return false;
