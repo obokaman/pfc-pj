@@ -1,10 +1,21 @@
 <?php
 
-	/*La función crea un usuario en la BBDD*/
+	/*La función crea un usuario en la BBDD
+			-nick: Nick del usuario
+			- name: Nombre del usuario
+			- surname1: Primer apellido del usuario
+			- surname2: Segundo apellido del usuario
+			- email_user: Dirección de correo del usuario
+			- city: Ciudad del usuario
+			- school: Colegio del usuario
+			- email_school: Direccion de correo del colegio
+			- pass: Password del usuario
+	*/
 	function create_user($nick, $name, $surname1, $surname2, $email_user, $city, $school, $email_school, $pass){
-	/*Pre: - */	
+	/*Pre: Ninguno de los parametros de la entrada es nulo a excepcion del surname2, el email_school y el pass */	
 		global $connection;
 		
+		/*Creamos la clave de activación del usuario*/
 		$key_act = make_activationkey();
 	    $query = "INSERT INTO user ( nick, name, surname1, surname2, email_user, city, school, email_school, type_user, pass, activation_key)
 						VALUES ('$nick',' $name',' $surname1',' $surname2',' $email_user',' $city',' $school',' $email_school','alumno','$pass', '$key_ac')";//<--- ACABAR DE RETOCAR LA QUERY CON EL TIPO DE ALUMNO
@@ -14,22 +25,22 @@
 						my_error('CREATE_USER-> '.mysql_errno($connection) . ": " . mysql_error($connection), 1);
 						return 2;
 					}
-		}else	return 0;
-		
+		}else	return 0;		
 	}
 	/*Post: La función devolverá según el comportamiento de la inserción del nuevo usuario:
 				- Un 0, si el usuario se ha insertado correctamente
 				- Un 1, en caso de que el nick del nuevo usuario ya exista
 				- Un 2 si se ha producido algún error en el momento de insertar en nuevo usuario */
 	
-	
-	/*La funcion nos retorna el identificador del usuario a partir del nick*/
+		
+	/*La funcion nos retorna el identificador del usuario a partir del nick
+			- nick: Nick del usuario
+	*/
 	function get_id_user($nick){
 	/*Pre: - */
 		global $connection;
 		
-		$query = "SELECT u.id_user FROM user u WHERE u.nick = '$nick'";
-	
+		$query = "SELECT u.id_user FROM user u WHERE u.nick = '$nick'";	
 		$result_query = mysql_query($query, $connection) or my_error('GET_ID_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		return extract_row($result_query)->id_user;		
@@ -50,78 +61,78 @@
 		foreach ($arr as $row) {
 			$res[] = $row->nick;
 		}
+		
 		return $res;
 	}
 	/*Post: La función nos devuelve una array de strings de todos los nicks de los  usuarios que estan almacenados en la base de datos*/
-
-	
-	/*La función nos devuelve la información del usuario a partir del identificador que tiene en la BBDD*/
-	function get_user_id($id){
-	/*Pre: - */
-		global $connection;
-		
-		$query =  "SELECT * FROM user WHERE id_user = '$id'";
-		$result_query = mysql_query($query, $connection) or my_error('GET_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-		
-		return(extract_row($result_query));
-	}
-	/*Post: Retorna una array con el objeto usuario que contiene la información del usuario*/
 	
 	
-	/*La función nos devuelve la información de usuario a partir del nick del usuario*/
+	/*La función nos devuelve la información de un usuario a partir del nick del usuario, si este usuario con el nick de la entrada es el mismo que el que esta logueado devuelve toda la informacion del usuario, en caso contrario, solo devuelve parte de la informacion del usuario  con el mismo nick que el de la entrada
+			-nick: Nick del usuario
+	*/
 	function get_user_nick($nick){
-	/*Pre: - */	
+	/*Pre: Debe de haber un usuario logueado */	
 		if (isset($_SESSION["user"])){
 			
 			global $connection;
 			
+			/*Comprobamos si usuario que esta logueado tiene el mismo nick que el de la entrada de la funcion*/
 			if ($nick == $_SESSION["user"]){
 				$nick_session = $_SESSION["user"];
 				$query =  "SELECT nick, name, surname1, surname2, email_user, city, school, email_school, type_user FROM user WHERE nick = '$nick_session '";
-			}else{
-				$query =  "SELECT nick, name, city, school FROM user WHERE nick = '$nick'";
 			}
-			
+			/*En el caso de que el nick sea distinto que el nick del usuario que esta logueado*/
+			else 	$query =  "SELECT nick, name, city, school FROM user WHERE nick = '$nick'";			
 			$result_query = mysql_query($query, $connection) or my_error('GET_USER_NICK-> '.mysql_errno($connection).": ".mysql_error($connection), 1);			
 			
-		    return(extract_row($result_query));
-			
-			}		
-		}
+		    return(extract_row($result_query));			
+		}		
+	}
 	/*Post: La función devolvera información distinta en diferentes casos:
 				- Devuelve toda la información del usuario, si el nick de la entrada es el mismo que el nick del usuario logueado de la session.
 				- Devuelve el nick, en nombre, población y colegio si el nick de la entrada es distinto que el nick del usuario logueado de la session.
 				- No devuelve nada en caso de que el usuario de la session no este logueado. */
 	
 	
-	/*Esta función modifica los campos almacenados de un usuario en la BBDD*/
+	/*Esta función modifica los campos almacenados de un usuario en la BBDD
+			- name: Nombre del usuario
+			- surname1: Primer apellido del usuario
+			- surname2: Segundo apellido del usuario
+			- email_user: Dirección de correo del usuario
+			- city: Ciudad del usuario
+			- school: Colegio del usuario
+			- email_school: Direccion de correo del colegio
+			- type_user: tipo de usuario
+			- old_pass: Antiguo password del usuario
+			- pass: Nuevo password del usuario
+    */
 	function set_user($name, $surname1, $surname2, $email_user, $city, $school, $email_school, $type_user, $old_pass, $pass){
 	/*Pre: El identificador del usuario existe y los campos no son nulos a exception del segundo apellido o del email de la escuela */
 		
 		global $connection;
 		
-		if(!isset($_SESSION["user"])){
-				return 1; /*No estamos en modo login*/
-		}else{		
-				$nick_session = $_SESSION["user"];
-				$query = "SELECT pass FROM user WHERE nick='$nick_session'";
-				$result_query = mysql_query($query, $connection);
-				$pass_user_session = extract_row($result_query);
-				
-				if ($pass_user_session -> pass != $old_pass){
-					return 2;	  /*La 'old_pass' no coincide con la contraseña del usuario de la sesion*/
-				}else{	
-						if($pass != null){
-								$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', city='$city', school='$school', email_school='$email_school', type_user='$type_user', pass='$pass' WHERE nick='$nick_session' and pass='$old_pass'";
-						}else{
-								$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', city='$city', school='$school', email_school='$email_school', type_user='$type_user' WHERE nick='$nick_session' and pass='$old_pass'";
-						}
-
-						$result_query = mysql_query($query, $connection) or my_error('SET_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-							
-						return 0; /*Se ha realizado el cambio correctamente*/
-				}
+		/*Si el usuario no esta logueado*/
+		if(!isset($_SESSION["user"]))	return 1; /*No estamos en modo login*/
+		
+		/*Si el usuario si que esta logueado*/
+		$nick_session = $_SESSION["user"];
+		$query = "SELECT pass FROM user WHERE nick='$nick_session'";
+		$result_query = mysql_query($query, $connection);
+		$pass_user_session = extract_row($result_query);
+		
+		/*Si el password es distinto al que tienen el usuario antes de ralizar ningún cambio*/
+		if (($old_pass != null) and ($pass_user_session -> pass != $old_pass))	return 2;	  /*La 'old_pass' no coincide con la contraseña del usuario de la sesion*/
+		
+		/*En caso de que el password nuevo no sea nulo, querra decir que se desea cambiar*/
+		if($pass != null){
+				$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', city='$city', school='$school', email_school='$email_school', type_user='$type_user', pass='$pass' WHERE nick='$nick_session' and pass='$old_pass'";
+		}else{
+				$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', city='$city', school='$school', email_school='$email_school', type_user='$type_user' WHERE nick='$nick_session' and pass='$old_pass'";
 		}
+
+		$result_query = mysql_query($query, $connection) or my_error('SET_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+			
+		return 0; /*Se ha realizado el cambio correctamente*/
 	}
 	/*Post: La función retorna enteros distintos dependiendo del comportamiento que siga:
 				- 1 si el usuario de la sesion no esta logueado
@@ -129,20 +140,20 @@
 				- 2 el 'old_pass' no corresponde al usuario logueado*/
 	
 	
-	/*Esta función borra el usuario de la BBDD identificado por el mismo identificador que tienen en la BBDD*/
+	/*Esta función borra el usuario de la BBDD identificado por el mismo identificador de la entrada*/
 	function delete_user_id($id){
-	/*Pre: - */
-	
+	/*Pre: - */	
 		global $connection;
 		
 	    $query = "DELETE FROM user WHERE id_user = '$id'";
-		$result_query = mysql_query($query, $connection) or my_error('DELETE_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);		
-	
+		$result_query = mysql_query($query, $connection) or my_error('DELETE_USER_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);			
 	}
 	/*Post: La función borra el usuario de la BBDD*/
 	
 
-	/*La función comprueba si el nick del usuario existe*/
+	/*La función comprueba si el nick del usuario existe
+			-nick: Nick del usuario
+	*/
 	function exist_user($nick){	
 	/*Pre: - */	
 		global $connection;

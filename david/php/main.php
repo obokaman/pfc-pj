@@ -51,7 +51,7 @@ else if ($f == "getUser") {
 }
 else if ($f == "getMyTeams") {	
 		send(
-			getMyTeams(
+			get_my_teams(
 				clean("circuit", "sql"),
 				clean("championship", "sql")			
 			)
