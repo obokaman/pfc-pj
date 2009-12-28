@@ -90,7 +90,7 @@
 
 	
 	
-	
+	/*Esta funcion nos devuelve una pagina del ranking de las partidas realizadas por los usuarios, este ranking dependera de los parametros que le pasemos. El ranking*/
 	function getRankings($circuit, $team, $championship, $page,  $sizepage){
 		
 			//Inicializamos los valores
@@ -162,34 +162,40 @@
 	}
 	
 	
-	
+	/*Funcion que nos devuelve fragmentos de un archivo de texto, en concreto, el trace.out (archivo de salida de realizar una partida), para ello tenemos que indicar el identificador de la partida, el byte de inicio de la lectura y la longitud que queremos leer
+			- id_game: Identificador de la partida
+			- start_byte: Byte de inicio de la lectura
+			-length: Longitud de lectura
+	*/
 	function get_trace_fragment( $id_game, $start_byte, $length ){
-		
+	/*Pre: El identificador de la partida ha de existir*/	
 		global $path;
 		
+		//Localizamos el fichero de lectura
 		$game = $path['games'].$id_game.'/trace.out';
-		//$game = "/etc/passwd";
 		
+		//Creamos una clase que es la que devolveremos junto con la informacion de la lectura
 		class result{
 			public $read_bytes = 0;
 			public $data = "";
-		}
-		
-		$result = new result;
-		
-		$size_file = filesize($game);
-		
-		if ($length == -1) $length = $size_file;
-		
+		}		
+		$result = new result;		
+		//Tamaño del archivo a leer
+		$size_file = filesize($game);		
+		//Si length es igual a -1, la longitud de lectura sera de todo el fichero a leer
+		if ($length == -1) $length = $size_file;		
+		//Comprobamos que que el byte de inicio no sobresalga del tamaño del fichero de lectura
 		if ($size_file >=  $start_byte ) {		
 			$handle = fopen( $game, "r" );		
-			fseek( $handle, $start_byte);
-			
+			//Situamos el puntero de lectura en el byte de inicio que hemos indicado
+			fseek( $handle, $start_byte);			
+			//Guardamos el contenido
 			$result->data = fread( $handle, $length );
-			
+			//Guardamos el numero de bytes leidos
 			if ( filesize($game) >= ($start_byte + $length) ) $result->read_bytes = $length;
 			else $result->read_bytes = filesize($game) - $start_byte;
 		}
 		return $result;
 	}
+	/*Post: Devolvemos dos valores, read_bytes y data, donde el primero contiene el numero de bytes leidos por la función y el segundo contiene todo el contenido del fichero de lectura*/
 ?>

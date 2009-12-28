@@ -7,11 +7,11 @@
 			- n_laps: Numero de vueltas
 			- time: -
 	*/
-	function create_circuit($name, $short_name, $level, $n_laps, $time){
+	function create_circuit($name, $short_name, $level, $n_laps, $time, $width, $height){
 	/*Pre: - */		
 		global $connection;
 			
-	    $query = "INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('$name', '$short_name', '$level', '$n_laps', '$time')";			
+	    $query = "INSERT INTO circuit (name, short_name, level, n_laps, time, width, height) VALUES ('$name', '$short_name', '$level', '$n_laps', '$time', '$width', '$height')";			
 		if (!mysql_query($query, $connection)) {
 			my_error('CREATE_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			return false;
@@ -110,7 +110,7 @@
 	function exist_circuit($name){	
 	/*Pre: - */		
 		global $connection;
-		
+
 		$query =  "SELECT * FROM circuit WHERE name = '$name'";	
 		$result_query = mysql_query($query, $connection) or my_error('EXIST_CIRCUIT-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 

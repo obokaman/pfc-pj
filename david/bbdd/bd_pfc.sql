@@ -85,6 +85,8 @@ CREATE TABLE circuit (
   level		integer ,
   n_laps	integer ,
   time		time	DEFAULT NULL,
+  width		integer,
+  height	integer,
 
   PRIMARY KEY (id_circuit),
   UNIQUE KEY (name, short_name)
