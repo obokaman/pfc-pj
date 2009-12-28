@@ -1,16 +1,24 @@
 <?php include("includes.php");
+/*Todas las funciones realizadas en este archivo que devuelvan valores, los devuelven en formato JSON*/
 
+/*Iniciamos la sesion con el nombre 'PFC'*/
 session_name("PFC");
 session_start();
+
+/*Abrimos una conneccion hacia la base de datos para poder realizar las siguientes operaciones */
 $connection = open_connection();
 
+/*Comprobamos la funcion que nos pide el cliente*/
 $f = clean("function", "string");
 
+/*Según la función que nos haya pedido el cliente, seleccionamos el codigo que hace referencia a dicha función. En este archivo podremos ver las principales funciones que puede realizar el cliente. Cada función o seccion de codigo para una operacion tiene un filtrado de parametros, para mantener la cohesion del codigo y evitar inyeccion de codigo SQL que podria provocar el mal funcionamiento de la base de datos. 
+Si queremos saber mas sobre las funciones que son llamadas, podemos ver una explicación mas detallada sobre cada una de ellas en los archivos que aparecen listados en el include.php*/
 
-
+/*Funcion que realiza el logueo de los usuarios*/
 if ($f == "login") {
 	send( login( clean("nick", "string"),	clean("password", "string") ) );
 }
+/*Función que nos inserta los nuevos usuarios en la base de datos*/
 else if ($f == "newUser") {
 	send(
 		create_user(
@@ -26,6 +34,7 @@ else if ($f == "newUser") {
 		)
 	);
 }
+/*Función para cambiar los parametros de los usuarios registrados*/
 else if ($f == "changeUser") {	
 		send(
 			set_user(
@@ -42,6 +51,7 @@ else if ($f == "changeUser") {
 			)
 		);
 }
+/*La función nos devuelve información de los usuarios*/
 else if ($f == "getUser") {	
 		send(
 			get_user_nick(
@@ -49,6 +59,7 @@ else if ($f == "getUser") {
 			)
 		);
 }
+/*Función que devuelve los equipos a los que esta inscrito el usuario loguado*/
 else if ($f == "getMyTeams") {	
 		send(
 			get_my_teams(
@@ -57,6 +68,7 @@ else if ($f == "getMyTeams") {
 			)
 		);
 }
+/*Función que devuelve los campeonatos a los que esta inscritos el usuario logueado*/
 else if ($f == "getMyChampionships") {	
 		send(
 			getMyChampionships(
@@ -64,17 +76,20 @@ else if ($f == "getMyChampionships") {
 			)
 		);
 }
+/*Función que devuelve los circuitos que hay en la base de datos*/
 else if ($f == "getCircuits") {	
 		send(
 			get_circuits()
 		);
 }
+/*Función que comprueba la clave de activacion de una cuenta de usuario, y devuelve un codigo HTML con un mensaje en caso de exito o de fallida. Esta funcion no devuelve el resultado en formato JSON*/
 else if ($f == "activated") {	
 		activated(
 			clean("nick", "string"),
 			clean("activation_key", "string")
 		);
 }
+/*Esta función devuelve un fragmento del ranking realizado a partir de los parametros circuit, team y championship (nombre del circuito, nombre del equipo y nombre del campeonato, respectivamente). Este fragmento, lo llamaremos pagina, y es lo que devolveremos.*/
 else if ($f == "getRankings") {	
 		send(
 			getRankings(
@@ -86,6 +101,7 @@ else if ($f == "getRankings") {
 			)
 		);
 }
+/*Función que nos crea un nuevo campeonato en la base de datos, y nos incluye los circuitos en los que se realiza el campenato*/
 else if ($f == "newChampionship") {	
 
 		$name = clean("name", "string");
@@ -111,9 +127,7 @@ else if ($f == "newChampionship") {
 						delete_championship_id( get_id_championship( $name ) );
 						$result = 2;
 					}
-					
 				}else $result = 2;
-				
 			}else $result = 2;
 		}		
 		send($result);

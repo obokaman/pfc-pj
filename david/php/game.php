@@ -90,21 +90,30 @@
 
 	
 	
-	/*Esta funcion nos devuelve una pagina del ranking de las partidas realizadas por los usuarios, este ranking dependera de los parametros que le pasemos. El ranking*/
+	/*Esta funcion realiza la consulta obteniendo los resultados de las partidas realizadas para crear un ranking, este ranking estara divido en paginas. Este ranking tendra un filtraje que depende de varios valores como el circuito donde se realiza las partidas, el equipo que realiza las partidas o el campeonato. Las paginas que obtengamos del ranking es lo que nos devolvera la funcion. Para indicar la pagina que queramos  unicamente devolvemos un listado de elementos donde cada uno contiene el usuario y el tiempo realizado de la partida, la pagina que le corresponde y el numero total de paginas del ranking.
+Si el parametro de entrada page es igual a 0 devolvemos la pagina a la que pertenece el nick logueado, en caso de que no haya un usuario logueado devolvemos la primera pagina. Si page es diferente de 0 se devuelve la pagina que se pide.
+Parametros de entrada:
+	- circuit: Nombre del circuito
+	- team: Nombre del equipo 
+	- championship: Nombre del campeonato
+	- page: pagina que queremos del ranking
+	- sizepage: Tamaño maximo de elementos que puede aparecer en una pagina del ranking
+ */
 	function getRankings($circuit, $team, $championship, $page,  $sizepage){
-		
+	/*Pre: El nombre del circuito no puede ser nulo*/
 			//Inicializamos los valores
 			global $connection;			
 			
+			//Clase que contendra la informacion que queremos devolver
 			class obj{
 				public $page = 0;
 				public $numpages = 0;
 				public $data = array();
 			}
-			$max = 50;	
-			
 			$result = new obj;
 			
+			//El maximo de elementos que puede haber en una pagina es de 50 por defecto, en el caso que nos especifiquen una cantidad en concreto de elementos pasara a ser el nuevo maximo
+			$max = 50;	
 			if ($sizepage!=0)	$max=$sizepage;
 			
 			//Creamos la query, filtrando los parametros de la entrada
@@ -145,21 +154,22 @@
 									$result->data =  extract_interval_rows($result_query, 0, $max);
 									$result->page = 1;						
 							}
-						
 					}else{//Devolvemos la pagina en el caso de que page sea diferente de 0					
 							//El segundo parametros debe estar en un intervalo entre 0 y n ya que es el rango que sigue el numero de las filas en la bd
 							$games = extract_interval_rows($result_query, (($page-1)*$max), $max);		
 							$result->data =  $games;
 							$result->page = intval($page);
 					}
-					
 			}else{
 					$result->page = intval($page);
 					$result->data = Array();					
 			}
-			
 			return $result;		
 	}
+	/*Post: La funcion nos devolvera 3 valores:
+			- page: Un entero que corresponde a el numero de la pagina del ranking
+			- numpages: Numero total de paginas que hay en el ranking realizado
+			- data: Un array con los pares nick de usuario y tiempo realizado en una partida. Esta array como maximo puede contener sizepage elementos*/
 	
 	
 	/*Funcion que nos devuelve fragmentos de un archivo de texto, en concreto, el trace.out (archivo de salida de realizar una partida), para ello tenemos que indicar el identificador de la partida, el byte de inicio de la lectura y la longitud que queremos leer
