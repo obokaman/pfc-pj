@@ -32,7 +32,8 @@
 				- Un 1, en caso de que el nick del nuevo usuario ya exista
 				- Un 2 si se ha producido algún error en el momento de insertar en nuevo usuario */
 	
-		
+
+
 	/*La funcion nos retorna el identificador del usuario a partir del nick
 			- nick: Nick del usuario
 	*/
@@ -53,7 +54,7 @@
 	/*Pre: - */	
 		global $connection;
 		
-		$query =  "SELECT u.nick FROM user u";
+		$query =  "SELECT u.nick FROM user u WHERE u.activated = 1";
 		$result_query = mysql_query($query, $connection) or my_error('GET_USERS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
 		$arr = extract_rows($result_query);
@@ -167,7 +168,10 @@
 	/*Post: Devuelve cierto en caso de que el nick del usuario existe, en caso contrario devuelve falso*/
 	
 	
-	/* Función que gestiona el logueo de los usuarios*/
+	/* Función que gestiona el logueo de los usuarios, guardando el nick del usuario que se acaba de loguear en una variable SESSION PHP que mantendra informacion del usuario mientras dure la session creada del navegador
+			- nick: Nick del usuario
+			- pass: Password del usuario
+	*/
 	function login( $nick, $pass){
 	/*Pre: - */
 	
@@ -188,9 +192,10 @@
 		 };		
 	 }
 	/*Post: La función puede devolver varios valores:
-				- 0 si nick y passwrod son correctos
+				- 0 si nick y password son correctos, ademas creada una variable session con el nick del usuario logueado
 				- 1 si nick no existe, o password es incorrecto
 				- 2 si nick y password son correctos, pero no esta activado*/
+	
 	
 	
 	/*Esta función comprueba si la clave de activacion de una cuenta es correcta o no y nos devuelve codigo HTML con un mensaje con los resultados de la operacion. En caso de que la clave sea correcta el usuario queda activado para poder realizar operaciones con su nick, en caso contrario se muestra un mensaje de error

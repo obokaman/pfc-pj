@@ -1,9 +1,15 @@
 <?php
 
-	/*La función limpia los parametros de entrada para que posteriormente funcionen correctamente*/
+	/*La función limpia los parametros de entrada para que posteriormente funcionen correctamente
+			- var: Nombre de la variable REQUEST
+			- type: Tipo de variable
+	*/
 	function clean($var, $type){
+	/*Pre: - */
+		//Comprobamos que el nombre de la variable aparezca en el REQUEST
 		if(isset($_REQUEST[$var])){
 			 $var = $_REQUEST[$var];
+			//Filtramos el tipo de variable que representa, para hacerle el tratamiento correcto al valor de la variable 
 			 switch ( $type ) {
 					case 'int':
 						$var = (int) $var;
@@ -38,12 +44,16 @@
 			return null;
 		}
 	}
+	/*Post. Retorna el valor de la variable mencionada a la entrada despues de haber sido tratada según el tipo que le pertence, en caso de que el nombre no forme parte de la array REQUEST retornamos un mensaje de error y el valor null*/
 	
-	/*Envia la variable de la entrada en formato JSON*/
+	/*Envia la variable de la entrada en formato JSON
+			- var: Contenido con informacion de cualquier tipo
+	*/
 	function send($var){
+	/*Pre: - */
 		print(json_encode($var)); 
 	}
-
+	/*Post: Retorna el contenido de informacion de la entrada en formato JSON*/
 
 	
 
