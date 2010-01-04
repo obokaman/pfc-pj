@@ -330,6 +330,14 @@ else if ($f == "getCircuitInfo") {
 
 
 
+/*La función devuelve información sobre un campeonato*/
+else if ($f == "getChampionshipCircuits") {	
+		send(
+			get_championship_circuits( clean("name", "string") )
+		);
+}
+
+
 /*La función inserta en la base de datos el codigo nuevo con el nombre de fichero indicado en la entrada*/
 else if( $f == "saveCode" ) {	
 	$code = clean ( "code", "json" );

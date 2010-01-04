@@ -16,6 +16,35 @@
 	}
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion de la nueva instancia entre el circuito y el campeonato, en caso contrario devuelve falso*/
 
+
+	/*La función retorna un listado de los nombres de los que pertenece el nombre del circuito que le pasamos por la entrada
+			- name: Nombre del campeonato
+	*/
+	function get_championship_circuits($name){
+	/*Pre: - */	
+		global $connection;
+		
+		$query = "SELECT c.name 
+						FROM circuit_championship cc, 
+								  circuit c, 
+								  championship ch 
+						WHERE ch.name = '$name' 
+						AND ch.id_champ = cc. id_champ 
+						AND cc.id_circuit = c.id_circuit";
+		
+		$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPIONSHIP_CIRCUITS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+		
+		$arr = extract_rows($result_query);
+		$res = array();
+		foreach ($arr as $row) {
+			$res[] = $row->name;
+		}
+		return $res;			
+	}
+	
+	/*Post: Devuelve una array de string con los nombres de los circuitos que pertenecen al campeonato con el mismo nombre que la entrada*/
+	
+	
 	
 	/*Esta función elimina la instancia en la que esta relacionado un circuito y un campeonato
 			- id_circuit: Identificador del circuito

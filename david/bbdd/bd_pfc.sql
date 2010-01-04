@@ -179,11 +179,11 @@ INSERT INTO user_team (id_user, id_team, active) VALUES (3,1,1);
 
 INSERT INTO user_team (id_user, id_team, active) VALUES (3,2,1);
 
-INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('Montmelo', 'basic', null, 3, null);
+INSERT INTO circuit (name, short_name, level, n_laps, time, width, height) VALUES ('Montmelo', 'basic', 1, 3, null, 1000, 1000);
 
-INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('Jerez', 'JRZ', null, 3, null);
+INSERT INTO circuit (name, short_name, level, n_laps, time, width, height) VALUES ('Jerez', 'basic2', 1, 3, null, 1000, 1000);
 
-INSERT INTO circuit (name, short_name, level, n_laps, time) VALUES ('Turquia', 'TRQ', null, 3, null);
+INSERT INTO circuit (name, short_name, level, n_laps, time, width, height) VALUES ('Turquia', 'chato', 1, 3, null, 1200, 500);
 
 INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato1', '2009-01-31', 3);
 
