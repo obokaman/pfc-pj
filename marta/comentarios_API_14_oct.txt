@@ -76,9 +76,10 @@ getMyTeams(circuit, championship) returns strings[]
 
 ==========================
 
-getMyChampionships(circuit) returns strings[]
+getMyChampionships(String circuit) returns strings[]
   * Nada si no estamos logeados.
   * Los 'name' de los championships a los que el usuario pertenece y contienen el circuit
+  !!! si circuit = "" devuelve todos los championships a los que el usuario pertenece sin restricciones de circuito
 
 ==========================
 
@@ -196,8 +197,36 @@ getSavedCodes() return (String name, String date)[]
 
 ==========================================================================
 
-getCircuitImage (name, width, height)
-  * retorna string con el nombre de la imagen del circuito 'name' (para el url donde habrá q recogerla)
-
 getCarImage (width, height)
   * retorna string con el nombre de la imagen (para el url donde habrá q recogerla)
+
+
+getCircuitInfo (string name)
+  * retorna una array de 5 elementos donde los indices de las posiciones son url, width, height, level, n_laps. La informacion que hay en estas 5 posiciones proviene de la base de datos del circuito con el mismo nombre que name
+
+
+getTraceFragment(int id_game, int start_byte, int length) return {int read_bytes, string data}
+  * retorna una fragmento del codigo de una partida con identificador igual a id_game y los bytes leidos de ese fragmento, el fragmento de codigo que retornaremos empieza desde el byte start_byte y length indica el tamaño que leeremos a partir de ese byte.
+	- read_bytes: numero de bytes leidos 
+	- data: contenido del fragmento extraido
+En caso del byte de inicio sea incorrecto, por ejemplo que el start_byte sea mas grande que el tamaño del propio fichero que queremos leer, los read_bytes=0 y data=""
+
+
+getFullFragment(int id_game) return {int read_bytes, string data}
+  * Hace exactamente lo  mismo que la funcion getFragmentTrace, lo que retorna todo el contenido del codigo de una partida. El objeto que devuelve tb es el mismo
+
+
+run(json code, string circuit)
+  * Esta función ejecuta el codigo en el circuito con el nombre igual a circuit y devuelve unos resultados en caso de exito o error. De momento para esta funcion es necesario que haya un usuario logueado
+  En caso de error retorna:
+ 	- code: codigo del error, sera < 0
+	- message: mensaje del error de compilacion
+  En caso de exito, a parte de devolver los valores necesarios al cliente, añade la nueva partida en la base de datos y crea un directorio en el servidor con todo los archivos de la ejecucion de la partida junto con los resultados:
+	- code: codigo del error, en este caso sera igual a 0
+	- message : Sera un simple "Ok"
+	- id_game: identificador de la partida con el codigo pasado por la entrada
+
+======================================================================
+  
+getChampionshipInfo (string name)
+ * retorna un array de strings que son los nombres de los circuitos que contiene el championship "name"

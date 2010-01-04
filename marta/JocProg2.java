@@ -24,14 +24,10 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.SuggestBox;
@@ -60,15 +56,11 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
 
-public class JocProg implements EntryPoint {
+public class JocProg2 implements EntryPoint {
 	
-	private static final String JSON_URL = "http://localhost/php/main.php?";
 	private static final int CODE = 1;
-	private static final int DEBUG = 2;
+	private static final int COMPILE = 2;
 	private static final int EXECUTION = 3;
-	private static final int TRAIN = 1;
-	private static final int CHAMP = 2;
-	private static final int NONE = 0;
 	
 	private AnimationEngine engine = new AnimationEngine();
 
@@ -76,8 +68,6 @@ public class JocProg implements EntryPoint {
 	private AbsolutePanel imagePanel = new AbsolutePanel();
 	private VerticalSplitPanel codiPanel = new VerticalSplitPanel();
 	private HorizontalPanel consolaPanel = new HorizontalPanel();
-	private DialogBox modeDialogBox = new DialogBox();
-	//private VerticalPanel popupVPanel = new VerticalPanel();
 	private VerticalPanel rankingVPanel = new VerticalPanel();
 	private HorizontalPanel rankingHPanel = new HorizontalPanel();
 	private HorizontalPanel ranking2HPanel = new HorizontalPanel();
@@ -94,7 +84,6 @@ public class JocProg implements EntryPoint {
 	
 	private TextArea inputTextArea = new TextArea();
 	private TextArea consolaTextArea = new TextArea();
-	private ListBox modeChampListBox = new ListBox(false);
 	private ListBox circuitsDropBox = new ListBox(false);
 	private ListBox champsDropBox = new ListBox(false);
 	private ListBox teamsDropBox = new ListBox(false);
@@ -161,23 +150,11 @@ public class JocProg implements EntryPoint {
 	private static int vPositionComp = 25;
    
 
-  
-	
-	private int playMode = NONE;
-	private String champOn = "";
-	private String circuitOn = "Montmelo";
-	private String circuitURL = "http://localhost/img/basic.png";
-	private int circuitWidth = 0;
-	private int circuitHeight = 0;
-	
-
-   
-   /**
+  /**
    * Entry point method.
    */
   public void onModuleLoad() {
 
-	  requestCircuits();
 	  createLoginPanel();
 	  multiPanel.setSize("100%","100%");
 	  if(USER=="") multiPanel.add(loginVPanel);
@@ -188,7 +165,6 @@ public class JocProg implements EntryPoint {
 	  createCorrePanel();
 	  createRankingPanel();
 	  createAdminPanel();
-	  createPopupPanel();
 
 	    
 	  loginButton.addClickHandler( 
@@ -246,7 +222,7 @@ public class JocProg implements EntryPoint {
 						  codiPanel.setSplitPosition(hPositionCode +"%");
 						  correPanel.setSplitPosition(vPositionCode +"%");
 						  break;
-				  	case DEBUG:
+				  	case COMPILE:
 						  codiPanel.setSplitPosition(hPositionComp +"%");
 						  correPanel.setSplitPosition(vPositionComp +"%");
 						  break;
@@ -254,11 +230,6 @@ public class JocProg implements EntryPoint {
 						  codiPanel.setSplitPosition(hPositionExec +"%");
 						  correPanel.setSplitPosition(vPositionExec +"%");
 						  break;
-				  }
-				  if(playMode == NONE){
-					  if(!USER.equals("")) refreshListBox(modeChampListBox);
-					  modeDialogBox.center();
-					  modeDialogBox.show();
 				  }
 			  }
 			  else if(tabIndex==2){
@@ -282,6 +253,7 @@ public class JocProg implements EntryPoint {
 	  
 	  //Associate the Main panel with the HTML host page.
 	  RootPanel.get("uiJuego").add(mainPanel);
+	  //RootPanel.get("uiJuego").add(adminVPanel);
   }
   
   
@@ -437,11 +409,6 @@ public class JocProg implements EntryPoint {
   
   private void createCorrePanel(){
 	  
-	  //se tiene que crear UI para elegir modo de juego, circuito, campeonato, etc..
-	  //(playMode, champOn, circuitOn,...)
-	  
-	  requestCircuitInfo(circuitOn);  //se hará cuando den al boton de aceptar en el popup de eleccion
-	  
 	  //Text areas
 	  consolaTextArea.setText("consola de salida");
 	  consolaTextArea.setSize("100%","100%");
@@ -450,21 +417,8 @@ public class JocProg implements EntryPoint {
 	  consolaPanel.add(consolaTextArea);
 	  
 	  imagePanel.setSize("100%","100%");
-	  HTMLPanel centerImagePanel = new HTMLPanel("<div align='center' style='background-color:#80FF80'><img src='"+circuitURL+"' height='100%'></div>");
+	  HTMLPanel centerImagePanel = new HTMLPanel("<div align='center' style='background-color:#80FF80'><img src='http://localhost/img/newbasic2.png' height='100%'></div>");
 	  imagePanel.add(centerImagePanel);
-	  
-	  //Image mask = new Image();
-	  //mask.setUrl("http://localhost/mask.png");
-	  //mask.setSize("100%","100%");
-	  //imagePanel.add(mask, 0, 0);
-	  //mask.addClickHandler(handler);
-	  
-	  //añadir play y botones según modo
-	  //HTMLPanel playImagePanel = new HTMLPanel("<div align='center'><img src='http://localhost/playButton.png' height='100%'></div>");
-	  //Image playImg = new Image();
-	  //playImg.setUrl("http://localhost/playButton.png");
-	  //playImagePanel.setWidth("100%");
-	  //imagePanel.add(playImagePanel,0,0);
 	  
 	  //Assemble Split Panels
 	  correPanel.setSize("100%","100%");
@@ -500,9 +454,9 @@ public class JocProg implements EntryPoint {
 	  playButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  if(modeOn == CODE || modeOn == DEBUG){
-						  requestRun(inputTextArea.getText(), circuitOn);
-					  }
+					  if(modeOn == CODE) modeOn = COMPILE;
+					  else modeOn = EXECUTION;
+					  changeMode();
 				  }
 			  });
 	  stopButton.addClickHandler( 
@@ -526,213 +480,6 @@ public class JocProg implements EntryPoint {
 			  });
   }
   
-  private void createPopupPanel(){
-	  
-	  HTML infoLabel = new HTML("Elige el modo de juego: ");
-	  
-	  Label modeLabel = new Label("Modo de juego: ");
-	  final ListBox modeListBox = new ListBox(false);
-	  modeListBox.addItem("MODO");
-	  modeListBox.addItem("Entrenamiento");
-	  modeListBox.addItem("Campeonato");
-	  HorizontalPanel modeHPanel = new HorizontalPanel();
-	  modeHPanel.setSpacing(5);
-	  modeHPanel.add(modeLabel);
-	  modeHPanel.add(modeListBox);
-	  
-	  Label champLabel = new Label("Campeonato: ");
-	  //final ListBox modeChampListBox = new ListBox(false);
-	  modeChampListBox.setEnabled(false);
-	  modeChampListBox.addItem("CAMPEONATOS");
-	  //rellenar el listbox con getMyChampionships(circuit = "")
-	  HorizontalPanel champHPanel = new HorizontalPanel();
-	  champHPanel.setSpacing(5);
-	  champHPanel.add(champLabel);
-	  champHPanel.add(modeChampListBox);
-	  
-	  VerticalPanel leftVPanel = new VerticalPanel();
-	  VerticalPanel firstImgVPanel = new VerticalPanel();
-	  VerticalPanel secondImgVPanel = new VerticalPanel();
-	  VerticalPanel thirdImgVPanel = new VerticalPanel();
-	  VerticalPanel rightVPanel = new VerticalPanel();
-	  Image moveLeft = new Image();
-	  Image firstCirc = new Image();
-	  Image secondCirc = new Image();
-	  Image thirdCirc = new Image();
-	  Image moveRight = new Image();
-	  
-	  /*for (int i=0; i<circuitsList.size(); i++) { 
-		  (String)circuitsList.get(i);
-		  //cogeremos los tres primeros y sus imagenes
-		  //tendremos un array de info con nombre, url, width y height
-		  //un index sobre el array para saber cual estamos mostrando
-	  }*/
-	  
-	  moveLeft.setUrl("http://localhost/next_left.png");
-	  firstCirc.setUrl("http://localhost/img/basic.png");
-	  secondCirc.setUrl("http://localhost/img/basic2.png");
-	  thirdCirc.setUrl("http://localhost/img/basic3.png");
-	  moveRight.setUrl("http://localhost/next_right.png");
-	  firstCirc.setSize("150px", "150px");
-	  secondCirc.setSize("150px", "150px");
-	  thirdCirc.setSize("150px", "150px");
-	  final PushButton leftPushButton = new PushButton(moveLeft);
-	  final PushButton rightPushButton = new PushButton(moveRight);
-	  leftPushButton.setEnabled(false);
-	  rightPushButton.setEnabled(false);
-	  final RadioButton firstRadioButton = new RadioButton("circuits", "Montmelo");
-	  final RadioButton secondRadioButton = new RadioButton("circuits", "Jerez");
-	  final RadioButton thirdRadioButton = new RadioButton("circuits", "Turquia");
-	  firstRadioButton.setEnabled(false);
-	  secondRadioButton.setEnabled(false);
-	  thirdRadioButton.setEnabled(false);
-	  
-	  leftVPanel.add(leftPushButton);
-	  firstImgVPanel.add(firstCirc);
-	  firstImgVPanel.add(firstRadioButton);
-	  firstImgVPanel.setCellHorizontalAlignment(firstRadioButton, HasHorizontalAlignment.ALIGN_CENTER);
-	  secondImgVPanel.add(secondCirc);
-	  secondImgVPanel.add(secondRadioButton);
-	  secondImgVPanel.setCellHorizontalAlignment(secondRadioButton, HasHorizontalAlignment.ALIGN_CENTER);
-	  thirdImgVPanel.add(thirdCirc);
-	  thirdImgVPanel.add(thirdRadioButton);
-	  thirdImgVPanel.setCellHorizontalAlignment(thirdRadioButton, HasHorizontalAlignment.ALIGN_CENTER);
-	  rightVPanel.add(rightPushButton);
-	  HorizontalPanel circuitsHPanel = new HorizontalPanel();
-	  circuitsHPanel.setSpacing(10);
-	  circuitsHPanel.add(leftVPanel);
-	  circuitsHPanel.add(firstImgVPanel);
-	  circuitsHPanel.add(secondImgVPanel);
-	  circuitsHPanel.add(thirdImgVPanel);
-	  circuitsHPanel.add(rightVPanel);
-	  circuitsHPanel.setCellVerticalAlignment(leftVPanel, HasVerticalAlignment.ALIGN_MIDDLE);
-	  circuitsHPanel.setCellVerticalAlignment(rightVPanel, HasVerticalAlignment.ALIGN_MIDDLE);
-	  
-	  HorizontalPanel buttonsHPanel = new HorizontalPanel();
-	  buttonsHPanel.setSpacing(5);
-	  Button okModeButton = new Button("Aceptar");
-	  Button cancelModeButton = new Button("Cancelar");
-	  buttonsHPanel.add(okModeButton);
-	  buttonsHPanel.add(cancelModeButton);
-	  
-	  VerticalPanel popupVPanel = new VerticalPanel();
-	  popupVPanel.setSpacing(15);
-	  popupVPanel.add(infoLabel);
-	  popupVPanel.add(modeHPanel);
-	  popupVPanel.add(champHPanel);
-	  popupVPanel.add(circuitsHPanel);  
-	  popupVPanel.add(buttonsHPanel);
-	  popupVPanel.setCellHorizontalAlignment(buttonsHPanel, HasHorizontalAlignment.ALIGN_RIGHT);
-	  
-	  modeDialogBox.setAnimationEnabled(true);
-	  modeDialogBox.add(popupVPanel);
-	  
-	  modeListBox.addChangeHandler(new ChangeHandler() {
-		  public void onChange(ChangeEvent event) {
-			  if(modeListBox.getSelectedIndex() == 0 || modeListBox.getSelectedIndex() == 2) {  //MODO || Campeonato
-				  modeChampListBox.setEnabled(false);
-				  modeChampListBox.setSelectedIndex(0);
-				  if (modeListBox.getSelectedIndex() == 2 && !USER.equals("")) modeChampListBox.setEnabled(true);  //Campeonato
-				  else if (modeListBox.getSelectedIndex() == 2 && USER.equals("")) Window.alert("Para poder jugar en modo 'Campeonato' debes estar identificado como usuario");
-				  leftPushButton.setEnabled(false);
-				  rightPushButton.setEnabled(false);
-				  firstRadioButton.setEnabled(false);
-				  secondRadioButton.setEnabled(false);
-				  thirdRadioButton.setEnabled(false);
-				  firstRadioButton.setValue(false);
-				  secondRadioButton.setValue(false);
-				  thirdRadioButton.setValue(false);
-			  }
-			  else {  //Entrenamiento
-				  modeChampListBox.setEnabled(false);
-				  modeChampListBox.setSelectedIndex(0);
-				  //tres primeras imagenes de la totalidad de los circuitos
-				  //tres nombres en el texto de los radio buttons
-				  leftPushButton.setEnabled(false);
-				  rightPushButton.setEnabled(true);  //dependera de si hay mas
-				  firstRadioButton.setEnabled(true);
-				  secondRadioButton.setEnabled(true);
-				  thirdRadioButton.setEnabled(true);  //dependera de si hay suficientes
-			  }
-		  }
-	  });
-	  
-	  modeChampListBox.addChangeHandler(new ChangeHandler() {
-		  public void onChange(ChangeEvent event) {
-			  firstRadioButton.setValue(false);
-			  secondRadioButton.setValue(false);
-			  thirdRadioButton.setValue(false);
-			  if(modeChampListBox.getSelectedIndex() == 0) { 
-				  leftPushButton.setEnabled(false);
-				  rightPushButton.setEnabled(false);
-				  firstRadioButton.setEnabled(false);
-				  secondRadioButton.setEnabled(false);
-				  thirdRadioButton.setEnabled(false);
-			  }
-			  else {
-				  String selectedChamp = modeChampListBox.getItemText(modeChampListBox.getSelectedIndex());
-				  //getChampionshipInfo(selectedChamp)
-				  //tres primeras imagenes de los circuitos del campeonato elegido
-				  //tres nombres en el texto de los radio buttons
-				  leftPushButton.setEnabled(false);
-				  rightPushButton.setEnabled(true);  //dependera de si hay mas
-				  firstRadioButton.setEnabled(true);
-				  secondRadioButton.setEnabled(true);
-				  thirdRadioButton.setEnabled(true);  //dependera de si hay suficientes
-			  }  
-		  }
-	  });
-	  
-	  okModeButton.addClickHandler( 
-			  new ClickHandler() {
-				  public void onClick(ClickEvent event) {
-					  if(modeListBox.getSelectedIndex()==0) Window.alert("Debes elegir un modo de juego");
-					  else if (modeChampListBox.isEnabled() && modeChampListBox.getSelectedIndex() == 0) Window.alert("En modo 'Campeonato' debes elegir un campeonato en el que competir");
-					  else if (!firstRadioButton.getValue() && !secondRadioButton.getValue() && !thirdRadioButton.getValue()) Window.alert("Debes elegir un circuito");
-					  else {
-						  playMode = modeListBox.getSelectedIndex();
-						  if (!modeChampListBox.isEnabled()) champOn = "";
-						  else champOn = modeChampListBox.getItemText(modeChampListBox.getSelectedIndex());
-						  if(firstRadioButton.getValue()) circuitOn = firstRadioButton.getText();
-						  else if(secondRadioButton.getValue()) circuitOn = secondRadioButton.getText();
-						  else if(thirdRadioButton.getValue()) circuitOn = thirdRadioButton.getText();
-						  
-						  modeListBox.setSelectedIndex(0);
-						  modeChampListBox.setEnabled(false);
-						  modeChampListBox.setSelectedIndex(0);
-						  leftPushButton.setEnabled(false);
-						  rightPushButton.setEnabled(false);
-						  firstRadioButton.setEnabled(false);
-						  secondRadioButton.setEnabled(false);
-						  thirdRadioButton.setEnabled(false);
-						  firstRadioButton.setValue(false);
-						  secondRadioButton.setValue(false);
-						  thirdRadioButton.setValue(false);
-						  modeDialogBox.hide();
-					  }
-				  }
-			  });
-	  
-	  cancelModeButton.addClickHandler( 
-			  new ClickHandler() {
-				  public void onClick(ClickEvent event) {
-					  modeListBox.setSelectedIndex(0);
-					  modeChampListBox.setEnabled(false);
-					  modeChampListBox.setSelectedIndex(0);
-					  leftPushButton.setEnabled(false);
-					  rightPushButton.setEnabled(false);
-					  firstRadioButton.setEnabled(false);
-					  secondRadioButton.setEnabled(false);
-					  thirdRadioButton.setEnabled(false);
-					  firstRadioButton.setValue(false);
-					  secondRadioButton.setValue(false);
-					  thirdRadioButton.setValue(false);
-					  modeDialogBox.hide();
-				  }
-			  });
-  }
-  
-  
   private void createRankingPanel(){
 	  
 	  // Create a panel to align the Widgets
@@ -740,8 +487,10 @@ public class JocProg implements EntryPoint {
 	  rankingHPanel.setSpacing(10);
 	  rankingHPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
+	  requestCircuits();
 	  // Add drop boxs with the lists
-	  if(circuitsDropBox.getItemCount()==0) circuitsDropBox.addItem("CIRCUITOS");
+	  circuitsDropBox.clear();
+	  circuitsDropBox.addItem("CIRCUITOS");
 	  champsDropBox.clear();
 	  champsDropBox.addItem("CAMPEONATOS");
 	  champsDropBox.setEnabled(false);
@@ -1057,7 +806,7 @@ public class JocProg implements EntryPoint {
   }
   
   
-
+  /*
   private void requestLogin() {
 	  
 	  if (loginUserTextBox.getText().equals("") || loginPassword.getText().equals("")){
@@ -1162,119 +911,6 @@ public class JocProg implements EntryPoint {
 		    } catch (RequestException e) {
 		    	Window.alert("Couldn't retrieve JSON");
 		    }
-	  }
-  }
-  
-  private void requestCircuitInfo(String circuit) {
-	  
-	  String url = JSON_URL;
-	  url = URL.encode(url);
-	  //Send request to server and catch any errors.
-	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
-
-	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-				  URL.encodeComponent("getCircuitInfo")+"&"+URL.encodeComponent("name")+"="+
-				  URL.encodeComponent(String.valueOf(circuit)), new RequestCallback() {
-			  public void onError(Request request, Throwable exception) {
-				  Window.alert("Couldn't retrieve JSON");
-			  }
-			  public void onResponseReceived(Request request, Response response) {
-				  if (200 == response.getStatusCode()) {
-					  Window.alert(response.getText());
-					  JSonData res = asJSonData(response.getText());
-					  circuitURL = res.get("url");
-					  circuitWidth = res.getInt("width");
-					  circuitHeight = res.getInt("height");
-					  //int level = res.getInt("level");
-					  //int n_laps = res.getInt("n_laps");
-				  } else {
-		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
-		          }
-			  }
-		  });
-	  } catch (RequestException e) {
-		  Window.alert("Couldn't retrieve JSON");
-	  } 
-  }
-  
-  private void requestRun(String code, String circuit) {
-	  
-	  String url = JSON_URL;
-	  url = URL.encode(url);
-	  //Send request to server and catch any errors.
-	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
-
-	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("run")+"&"+URL.encodeComponent("code")+"="+
-				  URL.encodeComponent(code)+"&"+URL.encodeComponent("circuit")+"="+
-				  URL.encodeComponent(circuit), new RequestCallback() {
-			  public void onError(Request request, Throwable exception) {
-				  Window.alert("Couldn't retrieve JSON");
-			  }
-		      public void onResponseReceived(Request request, Response response) {
-		    	  if (200 == response.getStatusCode()) {
-		    		  Window.alert(response.getText());
-		    		  JSonData res = asJSonData(response.getText());
-		    		 
-		    		  int cod = res.getInt("code");
-		    		  String msg = res.get("message");
-
-		        	  if(cod < 0) {
-		        		  Window.alert("Error de compilacion");
-		        		  consolaTextArea.setText(msg);
-						  modeOn = DEBUG;
-						  changeMode();
-		        	  }
-		        	  else if (cod == 0){
-		        		  Window.alert("Compilación correcta");
-			    		  int id_game = res.getInt("id_game");
-		        		  modeOn = EXECUTION;
-						  changeMode();
-						  consolaTextArea.setText("OK");
-						  requestTrace(id_game);
-		        	  }	
-		          } else {
-		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
-		          }
-		      }
-		  });
-	  } catch (RequestException e) {
-		  Window.alert("Couldn't retrieve JSON");
-	  }
-  }
-  
-  private void requestTrace(int id_game) {
-	  
-	  String url = JSON_URL;
-	  url = URL.encode(url);
-	  //Send request to server and catch any errors.
-	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
-
-	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-				  URL.encodeComponent("getFullTrace")+"&"+URL.encodeComponent("id_game")+"="+
-				  URL.encodeComponent(String.valueOf(id_game)), new RequestCallback() {
-			  public void onError(Request request, Throwable exception) {
-				  Window.alert("Couldn't retrieve JSON");
-			  }
-			  public void onResponseReceived(Request request, Response response) {
-				  if (200 == response.getStatusCode()) {
-					  JSonData res = asJSonData(response.getText());
-					  //int nbytes = res.getInt("read_bytes");
-					  String dat = res.get("data");
-					  engine.addAnimation(new CarAnimation(imagePanel,dat));
-				  } else {
-		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
-		          }
-			  }
-		  });
-	  } catch (RequestException e) {
-		  Window.alert("Couldn't retrieve JSON");
 	  }
   }
   
@@ -1425,7 +1061,6 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
-  
   private void requestCircuits() {    //al iniciar la aplicacion una sola vez
 	  
 	  String url = JSON_URL;
@@ -1461,37 +1096,7 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
-  private void refreshListBox(final ListBox listBox) {  //getMyChampionships
-	  String url = JSON_URL;
-	  url = URL.encode(url);
-	  //Send request to server and catch any errors.
-	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
-	
-	  try{
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("getMyChampionships")+"&"+URL.encodeComponent("circuit")+"="+
-		  URL.encodeComponent(""), new RequestCallback() {
-			  public void onError(Request request, Throwable exception) {
-				  Window.alert("Couldn't retrieve JSON");
-			  }
-		      public void onResponseReceived(Request request, Response response) {
-		    	  if (200 == response.getStatusCode()) {
-		    		  Window.alert(response.getText());
-		    		  JsArrayString res = asJsArrayString(response.getText());
-		    		  listBox.clear();
-		    		  listBox.addItem("CAMPEONATOS");
-		    		  for(int i=0;i<res.length();i++) listBox.addItem(res.get(i));
-		          } else {
-		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
-		          }
-		      }
-		  });
-	  } catch (RequestException e) {
-		  Window.alert("Couldn't retrieve JSON");
-	  }
-  }
-  
+
   private void refreshDropBoxs() {   //cuando se elija la pestaña de ranking
 	  
 	  if (circuitsDropBox.getSelectedIndex() != 0){
@@ -1615,7 +1220,6 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
-  
   private void requestNewChampionship() {
 
 	  Date today = new Date(); 
@@ -1713,6 +1317,7 @@ public class JocProg implements EntryPoint {
 		    }
 	  }
   }
+  
   
   private void requestAllNicks() {
 	  
@@ -1927,6 +1532,33 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
+  private void requestTrace() {
+	  
+	  String url = "http://localhost/newbasic2.trc";
+	  url = URL.encode(url);
+	  //Send request to server and catch any errors.
+	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+
+	  try {
+		  Request request = builder.sendRequest(URL.encodeComponent(""), new RequestCallback() {
+			  public void onError(Request request, Throwable exception) {
+				  Window.alert("Couldn't retrieve JSON");
+			  }
+			  public void onResponseReceived(Request request, Response response) {
+				  if (200 == response.getStatusCode()) {
+					  //String res = asString(response.getText());
+					  engine.addAnimation(new CarAnimation(imagePanel,response.getText()));
+				  } else {
+		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+		          }
+			  }
+		  });
+	  } catch (RequestException e) {
+		  Window.alert("Couldn't retrieve JSON");
+	  }
+  }
+  
   private void refreshInvitationsTable(String what) {
 
 	  String url = JSON_URL;
@@ -2022,8 +1654,7 @@ public class JocProg implements EntryPoint {
 		  Window.alert("Couldn't retrieve JSON");
 	  }
   }
-  
-
+  */
   
   private void logout(){
 	  USER = ""; 
@@ -2085,7 +1716,7 @@ public class JocProg implements EntryPoint {
 	  changeButton.setEnabled(true); changeButton.setVisible(true);
 	  saveChangeButton.setEnabled(false); saveChangeButton.setVisible(false);
   }
-
+  /*
   private void saveChanges(){
 	  
 	  if (regNameTextBox.getText().equals("") || regSurname1TextBox.getText().equals("") 
@@ -2150,7 +1781,7 @@ public class JocProg implements EntryPoint {
 		  }
 	  }
   }
-  
+ */ 
   private void changeMode(){
 	  switch (modeOn){
 	  	case CODE:
@@ -2159,7 +1790,7 @@ public class JocProg implements EntryPoint {
 			codiPanel.setSplitPosition(hPositionCode +"%");
 			correPanel.setSplitPosition(vPositionCode +"%");
 			break;
-	  	case DEBUG:
+	  	case COMPILE:
 	  		playButton.setEnabled(true);
 	  		stopButton.setEnabled(false);
 			codiPanel.setSplitPosition(hPositionComp +"%");
@@ -2170,6 +1801,8 @@ public class JocProg implements EntryPoint {
 	  		stopButton.setEnabled(true);
 			codiPanel.setSplitPosition(hPositionExec +"%");
 			correPanel.setSplitPosition(vPositionExec +"%");
+			requestTrace();
+			//engine.addAnimation(new CarAnimation(imagePanel,trace));
 			break;
 	  }
   }
@@ -2249,10 +1882,6 @@ public class JocProg implements EntryPoint {
   private final native UserData asUserData(String json) /*-{
 	return eval('('+json+')');
   }-*/;
-  
- //private final native JSonArrayData asJSonArrayData(String json) /*-{
- //	return eval('('+json+')');
- // }-*/;
   
   private final native JsArray<JSonData> asJsArrayJSonData(String json) /*-{
   	return eval('('+json+')');

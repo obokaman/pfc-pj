@@ -19,6 +19,18 @@ public class CarAnimation implements Animation {
      */
     protected final static ArrayList<Widget> carImages = new ArrayList<Widget>();
     /**
+     * The frequency for the widget being moved
+     */
+    private final static int frec = 10;
+    /**
+     * The amount of time the animation should last for.
+     */
+    protected final static int animationTime = 100;
+    /**
+     * The next field to read from trace
+     */
+    private static int nextField;
+    /**
      * The panel containing the widget being moved
      */
     protected final AbsolutePanel panel;
@@ -32,10 +44,9 @@ public class CarAnimation implements Animation {
     //protected final Widget widget;
     protected Widget widget;
     /**
-     * The amount of time the animation should last for.
+     * The widget index.
      */
-    //protected final int animationTime;
-    protected int animationTime;
+    protected int indexWidget;
     /**
      * The final X position for the widget.
      */
@@ -72,27 +83,23 @@ public class CarAnimation implements Animation {
      * @param targetY The final Y position the widget will end up in.
      */
     public CarAnimation(AbsolutePanel panel, String trace) {
-        /*this.widget = widget;
-        this.panel = (AbsolutePanel) widget.getParent();
-        this.targetX = targetX;
-        this.targetY = targetY;
-        this.animationTime = animationTime;*/
-    	for(int i=0; i<=330; i=i+30) {
+    	
+    	for(int i=0; i<=360-frec; i=i+frec) {
     		Image c = new Image();
     		c.setUrl("http://localhost/img/car-"+String.valueOf(i)+".gif");
     		carImages.add(c);
     	}
     	getTrace(trace);
     	this.panel = panel;
-    	//this.initialX = (int)Float.parseFloat(getNextTraceField());  //esta x es sobre 1000x1000
-    	//this.initialY = (int)Float.parseFloat(getNextTraceField());  //esta y es sobre 1000x1000
     	int x = (int)Float.parseFloat(getNextTraceField());
     	int y = (int)Float.parseFloat(getNextTraceField());
-    	convertMeasures(x,y,"initial");
     	this.targetAngle = Float.parseFloat(getNextTraceField());
-    	//this.widget = ; //calcular con angle q imagen cargar
-    	this.widget = carImages.get(0);
-    	this.animationTime = 100;
+    	
+    	int which = (int)((carImages.size()*((targetAngle + Math.PI)/(2*Math.PI)))+0.5);
+    	indexWidget = which%carImages.size();
+    	this.widget = carImages.get(indexWidget);
+
+    	convertMeasures(x,y,"initial");
     }
 
     /**
@@ -112,8 +119,6 @@ public class CarAnimation implements Animation {
      */
     public boolean beforeFirstFrame() {
         startTime = new Duration();
-        //targetX = (int)Float.parseFloat(getNextTraceField());  //esta x es sobre 1000x1000
-        //targetY = (int)Float.parseFloat(getNextTraceField());  //esta y es sobre 1000x1000
     	int x = (int)Float.parseFloat(getNextTraceField());
     	int y = (int)Float.parseFloat(getNextTraceField());
     	convertMeasures(x,y,"target");
@@ -156,18 +161,23 @@ public class CarAnimation implements Animation {
         if (initialX != targetX || initialY != targetY) {
             if (fraction >= 1.0f) {
                 // If all the time has passed then move to final location.
-            	//CALCULAR EL NUEVO WIDGET SEGUN targetAngle!!!!!!!
-                panel.setWidgetPosition(widget, targetX, targetY);
-                if (trace.size()>0){
+            	int index = (int)((carImages.size()*((targetAngle + Math.PI)/(2*Math.PI)))+0.5);
+            	index = index%carImages.size();
+            	if(index != indexWidget){
+            		panel.remove(widget);
+            		indexWidget = index;
+                	this.widget = carImages.get(indexWidget);
+                    panel.add(widget, targetX, targetY);
+            	}
+            	else panel.setWidgetPosition(widget, targetX, targetY);
+            	
+                if (nextField < trace.size()){
                 	initialX = targetX;
                 	initialY = targetY;
-                	//targetX = (int)Float.parseFloat(getNextTraceField());  //esta x es sobre 1000x1000
-                	//targetY = (int)Float.parseFloat(getNextTraceField());  //esta y es sobre 1000x1000
                 	int x = (int)Float.parseFloat(getNextTraceField());
                 	int y = (int)Float.parseFloat(getNextTraceField());
                 	convertMeasures(x,y,"target");
                 	targetAngle = Float.parseFloat(getNextTraceField());
-                	//widget = ;  //poner la imagen correcta según el angulo
                     startTime = new Duration();
                 	return false;
                 }
@@ -183,13 +193,10 @@ public class CarAnimation implements Animation {
         else if (trace.size()>0) {
         	initialX = targetX;
         	initialY = targetY;
-        	//targetX = (int)Float.parseFloat(getNextTraceField());  //esta x es sobre 1000x1000
-        	//targetY = (int)Float.parseFloat(getNextTraceField());  //esta y es sobre 1000x1000
         	int x = (int)Float.parseFloat(getNextTraceField());
         	int y = (int)Float.parseFloat(getNextTraceField());
         	convertMeasures(x,y,"target");
         	targetAngle = Float.parseFloat(getNextTraceField());
-        	//widget = ;  //poner la imagen correcta según el angulo
             startTime = new Duration();
             return false;
         }
@@ -207,34 +214,33 @@ public class CarAnimation implements Animation {
     
     private void getTrace(String t) {
     	int j=0;
-    	this.trace.add("");
-    	for(int i= 0; i < t.length(); ++i){
-    		if(t.charAt(i) == ' '){
-    			this.trace.add("");
-    			++j;
-    		}
-    		else {
-    			String s = this.trace.get(j);
-    			s += t.charAt(i);
-    			this.trace.remove(j);
-    			this.trace.add(s);
-    		}
+    	String[] vs = t.split("[ \n]");
+    	for(int i=0; i<vs.length;++i) {
+    		this.trace.add(vs[i]);
     	}
+    	nextField = 5;
     }
     
     private String getNextTraceField() {
-    	String s = this.trace.get(0);
-    	this.trace.remove(0);
+    	//String s = this.trace.get(0);
+    	//this.trace.remove(0);
+    	String s = this.trace.get(nextField);
+    	nextField++;
     	return s;
     }
     
     private void convertMeasures(int x, int y, String what) {
     	int h = this.panel.getOffsetHeight();
     	int w = this.panel.getOffsetWidth();
-    	//Window.alert("h: "+String.valueOf(h)+" w: "+String.valueOf(w));
+    	int widgtH = h*80/1000;
+    	
+    	widget.setHeight(widgtH + "px");
+    	
     	float newX = (float)(x/1000.0)*h;
     	float newY = (float)(y/1000.0)*h;
     	if(w > h) newX = newX + (float)((w-h)/2);
+    	newX = newX - (widgtH/2);
+    	newY = newY - (widgtH/2);
     	if(what.equals("initial")){
     		this.initialX = (int)newX;
     		this.initialY = (int)newY;
@@ -243,6 +249,9 @@ public class CarAnimation implements Animation {
     		this.targetX = (int)newX;
     		this.targetY = (int)newY;
     	}
-    	//Window.alert("newX: "+String.valueOf(newX)+" newY: "+String.valueOf(newY));
     }
+    
+    /*private void requestCircuitInfo(String name) {
+    	
+    }*/
 }
