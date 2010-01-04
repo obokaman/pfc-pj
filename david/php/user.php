@@ -121,14 +121,15 @@
 		$result_query = mysql_query($query, $connection);
 		$pass_user_session = extract_row($result_query);
 		
-		/*Si el password es distinto al que tienen el usuario antes de ralizar ningún cambio*/
-		if (($old_pass != null) and ($pass_user_session -> pass != $old_pass))	return 2;	  /*La 'old_pass' no coincide con la contraseña del usuario de la sesion*/
+		
 		
 		/*En caso de que el password nuevo no sea nulo, querra decir que se desea cambiar*/
 		if($pass != null){
-				$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', city='$city', school='$school', email_school='$email_school', type_user='$type_user', pass='$pass' WHERE nick='$nick_session' and pass='$old_pass'";
+				/*Si el password es distinto al que tienen el usuario antes de ralizar ningún cambio*/
+				if (($old_pass == null) or ($pass_user_session -> pass != $old_pass))	return 2;	  /*La 'old_pass' no coincide con la contraseña del usuario de la sesion*/			
+				$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', city='$city', school='$school', email_school='$email_school', type_user='$type_user', pass='$pass' WHERE nick='$nick_session'";
 		}else{
-				$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', city='$city', school='$school', email_school='$email_school', type_user='$type_user' WHERE nick='$nick_session' and pass='$old_pass'";
+				$query = "UPDATE user SET name='$name', surname1='$surname1', surname2= '$surname2', email_user='$email_user', city='$city', school='$school', email_school='$email_school', type_user='$type_user' WHERE nick='$nick_session'";
 		}
 
 		$result_query = mysql_query($query, $connection) or my_error('SET_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
