@@ -81,10 +81,10 @@
 		$obj = extract_row($result_query);
 		
 		$arr = Array ( 'url' => $path['url-images'].$obj->short_name.".png",
-								'width' => $obj->width,
-								'height' => $obj->height,
-								'level' => $obj->level,
-								'n_laps' => $obj->n_laps);
+								'width' => (int) $obj->width,
+								'height' => (int) $obj->height,
+								'level' => (int) $obj->level,
+								'n_laps' => (int) $obj->n_laps);
 		
 		return $arr;
 	}
