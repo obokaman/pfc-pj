@@ -76,6 +76,7 @@ public class JocProg implements EntryPoint {
 	private AbsolutePanel imagePanel = new AbsolutePanel();
 	private VerticalSplitPanel codiPanel = new VerticalSplitPanel();
 	private HorizontalPanel consolaPanel = new HorizontalPanel();
+	private HTMLPanel centerImagePanel;
 	private DialogBox modeDialogBox = new DialogBox();
 	//private VerticalPanel popupVPanel = new VerticalPanel();
 	private VerticalPanel rankingVPanel = new VerticalPanel();
@@ -143,7 +144,8 @@ public class JocProg implements EntryPoint {
 	private Button stopButton = new Button("¡Para!");
 	
 	
-	private ArrayList<String> circuitsList = new ArrayList<String>();
+	private ArrayList<CircuitInfo> circuitsList = new ArrayList<CircuitInfo>();
+	private ArrayList<CircuitInfo> champCircuitsList = new ArrayList<CircuitInfo>();
    	private ArrayList<String> champsList = new ArrayList<String>();
    	private ArrayList<String> teamsList = new ArrayList<String>();
    	private ArrayList<String> invitationsList = new ArrayList<String>();
@@ -160,8 +162,6 @@ public class JocProg implements EntryPoint {
 	private static int hPositionComp = 40;
 	private static int vPositionComp = 25;
    
-
-  
 	
 	private int playMode = NONE;
 	private String champOn = "";
@@ -169,6 +169,16 @@ public class JocProg implements EntryPoint {
 	private String circuitURL = "http://localhost/img/basic.png";
 	private int circuitWidth = 0;
 	private int circuitHeight = 0;
+	private int indexToShow = 0;
+	
+	private Image firstCirc = new Image();
+	private Image secondCirc = new Image();
+	private Image thirdCirc = new Image();
+	private PushButton leftPushButton;
+	private PushButton rightPushButton;
+	private RadioButton firstRadioButton = new RadioButton("circuits", "");
+	private RadioButton secondRadioButton = new RadioButton("circuits", "");
+	private RadioButton thirdRadioButton = new RadioButton("circuits", "");
 	
 
    
@@ -256,6 +266,8 @@ public class JocProg implements EntryPoint {
 						  break;
 				  }
 				  if(playMode == NONE){
+					  indexToShow = 0;
+					  displayCircuitsImages("right",circuitsList,firstCirc,secondCirc,thirdCirc,firstRadioButton,secondRadioButton,thirdRadioButton,leftPushButton,rightPushButton);
 					  if(!USER.equals("")) refreshListBox(modeChampListBox);
 					  modeDialogBox.center();
 					  modeDialogBox.show();
@@ -436,12 +448,7 @@ public class JocProg implements EntryPoint {
   }
   
   private void createCorrePanel(){
-	  
-	  //se tiene que crear UI para elegir modo de juego, circuito, campeonato, etc..
-	  //(playMode, champOn, circuitOn,...)
-	  
-	  requestCircuitInfo(circuitOn);  //se hará cuando den al boton de aceptar en el popup de eleccion
-	  
+
 	  //Text areas
 	  consolaTextArea.setText("consola de salida");
 	  consolaTextArea.setSize("100%","100%");
@@ -450,21 +457,8 @@ public class JocProg implements EntryPoint {
 	  consolaPanel.add(consolaTextArea);
 	  
 	  imagePanel.setSize("100%","100%");
-	  HTMLPanel centerImagePanel = new HTMLPanel("<div align='center' style='background-color:#80FF80'><img src='"+circuitURL+"' height='100%'></div>");
+	  centerImagePanel = new HTMLPanel("<div align='center' style='background-color:#80FF80'><img src='"+circuitURL+"' height='100%'></div>");
 	  imagePanel.add(centerImagePanel);
-	  
-	  //Image mask = new Image();
-	  //mask.setUrl("http://localhost/mask.png");
-	  //mask.setSize("100%","100%");
-	  //imagePanel.add(mask, 0, 0);
-	  //mask.addClickHandler(handler);
-	  
-	  //añadir play y botones según modo
-	  //HTMLPanel playImagePanel = new HTMLPanel("<div align='center'><img src='http://localhost/playButton.png' height='100%'></div>");
-	  //Image playImg = new Image();
-	  //playImg.setUrl("http://localhost/playButton.png");
-	  //playImagePanel.setWidth("100%");
-	  //imagePanel.add(playImagePanel,0,0);
 	  
 	  //Assemble Split Panels
 	  correPanel.setSize("100%","100%");
@@ -483,6 +477,8 @@ public class JocProg implements EntryPoint {
 	  buttonsPanel.add(codeNameTextBox);
 	  Button loadCodeButton = new Button("Cargar");
 	  buttonsPanel.add(loadCodeButton);
+	  Button changePlayModeButton = new Button("Cambiar juego");
+	  buttonsPanel.add(changePlayModeButton);
 	  
 	  inputTextArea.setText("entrada de código");
 	  inputTextArea.setSize("100%","100%");
@@ -524,6 +520,13 @@ public class JocProg implements EntryPoint {
 					  requestGetSavedCodes();
 				  }
 			  });
+	  changePlayModeButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  modeDialogBox.center();
+					  modeDialogBox.show();
+				  }
+			  });
   }
   
   private void createPopupPanel(){
@@ -544,7 +547,6 @@ public class JocProg implements EntryPoint {
 	  //final ListBox modeChampListBox = new ListBox(false);
 	  modeChampListBox.setEnabled(false);
 	  modeChampListBox.addItem("CAMPEONATOS");
-	  //rellenar el listbox con getMyChampionships(circuit = "")
 	  HorizontalPanel champHPanel = new HorizontalPanel();
 	  champHPanel.setSpacing(5);
 	  champHPanel.add(champLabel);
@@ -556,33 +558,19 @@ public class JocProg implements EntryPoint {
 	  VerticalPanel thirdImgVPanel = new VerticalPanel();
 	  VerticalPanel rightVPanel = new VerticalPanel();
 	  Image moveLeft = new Image();
-	  Image firstCirc = new Image();
-	  Image secondCirc = new Image();
-	  Image thirdCirc = new Image();
 	  Image moveRight = new Image();
 	  
-	  /*for (int i=0; i<circuitsList.size(); i++) { 
-		  (String)circuitsList.get(i);
-		  //cogeremos los tres primeros y sus imagenes
-		  //tendremos un array de info con nombre, url, width y height
-		  //un index sobre el array para saber cual estamos mostrando
-	  }*/
-	  
 	  moveLeft.setUrl("http://localhost/next_left.png");
-	  firstCirc.setUrl("http://localhost/img/basic.png");
-	  secondCirc.setUrl("http://localhost/img/basic2.png");
-	  thirdCirc.setUrl("http://localhost/img/basic3.png");
 	  moveRight.setUrl("http://localhost/next_right.png");
 	  firstCirc.setSize("150px", "150px");
 	  secondCirc.setSize("150px", "150px");
 	  thirdCirc.setSize("150px", "150px");
-	  final PushButton leftPushButton = new PushButton(moveLeft);
-	  final PushButton rightPushButton = new PushButton(moveRight);
+	  
+	  leftPushButton = new PushButton(moveLeft);
+	  rightPushButton = new PushButton(moveRight);
 	  leftPushButton.setEnabled(false);
 	  rightPushButton.setEnabled(false);
-	  final RadioButton firstRadioButton = new RadioButton("circuits", "Montmelo");
-	  final RadioButton secondRadioButton = new RadioButton("circuits", "Jerez");
-	  final RadioButton thirdRadioButton = new RadioButton("circuits", "Turquia");
+
 	  firstRadioButton.setEnabled(false);
 	  secondRadioButton.setEnabled(false);
 	  thirdRadioButton.setEnabled(false);
@@ -646,13 +634,12 @@ public class JocProg implements EntryPoint {
 			  else {  //Entrenamiento
 				  modeChampListBox.setEnabled(false);
 				  modeChampListBox.setSelectedIndex(0);
-				  //tres primeras imagenes de la totalidad de los circuitos
-				  //tres nombres en el texto de los radio buttons
-				  leftPushButton.setEnabled(false);
-				  rightPushButton.setEnabled(true);  //dependera de si hay mas
+				  indexToShow = 0;
+				  displayCircuitsImages("right",circuitsList,firstCirc,secondCirc,thirdCirc,firstRadioButton,secondRadioButton,thirdRadioButton,leftPushButton,rightPushButton);			  
+				  
 				  firstRadioButton.setEnabled(true);
 				  secondRadioButton.setEnabled(true);
-				  thirdRadioButton.setEnabled(true);  //dependera de si hay suficientes
+				  thirdRadioButton.setEnabled(true);
 			  }
 		  }
 	  });
@@ -671,14 +658,10 @@ public class JocProg implements EntryPoint {
 			  }
 			  else {
 				  String selectedChamp = modeChampListBox.getItemText(modeChampListBox.getSelectedIndex());
-				  //getChampionshipInfo(selectedChamp)
-				  //tres primeras imagenes de los circuitos del campeonato elegido
-				  //tres nombres en el texto de los radio buttons
-				  leftPushButton.setEnabled(false);
-				  rightPushButton.setEnabled(true);  //dependera de si hay mas
+				  requestChampionshipCircuits(selectedChamp);
 				  firstRadioButton.setEnabled(true);
 				  secondRadioButton.setEnabled(true);
-				  thirdRadioButton.setEnabled(true);  //dependera de si hay suficientes
+				  thirdRadioButton.setEnabled(true);
 			  }  
 		  }
 	  });
@@ -697,6 +680,20 @@ public class JocProg implements EntryPoint {
 						  else if(secondRadioButton.getValue()) circuitOn = secondRadioButton.getText();
 						  else if(thirdRadioButton.getValue()) circuitOn = thirdRadioButton.getText();
 						  
+						  boolean b = false;
+						  for(int i=0;i<circuitsList.size() && !b;i++){
+							  if(circuitsList.get(i).name.equals(circuitOn)){
+								  b=true;
+								  circuitURL = circuitsList.get(i).url;
+								  circuitWidth = circuitsList.get(i).width;
+								  circuitHeight = circuitsList.get(i).height;
+							  }
+						  }
+
+						  imagePanel.remove(centerImagePanel);
+						  centerImagePanel = new HTMLPanel("<div align='center' style='background-color:#80FF80'><img src='http://localhost/"+circuitURL+"' height='100%'></div>");
+						  imagePanel.add(centerImagePanel);
+						  modeDialogBox.hide();
 						  modeListBox.setSelectedIndex(0);
 						  modeChampListBox.setEnabled(false);
 						  modeChampListBox.setSelectedIndex(0);
@@ -708,7 +705,8 @@ public class JocProg implements EntryPoint {
 						  firstRadioButton.setValue(false);
 						  secondRadioButton.setValue(false);
 						  thirdRadioButton.setValue(false);
-						  modeDialogBox.hide();
+						  indexToShow = 0;
+						  displayCircuitsImages("right",circuitsList,firstCirc,secondCirc,thirdCirc,firstRadioButton,secondRadioButton,thirdRadioButton,leftPushButton,rightPushButton);
 					  }
 				  }
 			  });
@@ -716,6 +714,7 @@ public class JocProg implements EntryPoint {
 	  cancelModeButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
+					  modeDialogBox.hide();
 					  modeListBox.setSelectedIndex(0);
 					  modeChampListBox.setEnabled(false);
 					  modeChampListBox.setSelectedIndex(0);
@@ -727,11 +726,56 @@ public class JocProg implements EntryPoint {
 					  firstRadioButton.setValue(false);
 					  secondRadioButton.setValue(false);
 					  thirdRadioButton.setValue(false);
-					  modeDialogBox.hide();
+					  indexToShow = 0;
+					  displayCircuitsImages("right",circuitsList,firstCirc,secondCirc,thirdCirc,firstRadioButton,secondRadioButton,thirdRadioButton,leftPushButton,rightPushButton);
 				  }
 			  });
   }
   
+  private void displayCircuitsImages(String where,ArrayList<CircuitInfo> list,Image img1,Image img2,Image img3,RadioButton rButton1,RadioButton rButton2,RadioButton rButton3,PushButton leftB, PushButton rightB) {
+
+		if(where.equals("left")){
+			if (indexToShow-3 < 0) indexToShow=0;
+			else indexToShow=indexToShow-3;
+		}
+		
+		img1.setVisible(false);
+		img2.setVisible(false);
+		img3.setVisible(false);
+		rButton1.setValue(false);
+		rButton2.setValue(false);
+		rButton3.setValue(false);
+		rButton1.setVisible(false);
+		rButton2.setVisible(false);
+		rButton3.setVisible(false);
+	  
+		if (indexToShow < list.size()){
+			img1.setUrl("http://localhost"+list.get(indexToShow).url);
+			img1.setVisible(true);
+			rButton1.setText(list.get(indexToShow).name);
+			rButton1.setVisible(true);
+		}
+		if (indexToShow+1 < list.size()){
+			img2.setUrl("http://localhost"+list.get(indexToShow+1).url);
+			img2.setVisible(true);
+			rButton2.setText(list.get(indexToShow+1).name);
+			rButton2.setVisible(true);
+		}
+		if (indexToShow+2 < list.size()){
+			img3.setUrl("http://localhost"+list.get(indexToShow+2).url);
+			img3.setVisible(true);
+			rButton3.setText(list.get(indexToShow+2).name);
+			rButton3.setVisible(true);
+		}
+				  
+		if(indexToShow == 0)leftB.setEnabled(false);
+		else leftB.setEnabled(true);
+		
+		if(indexToShow+3 < list.size())rightB.setEnabled(true);
+		else rightB.setEnabled(false);
+		
+		indexToShow=indexToShow+3;
+  }
   
   private void createRankingPanel(){
 	  
@@ -1165,7 +1209,7 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
-  private void requestCircuitInfo(String circuit) {
+  private void requestCircuitInfo(String circuit, final int index) {
 	  
 	  String url = JSON_URL;
 	  url = URL.encode(url);
@@ -1184,11 +1228,12 @@ public class JocProg implements EntryPoint {
 				  if (200 == response.getStatusCode()) {
 					  Window.alert(response.getText());
 					  JSonData res = asJSonData(response.getText());
-					  circuitURL = res.get("url");
-					  circuitWidth = res.getInt("width");
-					  circuitHeight = res.getInt("height");
-					  //int level = res.getInt("level");
-					  //int n_laps = res.getInt("n_laps");
+					  circuitsList.get(index).url = res.get("url");
+					  circuitsList.get(index).width = res.getInt("width");
+					  circuitsList.get(index).height = res.getInt("height");
+					  circuitsList.get(index).level = res.getInt("level");
+					  circuitsList.get(index).n_laps = res.getInt("n_laps");
+					  
 				  } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 		          }
@@ -1446,10 +1491,15 @@ public class JocProg implements EntryPoint {
 		    		  circuitsList.clear();
 		    		  circuitsDropBox.clear();
 		    		  circuitsDropBox.addItem("CIRCUITOS");
-		    		  for(int i=0;i<circs.length();i++) { circuitsList.add(circs.get(i)); }
+		    		  for(int i=0;i<circs.length();i++) { 
+		    			  CircuitInfo cInfo = new CircuitInfo();
+		    			  cInfo.name = circs.get(i);
+		    			  circuitsList.add(cInfo); 
+		    			  requestCircuitInfo(circs.get(i),i);
+		    		  }
 		    		  for (int i=0; i<circuitsList.size(); i++) { 
-		    			  circuitsDropBox.addItem((String)circuitsList.get(i));
-		    			  circuitsMultiBox.addItem((String)circuitsList.get(i));
+		    			  circuitsDropBox.addItem(circuitsList.get(i).name);
+		    			  circuitsMultiBox.addItem(circuitsList.get(i).name);
 		    		  }
 		          } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
@@ -1477,7 +1527,6 @@ public class JocProg implements EntryPoint {
 			  }
 		      public void onResponseReceived(Request request, Response response) {
 		    	  if (200 == response.getStatusCode()) {
-		    		  Window.alert(response.getText());
 		    		  JsArrayString res = asJsArrayString(response.getText());
 		    		  listBox.clear();
 		    		  listBox.addItem("CAMPEONATOS");
@@ -1491,6 +1540,52 @@ public class JocProg implements EntryPoint {
 		  Window.alert("Couldn't retrieve JSON");
 	  }
   }
+  
+  private void requestChampionshipCircuits(String name) {  //getMyChampionships
+	  String url = JSON_URL;
+	  url = URL.encode(url);
+	  //Send request to server and catch any errors.
+	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	
+	  try{
+		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+		  URL.encodeComponent("getChampionshipCircuits")+"&"+URL.encodeComponent("name")+"="+
+		  URL.encodeComponent(name), new RequestCallback() {
+			  public void onError(Request request, Throwable exception) {
+				  Window.alert("Couldn't retrieve JSON");
+			  }
+		      public void onResponseReceived(Request request, Response response) {
+		    	  if (200 == response.getStatusCode()) {
+		    		  JsArrayString res = asJsArrayString(response.getText());
+		    		  champCircuitsList.clear();
+		    		  for(int i=0;i<res.length();i++) {
+		    			  CircuitInfo cInfo = new CircuitInfo();
+		    			  cInfo.name = res.get(i);
+		    			  int j;
+		    			  boolean b = false;
+		    			  for(j=0;j<circuitsList.size() && !b; j++){
+		    				  if (circuitsList.get(j).name.equals(res.get(i))){
+		    					  cInfo.url = circuitsList.get(j).url;
+		    					  b = true;
+		    				  }
+		    			  }
+		    			  champCircuitsList.add(cInfo);
+		    		  }
+		    		  indexToShow = 0;
+	    			  displayCircuitsImages("right",champCircuitsList,firstCirc,secondCirc,thirdCirc,firstRadioButton,secondRadioButton,thirdRadioButton,leftPushButton,rightPushButton);
+	    			  
+	    			  
+		          } else {
+		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+		          }
+		      }
+		  });
+	  } catch (RequestException e) {
+		  Window.alert("Couldn't retrieve JSON");
+	  }
+  }
+  
   
   private void refreshDropBoxs() {   //cuando se elija la pestaña de ranking
 	  
@@ -1564,7 +1659,7 @@ public class JocProg implements EntryPoint {
 	  else {
 		  int sizepage = sizePagesDropBox.getSelectedIndex();
 		  int page = rankPagesDropBox.getSelectedIndex();
-		  String circuit = (String)circuitsList.get(circuitsDropBox.getSelectedIndex() - 1);
+		  String circuit = circuitsList.get(circuitsDropBox.getSelectedIndex() - 1).name;
 		  String champ;
 		  if(champsDropBox.getSelectedIndex()==0) champ = "";
 		  else champ = (String)champsList.get(champsDropBox.getSelectedIndex() - 1);
@@ -1662,7 +1757,7 @@ public class JocProg implements EntryPoint {
 		        		  champNameTextBox.setText("");
 		        		  champDateBox.setValue(null);
 		        		  circuitsMultiBox.clear();
-		        		  for (int i=0; i<circuitsList.size(); i++) { circuitsMultiBox.addItem((String)circuitsList.get(i)); }
+		        		  for (int i=0; i<circuitsList.size(); i++) { circuitsMultiBox.addItem(circuitsList.get(i).name); }
 		        		  selectedMultiBox.clear();
 		        	  }
 		          } else {

@@ -228,5 +228,5 @@ run(json code, string circuit)
 
 ======================================================================
   
-getChampionshipInfo (string name)
+getChampionshipCircuits (string name)
  * retorna un array de strings que son los nombres de los circuitos que contiene el championship "name"
