@@ -76,10 +76,10 @@ getMyTeams(circuit, championship) returns strings[]
 
 ==========================
 
-getMyChampionships(circuit) returns strings[]
+getMyChampionships(String circuit) returns strings[]
   * Nada si no estamos logeados.
   * Los 'name' de los championships a los que el usuario pertenece y contienen el circuit
-  !!! si circuit = null devuelve todos los championships a los que el usuario pertenece
+  !!! si circuit = "" devuelve todos los championships a los que el usuario pertenece sin restricciones de circuito
 
 ==========================
 
