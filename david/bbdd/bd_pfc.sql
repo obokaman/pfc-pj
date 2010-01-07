@@ -185,6 +185,10 @@ INSERT INTO circuit (name, short_name, level, n_laps, time, width, height) VALUE
 
 INSERT INTO circuit (name, short_name, level, n_laps, time, width, height) VALUES ('Turquia', 'chato', 1, 3, null, 1200, 500);
 
+INSERT INTO circuit (name, short_name, level, n_laps, time, width, height) VALUES ('Circuito4', 'basic3', 1, 3, null, 1000, 1000);
+
+INSERT INTO circuit (name, short_name, level, n_laps, time, width, height) VALUES ('Circuito5', 'newbasic', 1, 3, null, 1000, 1000);
+
 INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato1', '2009-01-31', 3);
 
 INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato2', '2010-01-31', 3);
