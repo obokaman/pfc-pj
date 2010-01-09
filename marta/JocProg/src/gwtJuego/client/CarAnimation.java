@@ -84,10 +84,12 @@ public class CarAnimation implements Animation {
      */
     public CarAnimation(AbsolutePanel panel, String trace) {
     	
-    	for(int i=0; i<=360-frec; i=i+frec) {
-    		Image c = new Image();
-    		c.setUrl("http://localhost/img/car-"+String.valueOf(i)+".gif");
-    		carImages.add(c);
+    	if (carImages.size() == 0) {
+	    	for(int i=0; i<=360-frec; i=i+frec) {
+	    		Image c = new Image();
+	    		c.setUrl("http://localhost/img/car-"+String.valueOf(i)+".gif");
+	    		carImages.add(c);
+	    	}
     	}
     	getTrace(trace);
     	this.panel = panel;
@@ -213,8 +215,8 @@ public class CarAnimation implements Animation {
     }
     
     private void getTrace(String t) {
-    	int j=0;
     	String[] vs = t.split("[ \n]");
+    	trace.clear();
     	for(int i=0; i<vs.length;++i) {
     		this.trace.add(vs[i]);
     	}
@@ -222,8 +224,6 @@ public class CarAnimation implements Animation {
     }
     
     private String getNextTraceField() {
-    	//String s = this.trace.get(0);
-    	//this.trace.remove(0);
     	String s = this.trace.get(nextField);
     	nextField++;
     	return s;
@@ -250,8 +250,4 @@ public class CarAnimation implements Animation {
     		this.targetY = (int)newY;
     	}
     }
-    
-    /*private void requestCircuitInfo(String name) {
-    	
-    }*/
 }

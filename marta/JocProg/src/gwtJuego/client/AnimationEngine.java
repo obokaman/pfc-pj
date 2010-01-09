@@ -5,20 +5,44 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-/**
- * An engine for executing animations.
- *
- * @author amoffat Alex Moffat
- */
+
 public class AnimationEngine {
 
     /**
      * The time that should elapse between calls to executeAnimations, in milliseconds.
      */
     private static final int ANIMATION_INTERVAL = 33;
+    /**
+     * Flag that indicates whether or not the current animation is paused.
+     */
+    private static boolean paused;
+    /**
+     * Flag that indicates whether or not the current animation should be finished.
+     */
+    private static boolean stop;
+    /**
+     * The panel where the buttons to control the animation are.
+     */
+    private static HorizontalPanel controllersPanel;
+    /**
+     * The panel where the animation take place.
+     */
+    private static AbsolutePanel animationPanel;
 
     /**
      * Map from a widget to the animation that is animating it. Only one animation is allowed per widget. A LinkedHashMap
@@ -47,7 +71,67 @@ public class AnimationEngine {
      *
      * @param animation The animation to add.
      */
-    public void addAnimation(Animation animation) {
+    public void addAnimation(Animation animation, HorizontalPanel controllersHPanel, HorizontalPanel buttonsHPanel, AbsolutePanel imgPanel, final TextArea inputTextArea ) {
+    	
+    	controllersPanel = controllersHPanel;
+    	animationPanel = imgPanel;
+    	final TextBox name = (TextBox)buttonsHPanel.getWidget(0);
+    	name.setEnabled(false);
+    	final Button load = (Button)buttonsHPanel.getWidget(1);
+    	load.setEnabled(false);
+    	final Button save = (Button)buttonsHPanel.getWidget(2);
+    	save.setEnabled(false);
+    	final Button change = (Button)buttonsHPanel.getWidget(3);
+    	change.setEnabled(false);
+    	
+    	paused = false;
+    	stop = false;
+    	controllersPanel.getWidget(0).setVisible(false);
+    	controllersPanel.getWidget(1).setVisible(true);
+        PushButton controlPauseButton = (PushButton)controllersPanel.getWidget(1);
+        PushButton controlPlayButton = (PushButton)controllersPanel.getWidget(2);
+        
+        final PushButton oldStopButton = (PushButton)controllersPanel.getWidget(3);
+        oldStopButton.setEnabled(true);  
+        
+        controlPauseButton.addClickHandler( 
+  			  new ClickHandler() {
+  				  public void onClick(ClickEvent event) {
+  					  if(!paused) {
+  						controllersPanel.getWidget(1).setVisible(false);
+  						controllersPanel.getWidget(2).setVisible(true);
+  				        paused = true;
+  					  }
+  				  }
+  			  });
+        controlPlayButton.addClickHandler( 
+    			  new ClickHandler() {
+    				  public void onClick(ClickEvent event) {
+    					  if(paused) {
+    						controllersPanel.getWidget(2).setVisible(false);
+    						controllersPanel.getWidget(1).setVisible(true);
+    				        paused = false;
+    					  }
+    				  }
+    			  });
+        oldStopButton.addClickHandler( 
+    			  new ClickHandler() {
+   				  public void onClick(ClickEvent event) {
+    					  stop = true;
+    					  oldStopButton.setEnabled(false);
+    					  controllersPanel.getWidget(1).setVisible(false);
+    					  controllersPanel.getWidget(2).setVisible(false);
+    	                  controllersPanel.getWidget(0).setVisible(true);
+    	                  PushButton oldPlayButton = (PushButton)controllersPanel.getWidget(0);
+    	                  oldPlayButton.setEnabled(true);
+    	                  inputTextArea.setEnabled(true);
+    	                  name.setEnabled(true);
+    	                  load.setEnabled(true);
+    	                  save.setEnabled(true);
+    	                  change.setEnabled(true);
+    				  }
+    			  });
+    	
         boolean timerIsRunning = !animations.isEmpty();
         if (!animation.beforeFirstFrame()) {
             if (executingAnimations) {
@@ -71,11 +155,17 @@ public class AnimationEngine {
             executingAnimations = true;
             for (Iterator<Map.Entry<Widget, Animation>> entries = animations.entrySet().iterator(); entries.hasNext();) {
                 Animation animation = entries.next().getValue();
-                if (animation.animateOneFrame()) {
+                if (!paused && !stop && animation.animateOneFrame()) {
                     // This animation is completed so remove it.
-                    animation.afterLastFrame();
-                    entries.remove();
+                	Window.alert("9");
+                	animation.afterLastFrame();
+                	entries.remove();
                 }
+                else if(stop) {
+            		animation.afterLastFrame();
+            		entries.remove();
+            		if (animationPanel.getWidgetCount() == 2) animationPanel.remove(1);  //borrar widget coche
+            	}
             }
         } finally {
             executingAnimations = false;

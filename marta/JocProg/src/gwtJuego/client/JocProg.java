@@ -62,7 +62,9 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 
 public class JocProg implements EntryPoint {
 	
+	private static final String LOCAL_URL = "http://localhost/";
 	private static final String JSON_URL = "http://localhost/php/main.php?";
+	private static final String IMG_URL = "http://localhost/img/";
 	private static final int CODE = 1;
 	private static final int DEBUG = 2;
 	private static final int EXECUTION = 3;
@@ -140,8 +142,10 @@ public class JocProg implements EntryPoint {
 	private Button regButton = new Button("Enviar");
 	private Button changeButton = new Button("Modificar datos");
 	private Button saveChangeButton = new Button("Guardar cambios");
-	private Button playButton = new Button("¡Corre!");
-	private Button stopButton = new Button("¡Para!");
+	//private Button playButton = new Button("¡Corre!");
+	//private Button stopButton = new Button("¡Para!");
+	private PushButton playButton;
+	private PushButton stopButton;
 	
 	
 	private ArrayList<CircuitInfo> circuitsList = new ArrayList<CircuitInfo>();
@@ -267,7 +271,7 @@ public class JocProg implements EntryPoint {
 				  }
 				  if(playMode == NONE){
 					  indexToShow = 0;
-					  displayCircuitsImages("right",circuitsList,firstCirc,secondCirc,thirdCirc,firstRadioButton,secondRadioButton,thirdRadioButton,leftPushButton,rightPushButton);
+					  displayCircuitsImages(circuitsList);
 					  if(!USER.equals("")) refreshListBox(modeChampListBox);
 					  modeDialogBox.center();
 					  modeDialogBox.show();
@@ -466,27 +470,74 @@ public class JocProg implements EntryPoint {
 	  correPanel.setLeftWidget(imagePanel);
 	  correPanel.setRightWidget(consolaPanel);
 	  
-	  HorizontalPanel buttonsPanel = new HorizontalPanel();
-	  buttonsPanel.add(playButton);
-	  stopButton.setEnabled(false);
-	  buttonsPanel.add(stopButton);
+	  Image playButtonImg = new Image();
+	  playButtonImg.setUrl(LOCAL_URL+"play.png");
+	  playButtonImg.setHeight("21px");
+	  Image stopButtonImg = new Image();
+	  stopButtonImg.setUrl(LOCAL_URL+"stop.png");
+	  stopButtonImg.setHeight("21px");
+	  Image pauseButtonImg = new Image();
+	  pauseButtonImg.setUrl(LOCAL_URL+"pause.png");
+	  pauseButtonImg.setHeight("21px");
+	  Image play2ButtonImg = new Image();
+	  play2ButtonImg.setUrl(LOCAL_URL+"play.png");
+	  play2ButtonImg.setHeight("21px");
 	  
-	  Button saveCodeButton = new Button("Guardar");
+	  playButton = new PushButton(playButtonImg);
+	  stopButton = new PushButton(stopButtonImg);     
+	  stopButton.setEnabled(false);
+	  PushButton controlPauseButton = new PushButton(pauseButtonImg);
+	  controlPauseButton.setVisible(false);
+	  PushButton controlPlayButton = new PushButton(play2ButtonImg);
+	  controlPlayButton.setVisible(false);
+	  
+	  Image progressImg = new Image();
+	  Image leftProgressImg = new Image();
+	  Image rightProgressImg = new Image();
+	  leftProgressImg.setUrl(LOCAL_URL+"barra1.png");
+	  progressImg.setUrl(LOCAL_URL+"barra2.png");
+	  rightProgressImg.setUrl(LOCAL_URL+"barra3.png");
+	  Image pointerImg = new Image();
+	  pointerImg.setUrl(LOCAL_URL+"pointer.png");
+	  AbsolutePanel progressAbsPanel = new AbsolutePanel();
+	  progressAbsPanel.add(progressImg);
+	  progressAbsPanel.add(pointerImg,0,0);
+	  
+	  final HorizontalPanel progressPanel = new HorizontalPanel();
+	  progressPanel.add(playButton); //0
+	  progressPanel.add(controlPauseButton); //1
+	  progressPanel.add(controlPlayButton); //2
+	  progressPanel.add(stopButton);  //3
+	  progressPanel.add(leftProgressImg);
+	  progressPanel.add(progressAbsPanel);
+	  progressPanel.add(rightProgressImg);
+	  
+	  final HorizontalPanel buttonsPanel = new HorizontalPanel();
+	  buttonsPanel.setSpacing(5);
 	  final TextBox codeNameTextBox = new TextBox();
-	  buttonsPanel.add(saveCodeButton);
 	  buttonsPanel.add(codeNameTextBox);
 	  Button loadCodeButton = new Button("Cargar");
 	  buttonsPanel.add(loadCodeButton);
+	  Button saveCodeButton = new Button("Guardar");
+	  buttonsPanel.add(saveCodeButton);
 	  Button changePlayModeButton = new Button("Cambiar juego");
 	  buttonsPanel.add(changePlayModeButton);
+	  
+	  HorizontalPanel controlHPanel = new HorizontalPanel();
+	  controlHPanel.add(progressPanel);
+	  controlHPanel.add(buttonsPanel);
+	  controlHPanel.setCellWidth(buttonsPanel,"100%");
+	  controlHPanel.setCellHorizontalAlignment(buttonsPanel, HasHorizontalAlignment.ALIGN_RIGHT);
 	  
 	  inputTextArea.setText("entrada de código");
 	  inputTextArea.setSize("100%","100%");
 	  VerticalPanel inputPanel = new VerticalPanel();
 	  inputPanel.setSize("100%","100%");
 	  inputPanel.setSpacing(5);
-	  inputPanel.add(buttonsPanel);
+	  inputPanel.add(controlHPanel);
 	  inputPanel.add(inputTextArea);
+	  inputPanel.setCellHeight(inputTextArea,"100%");
+	  inputPanel.setCellVerticalAlignment(inputTextArea, HasVerticalAlignment.ALIGN_TOP);
 		  
 	  codiPanel.setSize("100%","100%");
 	  codiPanel.setSplitPosition("50%");
@@ -497,21 +548,25 @@ public class JocProg implements EntryPoint {
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
 					  if(modeOn == CODE || modeOn == DEBUG){
-						  requestRun(inputTextArea.getText(), circuitOn);
+						  playButton.setEnabled(false);
+						  requestRun(inputTextArea.getText(), circuitOn, progressPanel,buttonsPanel);
 					  }
 				  }
 			  });
-	  stopButton.addClickHandler( 
+	  inputTextArea.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  modeOn = CODE;
-					  changeMode();
+					  if(modeOn == EXECUTION && playButton.isEnabled() && playButton.isVisible()){
+						  modeOn = CODE;
+						  changeMode();
+					  }
 				  }
 			  });
 	  saveCodeButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  requestSaveCode(inputTextArea.getText(),codeNameTextBox.getText());
+					  if(codeNameTextBox.getText().equals("")) Window.alert("Debes introducir un nombre para el archivo de guardado");
+					  else requestSaveCode(inputTextArea.getText(),codeNameTextBox.getText());
 				  }
 			  });
 	  loadCodeButton.addClickHandler( 
@@ -544,7 +599,6 @@ public class JocProg implements EntryPoint {
 	  modeHPanel.add(modeListBox);
 	  
 	  Label champLabel = new Label("Campeonato: ");
-	  //final ListBox modeChampListBox = new ListBox(false);
 	  modeChampListBox.setEnabled(false);
 	  modeChampListBox.addItem("CAMPEONATOS");
 	  HorizontalPanel champHPanel = new HorizontalPanel();
@@ -614,7 +668,6 @@ public class JocProg implements EntryPoint {
 	  
 	  modeDialogBox.setAnimationEnabled(true);
 	  modeDialogBox.add(popupVPanel);
-	  
 	  modeListBox.addChangeHandler(new ChangeHandler() {
 		  public void onChange(ChangeEvent event) {
 			  if(modeListBox.getSelectedIndex() == 0 || modeListBox.getSelectedIndex() == 2) {  //MODO || Campeonato
@@ -635,7 +688,7 @@ public class JocProg implements EntryPoint {
 				  modeChampListBox.setEnabled(false);
 				  modeChampListBox.setSelectedIndex(0);
 				  indexToShow = 0;
-				  displayCircuitsImages("right",circuitsList,firstCirc,secondCirc,thirdCirc,firstRadioButton,secondRadioButton,thirdRadioButton,leftPushButton,rightPushButton);			  
+				  displayCircuitsImages(circuitsList);			  
 				  
 				  firstRadioButton.setEnabled(true);
 				  secondRadioButton.setEnabled(true);
@@ -665,6 +718,23 @@ public class JocProg implements EntryPoint {
 			  }  
 		  }
 	  });
+	  
+	  leftPushButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  if (indexToShow-6 < 0) indexToShow=0;
+					  else indexToShow=indexToShow-6;
+					  if(modeListBox.getSelectedIndex() == 1) displayCircuitsImages(circuitsList);  //entrenamiento
+					  else if(modeListBox.getSelectedIndex() == 2) displayCircuitsImages(champCircuitsList);  //campeonato
+				  }
+			  });
+	  rightPushButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  if(modeListBox.getSelectedIndex() == 1) displayCircuitsImages(circuitsList);  //entrenamiento
+					  else if(modeListBox.getSelectedIndex() == 2) displayCircuitsImages(champCircuitsList);  //campeonato
+				  }
+			  });
 	  
 	  okModeButton.addClickHandler( 
 			  new ClickHandler() {
@@ -706,7 +776,7 @@ public class JocProg implements EntryPoint {
 						  secondRadioButton.setValue(false);
 						  thirdRadioButton.setValue(false);
 						  indexToShow = 0;
-						  displayCircuitsImages("right",circuitsList,firstCirc,secondCirc,thirdCirc,firstRadioButton,secondRadioButton,thirdRadioButton,leftPushButton,rightPushButton);
+						  displayCircuitsImages(circuitsList);
 					  }
 				  }
 			  });
@@ -714,67 +784,65 @@ public class JocProg implements EntryPoint {
 	  cancelModeButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  modeDialogBox.hide();
-					  modeListBox.setSelectedIndex(0);
-					  modeChampListBox.setEnabled(false);
-					  modeChampListBox.setSelectedIndex(0);
-					  leftPushButton.setEnabled(false);
-					  rightPushButton.setEnabled(false);
-					  firstRadioButton.setEnabled(false);
-					  secondRadioButton.setEnabled(false);
-					  thirdRadioButton.setEnabled(false);
-					  firstRadioButton.setValue(false);
-					  secondRadioButton.setValue(false);
-					  thirdRadioButton.setValue(false);
-					  indexToShow = 0;
-					  displayCircuitsImages("right",circuitsList,firstCirc,secondCirc,thirdCirc,firstRadioButton,secondRadioButton,thirdRadioButton,leftPushButton,rightPushButton);
+					  if(playMode == NONE) Window.alert("Debes elegir un modo de juego");
+					  else {
+						  modeDialogBox.hide();
+						  modeListBox.setSelectedIndex(0);
+						  modeChampListBox.setEnabled(false);
+						  modeChampListBox.setSelectedIndex(0);
+						  leftPushButton.setEnabled(false);
+						  rightPushButton.setEnabled(false);
+						  firstRadioButton.setEnabled(false);
+						  secondRadioButton.setEnabled(false);
+						  thirdRadioButton.setEnabled(false);
+						  firstRadioButton.setValue(false);
+						  secondRadioButton.setValue(false);
+						  thirdRadioButton.setValue(false);
+						  indexToShow = 0;
+						  displayCircuitsImages(circuitsList);
+					  }
 				  }
 			  });
   }
   
-  private void displayCircuitsImages(String where,ArrayList<CircuitInfo> list,Image img1,Image img2,Image img3,RadioButton rButton1,RadioButton rButton2,RadioButton rButton3,PushButton leftB, PushButton rightB) {
-
-		if(where.equals("left")){
-			if (indexToShow-3 < 0) indexToShow=0;
-			else indexToShow=indexToShow-3;
-		}
+  private void displayCircuitsImages(ArrayList<CircuitInfo> list) {
 		
-		img1.setVisible(false);
-		img2.setVisible(false);
-		img3.setVisible(false);
-		rButton1.setValue(false);
-		rButton2.setValue(false);
-		rButton3.setValue(false);
-		rButton1.setVisible(false);
-		rButton2.setVisible(false);
-		rButton3.setVisible(false);
+		firstCirc.setVisible(false);
+		secondCirc.setVisible(false);
+		thirdCirc.setVisible(false);
+		firstRadioButton.setValue(false);
+		secondRadioButton.setValue(false);
+		thirdRadioButton.setValue(false);
+		firstRadioButton.setVisible(false);
+		secondRadioButton.setVisible(false);
+		thirdRadioButton.setVisible(false);
 	  
 		if (indexToShow < list.size()){
-			img1.setUrl("http://localhost"+list.get(indexToShow).url);
-			img1.setVisible(true);
-			rButton1.setText(list.get(indexToShow).name);
-			rButton1.setVisible(true);
+			firstCirc.setUrl("http://localhost"+list.get(indexToShow).url);
+			firstCirc.setVisible(true);
+			firstRadioButton.setText(list.get(indexToShow).name);
+			firstRadioButton.setVisible(true);
 		}
 		if (indexToShow+1 < list.size()){
-			img2.setUrl("http://localhost"+list.get(indexToShow+1).url);
-			img2.setVisible(true);
-			rButton2.setText(list.get(indexToShow+1).name);
-			rButton2.setVisible(true);
+			secondCirc.setUrl("http://localhost"+list.get(indexToShow+1).url);
+			secondCirc.setVisible(true);
+			secondRadioButton.setText(list.get(indexToShow+1).name);
+			secondRadioButton.setVisible(true);
 		}
 		if (indexToShow+2 < list.size()){
-			img3.setUrl("http://localhost"+list.get(indexToShow+2).url);
-			img3.setVisible(true);
-			rButton3.setText(list.get(indexToShow+2).name);
-			rButton3.setVisible(true);
+			thirdCirc.setUrl("http://localhost"+list.get(indexToShow+2).url);
+			thirdCirc.setVisible(true);
+			thirdRadioButton.setText(list.get(indexToShow+2).name);
+			thirdRadioButton.setVisible(true);
 		}
 				  
-		if(indexToShow == 0)leftB.setEnabled(false);
-		else leftB.setEnabled(true);
-		
-		if(indexToShow+3 < list.size())rightB.setEnabled(true);
-		else rightB.setEnabled(false);
+		if(indexToShow == 0)leftPushButton.setEnabled(false);
+		else leftPushButton.setEnabled(true);
 		
 		indexToShow=indexToShow+3;
+		
+		if(indexToShow < list.size())rightPushButton.setEnabled(true);
+		else rightPushButton.setEnabled(false);
   }
   
   private void createRankingPanel(){
@@ -1226,7 +1294,6 @@ public class JocProg implements EntryPoint {
 			  }
 			  public void onResponseReceived(Request request, Response response) {
 				  if (200 == response.getStatusCode()) {
-					  Window.alert(response.getText());
 					  JSonData res = asJSonData(response.getText());
 					  circuitsList.get(index).url = res.get("url");
 					  circuitsList.get(index).width = res.getInt("width");
@@ -1244,7 +1311,7 @@ public class JocProg implements EntryPoint {
 	  } 
   }
   
-  private void requestRun(String code, String circuit) {
+  private void requestRun(String code, String circuit,final HorizontalPanel animationControllersPanel,final HorizontalPanel buttonsPanel) {
 	  
 	  String url = JSON_URL;
 	  url = URL.encode(url);
@@ -1280,7 +1347,7 @@ public class JocProg implements EntryPoint {
 		        		  modeOn = EXECUTION;
 						  changeMode();
 						  consolaTextArea.setText("OK");
-						  requestTrace(id_game);
+						  requestTrace(id_game, animationControllersPanel, buttonsPanel);
 		        	  }	
 		          } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
@@ -1292,7 +1359,7 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
-  private void requestTrace(int id_game) {
+  private void requestTrace(int id_game,final HorizontalPanel animationControllersPanel, final HorizontalPanel buttonsPanel) {
 	  
 	  String url = JSON_URL;
 	  url = URL.encode(url);
@@ -1312,7 +1379,7 @@ public class JocProg implements EntryPoint {
 					  JSonData res = asJSonData(response.getText());
 					  //int nbytes = res.getInt("read_bytes");
 					  String dat = res.get("data");
-					  engine.addAnimation(new CarAnimation(imagePanel,dat));
+					  engine.addAnimation(new CarAnimation(imagePanel,dat), animationControllersPanel, buttonsPanel, imagePanel, inputTextArea);
 				  } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 		          }
@@ -1573,7 +1640,7 @@ public class JocProg implements EntryPoint {
 		    			  champCircuitsList.add(cInfo);
 		    		  }
 		    		  indexToShow = 0;
-	    			  displayCircuitsImages("right",champCircuitsList,firstCirc,secondCirc,thirdCirc,firstRadioButton,secondRadioButton,thirdRadioButton,leftPushButton,rightPushButton);
+	    			  displayCircuitsImages(champCircuitsList);
 	    			  
 	    			  
 		          } else {
@@ -2189,11 +2256,11 @@ public class JocProg implements EntryPoint {
 			  || regEmailSchoolTextBox.getText().equals("")){
 				  Window.alert("Debes rellenar todos los campos");
 			  }
-	  else if (!regNewPassword.getText().equals("") && regPassword.getText().equals("")){
-		  Window.alert("Para cambiar la contraseña debes introducir la actual");
-	  }
 	  else if (!regNewPassword.getText().equals("") && regConfirmPassword.getText().equals("")){
 		  Window.alert("Debes introducir la confirmación de la nueva contraseña");
+	  }
+	  else if (!regNewPassword.getText().equals("") && regPassword.getText().equals("")){
+		  Window.alert("Para cambiar la contraseña debes introducir la actual");
 	  }
 	  else if(!regNewPassword.getText().equals(regConfirmPassword.getText())){
 		  Window.alert("La nueva contraseña y su confirmación no coinciden. Por favor, introdúcelas de nuevo");
@@ -2251,6 +2318,7 @@ public class JocProg implements EntryPoint {
 	  	case CODE:
 	  		playButton.setEnabled(true);
 	  		stopButton.setEnabled(false);
+	  		inputTextArea.setEnabled(true);
 			codiPanel.setSplitPosition(hPositionCode +"%");
 			correPanel.setSplitPosition(vPositionCode +"%");
 			break;
@@ -2263,6 +2331,7 @@ public class JocProg implements EntryPoint {
 	  	case EXECUTION:
 	  		playButton.setEnabled(false);
 	  		stopButton.setEnabled(true);
+	  		inputTextArea.setEnabled(false);
 			codiPanel.setSplitPosition(hPositionExec +"%");
 			correPanel.setSplitPosition(vPositionExec +"%");
 			break;
