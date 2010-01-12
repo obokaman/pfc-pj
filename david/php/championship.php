@@ -6,7 +6,7 @@
 			- id_founded: Identificador del usuario fundador del campeonat
 	*/
 	function create_championship($name, $date_limit, $id_founded){
-	/*Pre: 'id_founded' es un identificador de usuario que existe en la BBDD */	
+	/*Pre: 'id_founded' es un identificador de usuario que existe en la BBDD y ningún valor puede ser nulo */	
 		global $connection;
 		
 	    $query = "INSERT INTO championship (name, data_limit, id_founded) VALUES ('$name', '$date_limit', '$id_founded')";

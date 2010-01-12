@@ -357,28 +357,32 @@ else if( $f == "saveCode" ) {
 /*Según el resultado de la operación devuelve un entero con el valor:
 	- 0 se ha guardado correctamente
 	- 1 ya existe el nombre del fichero
-	- 2 otros errores */
+	- 2 otros errores
+	- 3 si el usuario no esta logueado*/
 
 
 
 /*La función retorna el codigo guardado por el usuario logueado con el mismo nombre que nombre de fichero de la entrada*/
 else if( $f == "loadCode" ) {	
-	if ( ! isset($_SESSION['user']) ) send(3);
-	else send(
-		get_code ( 
-			clean( "name", "string" ),
-			get_id_user( $_SESSION['user'] )
-		)
-	);
+	if ( isset($_SESSION['user']) ){
+		send(
+			get_code ( 
+				clean( "name", "string" ),
+				get_id_user( $_SESSION['user'] )
+			)
+		);
+	}
 }
 
 
 
 /*La función devuelve el nombre de todas las partidas guardadas por el usuario logueado*/
 else if( $f == "getSavedCodes" ) {	
-	send(
-		get_saved_codes ( 	get_id_user( $_SESSION['user'] ) )
-	);	
+	if ( isset($_SESSION['user']) ){
+		send(
+			get_saved_codes ( 	get_id_user( $_SESSION['user'] ) )
+		);
+	}
 }
 
 
