@@ -14,7 +14,7 @@ CREATE TABLE user(
 	school  	varchar(50) NOT NULL,
 	email_school    varchar(50),
 	type_user	varchar(20) NOT NULL,
-	pass		varchar(20) DEFAULT 12345,
+	pass		varchar(20),
 	activated 	bool	    DEFAULT false,
 	activation_key  varchar(20),
 
@@ -151,6 +151,9 @@ CREATE TABLE code (
 )
 ENGINE = InnoDB
 CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+INSERT INTO user (nick, name, surname1, surname2, email_user,
+city, school, email_school, type_user, pass, activated) VALUES ('anonymous', 'anonymous', 'anonymous', null , 'anonymous@gmail.com', 'Blanes', 'Colegio1', 'cole@colegio1.com', 'alumno', '3434343434', 1);
 
 INSERT INTO user (nick, name, surname1, surname2, email_user,
 city, school, email_school, type_user, pass) VALUES ('dgb', 'David', 'Garcia', 'Bautista', 'dvdgarcia.83@gmail.com', 'Blanes', 'Colegio1', 'cole@colegio1.com', 'alumno', '123');

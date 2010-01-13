@@ -418,7 +418,8 @@ else if( $f == "run" ) {
 	send(
 		run( 			
 			clean("code", "json"),
-			clean("circuit", "string")
+			clean("circuit", "string"),
+			clean("championship", "string")
 		)
 	);	
 }

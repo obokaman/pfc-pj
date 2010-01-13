@@ -1,39 +1,18 @@
 <?php
 
-	/*Esta función añade a la BBDD una nueva partida formada por el identificador del usuario que la realiza, el identificador del circuito donde se realiza, el campeonato al que pertence dicha partida, el tiempo realizado en la partida y la fecha y hora de la insercion de esta partida
-			- id_user: Identificador del usuario
-			- id_circuit: Identificador del circuito
-			- id_champ: Identificador del campeonato
-			- time: Tiempo conseguido en la partida en el circuito indicado por el usuario
-			- time_insertion: Fecha y hora de la partida cuando ha sido realizada
-*/
-	function create_game_with_champ($id_user, $id_circuit, $id_champ, $time, $time_insertion){
-	/*Pre: Los identificadores de la entrada de la función existen, y el circuito pertenece al campeonato que se nos indica
-    en la entrada */	
-		global $connection;
-
-		$query = "INSERT INTO game ( id_user, id_circuit, id_champ, time_result, time_insertion) VALUES ('$id_user',' $id_circuit', '$id_champ', '$time', '$time_insertion')";
-		$result_query = mysql_query($query, $connection);
-		
-		if (!$result_query) {
-			my_error('CREATE_GAME_WITH_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-			return false;
-		}else	return true;
-	}
-	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion de la nueva partida, en caso contrario devuelve falso*/
-	
-
 	/*Esta función añade a la BBDD una nueva partida formada por el identificador del usuario que la realiza, el identificador del circuito donde se realiza, el tiempo realizado en la partida y la fecha y hora de la insercion de esta partida
 			- id_user: Identificador del usuario
 			- id_circuit: Identificador del circuito
 			- time: Tiempo conseguido en la partida en el circuito indicado por el usuario
 			- time_insertion: Fecha y hora de la partida cuando ha sido realizada
 	*/
-	function create_game($id_user, $id_circuit, $time, $time_insertion){
+	function create_game($id_user, $id_circuit, $id_champ, $time, $time_insertion){
 	/*Pre: Ninguno de los valores de la entrada son nulos y los identificadores de usuari y de circuito deben existir*/	
 		global $connection;
-
-		$query = "INSERT INTO game ( id_user, id_circuit, time_result, time_insertion) VALUES ('$id_user',' $id_circuit', '$time', '$time_insertion')";	
+		
+		if (!$id_champ)		$query = "INSERT INTO game ( id_user, id_circuit, time_result, time_insertion) VALUES ('$id_user',' $id_circuit', '$time', '$time_insertion')";	
+		else		$query = "INSERT INTO game ( id_user, id_circuit, id_champ, time_result, time_insertion) VALUES ('$id_user',' $id_circuit', '$id_champ', '$time', '$time_insertion')";
+		
 		$result_query = mysql_query($query, $connection);
 		
 		if (!$result_query) {

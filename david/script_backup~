@@ -5,8 +5,6 @@ path="/home/dvd/Escritorio"
 path_server="/var/www"
 path_src="/home/dvd/share"
 
-diract=`pwd`
-
 dirtmp=`mktemp -d`
 
 #Comanda para la creacion de un backup de la base de datos del proyecto, mediante la funcion de mysql 'mysqldump'
@@ -32,6 +30,5 @@ cp -r $path_src/racing/pack $dirtmp/racing/pack
 #Comanda para comprimir el directorio backup
 cd $dirtmp
 tar zcvf $path/backup_pfc.tar.gz * 
-cd $diract
 
 

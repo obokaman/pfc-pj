@@ -99,7 +99,7 @@
 			- code: Codigo de la partida
 			- circuit: Nombre del circuito			
 	*/
-	function run( $code, $circuit ){
+	function run( $code, $circuit, $champ ){
 	/*Pre: El circuito existe en la base de datos*/
 		global $path;
 		
@@ -140,13 +140,14 @@
 		$time = fscanf($file, "%d");
 		fclose($file);
 		
-		$id_user = get_id_user( $_SESSION['user'] );
+		if (isset($_SESSION['user'])) $id_user = get_id_user( $_SESSION['user'] );
+		else $id_user = 1;
 		
 		//Obtenemos el dia y la fecha de la insercion de la partida (valor necesario para poder insertar el resultado de la partida en la BBDD)
 		$time_insertion = date("y-m-d h:i:s");
 		
 		//Insertamos la partida en la base de datos, en caso de error nos mostrara un mensaje de error
-		if (!create_game( $id_user, get_id_circuit($circuit), $time[0], $time_insertion)) my_error( "RUN: No se ha insertar la partida correctamente", 1 );
+		if (!create_game( $id_user, get_id_circuit($circuit), get_id_championship($champ), $time[0], $time_insertion)) my_error( "RUN: No se ha insertar la partida correctamente", 1 );
 		
 		//Obtenemos el identificar de la partida a partir del usuario que ha realizado la partida (usuario logueado) y el momento en que ha sido insertada la partida
 		$id_game = get_id_by_date_user( $id_user, $time_insertion);
