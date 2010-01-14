@@ -40,7 +40,7 @@
 			}
 			return $var;	
 		}else{
-			my_error('ERROR: A variable is not activated to clean', 1);
+			my_error('ERROR: A variable is not activated to clean '.$var, 1);
 			return null;
 		}
 	}
