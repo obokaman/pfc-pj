@@ -18,7 +18,7 @@ Si queremos saber mas sobre las funciones que son llamadas, podemos ver una expl
 if ($f == "login") {
 	send( login( clean("nick", "string"),	clean("password", "string") ) );
 }
-else if($f="logout"){
+else if ($f=="logout"){
 	session_unset();
 }
 /*Función que nos inserta los nuevos usuarios en la base de datos*/
@@ -332,6 +332,7 @@ else if ($f == "getCircuitInfo") {
 
 /*La función devuelve información sobre un campeonato*/
 else if ($f == "getChampionshipCircuits") {	
+
 		send(
 			get_championship_circuits( clean("name", "string") )
 		);

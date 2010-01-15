@@ -23,7 +23,7 @@
 	function get_championship_circuits($name){
 	/*Pre: - */	
 		global $connection;
-		
+
 		$query = "SELECT c.name 
 						FROM circuit_championship cc, 
 								  circuit c, 
