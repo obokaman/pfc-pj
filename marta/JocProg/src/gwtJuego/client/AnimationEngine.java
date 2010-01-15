@@ -129,6 +129,7 @@ public class AnimationEngine {
     	                  load.setEnabled(true);
     	                  save.setEnabled(true);
     	                  change.setEnabled(true);
+    	                  if (animationPanel.getWidgetCount() == 2) animationPanel.remove(1);  //borrar widget coche
     				  }
     			  });
     	
@@ -157,14 +158,12 @@ public class AnimationEngine {
                 Animation animation = entries.next().getValue();
                 if (!paused && !stop && animation.animateOneFrame()) {
                     // This animation is completed so remove it.
-                	Window.alert("9");
                 	animation.afterLastFrame();
                 	entries.remove();
                 }
                 else if(stop) {
             		animation.afterLastFrame();
             		entries.remove();
-            		if (animationPanel.getWidgetCount() == 2) animationPanel.remove(1);  //borrar widget coche
             	}
             }
         } finally {

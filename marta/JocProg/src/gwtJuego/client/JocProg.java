@@ -76,6 +76,7 @@ public class JocProg implements EntryPoint {
 
 	private HorizontalSplitPanel correPanel = new HorizontalSplitPanel();
 	private AbsolutePanel imagePanel = new AbsolutePanel();
+	private AbsolutePanel progressAbsPanel = new AbsolutePanel();
 	private VerticalSplitPanel codiPanel = new VerticalSplitPanel();
 	private HorizontalPanel consolaPanel = new HorizontalPanel();
 	private HTMLPanel centerImagePanel;
@@ -105,7 +106,7 @@ public class JocProg implements EntryPoint {
 	private ListBox sizePagesDropBox = new ListBox(false);
 	private ListBox circuitsMultiBox = new ListBox(true);
 	private ListBox selectedMultiBox = new ListBox(true);
-	private FlexTable rankingFlexTable = new FlexTable();
+	private FlexTable rankingFlexTable = new FlexTable();   ///
 	private TextBox loginUserTextBox = new TextBox();
 	private PasswordTextBox loginPassword = new PasswordTextBox();
 	private TextBox regNickTextBox = new TextBox();
@@ -135,15 +136,13 @@ public class JocProg implements EntryPoint {
 	private SuggestBox suggestNickBox;
 	private ListBox addPlayersDropBox = new ListBox(false);
 	private Label addPlayersLabel = new Label();
-	private FlexTable invitationsFlexTable = new FlexTable();
+	private FlexTable invitationsFlexTable = new FlexTable();  //////
 
 	private Button loginButton = new Button("Entrar");
 	private Button logoutButton = new Button("Cerrar sesión");
 	private Button regButton = new Button("Enviar");
 	private Button changeButton = new Button("Modificar datos");
 	private Button saveChangeButton = new Button("Guardar cambios");
-	//private Button playButton = new Button("¡Corre!");
-	//private Button stopButton = new Button("¡Para!");
 	private PushButton playButton;
 	private PushButton stopButton;
 	
@@ -496,10 +495,11 @@ public class JocProg implements EntryPoint {
 	  Image rightProgressImg = new Image();
 	  leftProgressImg.setUrl(LOCAL_URL+"barra1.png");
 	  progressImg.setUrl(LOCAL_URL+"barra2.png");
+	  //HTMLPanel progressImg = new HTMLPanel("<div align='center'><img src='"+LOCAL_URL+"barra2.png' width='100%' height='100%'></div>");
 	  rightProgressImg.setUrl(LOCAL_URL+"barra3.png");
 	  Image pointerImg = new Image();
 	  pointerImg.setUrl(LOCAL_URL+"pointer.png");
-	  AbsolutePanel progressAbsPanel = new AbsolutePanel();
+	  progressAbsPanel.setSize("100%", "100%");
 	  progressAbsPanel.add(progressImg);
 	  progressAbsPanel.add(pointerImg,0,0);
 	  
@@ -508,23 +508,29 @@ public class JocProg implements EntryPoint {
 	  progressPanel.add(controlPauseButton); //1
 	  progressPanel.add(controlPlayButton); //2
 	  progressPanel.add(stopButton);  //3
-	  progressPanel.add(leftProgressImg);
-	  progressPanel.add(progressAbsPanel);
-	  progressPanel.add(rightProgressImg);
+	  
+	  
+	  HorizontalPanel barPanel = new HorizontalPanel();
+	  barPanel.add(leftProgressImg);
+	  barPanel.add(progressAbsPanel);
+	  barPanel.add(rightProgressImg);
 	  
 	  final HorizontalPanel buttonsPanel = new HorizontalPanel();
 	  buttonsPanel.setSpacing(5);
 	  final TextBox codeNameTextBox = new TextBox();
 	  buttonsPanel.add(codeNameTextBox);
-	  Button loadCodeButton = new Button("Cargar");
-	  buttonsPanel.add(loadCodeButton);
 	  Button saveCodeButton = new Button("Guardar");
 	  buttonsPanel.add(saveCodeButton);
+	  Button loadCodeButton = new Button("Cargar");
+	  buttonsPanel.add(loadCodeButton);
 	  Button changePlayModeButton = new Button("Cambiar juego");
 	  buttonsPanel.add(changePlayModeButton);
 	  
 	  HorizontalPanel controlHPanel = new HorizontalPanel();
 	  controlHPanel.add(progressPanel);
+	  controlHPanel.add(barPanel);
+	  controlHPanel.setCellWidth(barPanel,"100%");
+	  controlHPanel.setCellHorizontalAlignment(barPanel, HasHorizontalAlignment.ALIGN_LEFT);
 	  controlHPanel.add(buttonsPanel);
 	  controlHPanel.setCellWidth(buttonsPanel,"100%");
 	  controlHPanel.setCellHorizontalAlignment(buttonsPanel, HasHorizontalAlignment.ALIGN_RIGHT);
@@ -549,7 +555,7 @@ public class JocProg implements EntryPoint {
 				  public void onClick(ClickEvent event) {
 					  if(modeOn == CODE || modeOn == DEBUG){
 						  playButton.setEnabled(false);
-						  requestRun(inputTextArea.getText(), circuitOn, progressPanel,buttonsPanel);
+						  requestRun(inputTextArea.getText(), circuitOn, champOn, progressPanel,buttonsPanel);
 					  }
 				  }
 			  });
@@ -867,6 +873,12 @@ public class JocProg implements EntryPoint {
 	  // Create table for ranking data.
 	  rankingFlexTable.setText(0, 0, "Usuario");
 	  rankingFlexTable.setText(0, 1, "Tiempo");
+	  // Add styles to elements in the ranking list table.
+	  rankingFlexTable.getRowFormatter().addStyleName(0, "flexTableHeader");
+	  rankingFlexTable.addStyleName("flexTable");
+	  rankingFlexTable.getCellFormatter().addStyleName(0, 0, "rankingListColumn");
+	  rankingFlexTable.getCellFormatter().addStyleName(0, 1, "rankingListColumn");
+	  
 	  sizePagesDropBox.clear();
 	  for(int i=0;i<pageSizes.length;i++) { sizePagesDropBox.addItem(pageSizes[i]); }
 	  sizePagesDropBox.setEnabled(false);
@@ -951,6 +963,7 @@ public class JocProg implements EntryPoint {
 	  createInvitationsPanel();
   
 	  adminHPanel.setSize("100%","100%");
+	  adminHPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 	  adminStckPanel.setSize("205px","50%");
 	  ItemNewChamp = ChampsTree.addItem("Crear nuevo");
 	  ItemAddChamp = ChampsTree.addItem("Invitar a jugadores");
@@ -1027,18 +1040,18 @@ public class JocProg implements EntryPoint {
   private void createNewChampPanel(){
 	  
 	  VerticalPanel champNameVPanel = new VerticalPanel();
-	  champNameVPanel.setSize("100%","100%");
+	  
 	  Grid champNameGrid = new Grid(3,2);
-	  champNameGrid.setWidget(0,0,new HTML("Nombre: "));
+	  champNameGrid.setWidget(0,0,new HTML("Nombre del campeonato: "));
 	  champNameGrid.setWidget(0,1,champNameTextBox);
 	  champNameGrid.setWidget(1,0,new HTML("Fecha límite inscripciones: "));
 	  champDateBox.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("dd/MM/yyyy")));
 	  champNameGrid.setWidget(1,1,champDateBox);
 	  champNameVPanel.add(champNameGrid);
-	  champNameVPanel.setCellVerticalAlignment(champNameGrid,HasVerticalAlignment.ALIGN_MIDDLE);
 	  
 	  VerticalPanel champChooseVPanel = new VerticalPanel();
 	  champChooseVPanel.setSize("100%","100%");
+	  champChooseVPanel.setSpacing(5);
 	  champChooseVPanel.add(new HTML("Circuitos disponibles:"));
 	  Grid dispCircuitsGrid = new Grid(1,2);
 	  circuitsMultiBox.setSize("130px","200px");
@@ -1051,6 +1064,7 @@ public class JocProg implements EntryPoint {
 	  champChooseVPanel.add(new HTML("(para selección múltiple mantén pulsado 'Ctrl')"));
 	  
 	  VerticalPanel champAddVPanel = new VerticalPanel();
+	  champAddVPanel.setSpacing(5);
 	  champAddVPanel.setSize("100%","100%");
 	  champAddVPanel.add(new HTML("Circuitos seleccionados:"));
 	  Grid selectedCircuitsGrid = new Grid(1,2);
@@ -1061,20 +1075,19 @@ public class JocProg implements EntryPoint {
 	  CellFormatter selectedCircsCellFormatter = selectedCircuitsGrid.getCellFormatter();
 	  selectedCircsCellFormatter.setVerticalAlignment(0,1,HasVerticalAlignment.ALIGN_TOP);
 	  champAddVPanel.add(selectedCircuitsGrid);
-	  Button createChampButton = new Button("Crear campeonato");
-	  champAddVPanel.add(createChampButton);
-	  champAddVPanel.setCellVerticalAlignment(createChampButton,HasVerticalAlignment.ALIGN_BOTTOM);
-	  champAddVPanel.setCellHorizontalAlignment(createChampButton,HasHorizontalAlignment.ALIGN_RIGHT);
 	  
 	  HorizontalPanel newChampHPanel = new HorizontalPanel();
 	  newChampHPanel.setSize("100%","100%");
-	  newChampHPanel.add(champNameVPanel);
 	  newChampHPanel.add(champChooseVPanel);
 	  newChampHPanel.add(champAddVPanel);
-	  
+
 	  newChampVPanel.setSize("100%","100%");
-	  newChampVPanel.add(new HTML("Crear nuevo campeonato:"));
+	  newChampVPanel.setSpacing(20);
+	  newChampVPanel.add(champNameVPanel);
 	  newChampVPanel.add(newChampHPanel);
+	  Button createChampButton = new Button("Crear campeonato");
+	  newChampVPanel.add(createChampButton);
+	  newChampVPanel.setCellHorizontalAlignment(champNameVPanel, HasHorizontalAlignment.ALIGN_LEFT);
 
 	  
 	  addCircuitsButton.addClickHandler( 
@@ -1104,7 +1117,21 @@ public class JocProg implements EntryPoint {
 	  createChampButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  requestNewChampionship();
+					  Date today = new Date(); 
+					  if (champNameTextBox.getText().equals("")){
+						  Window.alert("Debes indicar un nombre para el circuito");
+					  } 
+					 else if (champDateBox.getValue() == null){
+						  Window.alert("Debes indicar una fecha correcta");
+					  }
+					  else if (champDateBox.getValue().before(today)){
+						  Window.alert("La fecha límite para las inscripciones debe ser posterior al día de creación");
+					  }
+					  else if (selectedMultiBox.getItemCount()==0){
+						  Window.alert("El nuevo campeonato debe constar de al menos un circuito");
+						  
+					  }
+					  else requestNewChampionship();
 				  }
 			  });
 
@@ -1112,20 +1139,24 @@ public class JocProg implements EntryPoint {
   
   private void createNewTeamPanel(){
 	  
-	  Grid newTeam = new Grid(2,2);
+	  Grid newTeam = new Grid(1,2);
 	  newTeam.setWidget(0,0,new HTML("Nombre: "));
 	  newTeam.setWidget(0,1,teamNameTextBox);
-	  Button createTeamButton = new Button("Crear equipo");
-	  newTeam.setWidget(1,1,createTeamButton);
 	  
-	  newTeamVPanel.setSize("100%","100%");
-	  newTeamVPanel.add(new HTML("¡Crea un nuevo equipo del que serás propietario!:"));
+	  Button createTeamButton = new Button("Crear equipo");
+
+	  newTeamVPanel.setSpacing(20);
+	  newTeamVPanel.add(new HTML("¡Crea un nuevo equipo del que serás propietario!"));
 	  newTeamVPanel.add(newTeam);
+	  newTeamVPanel.add(createTeamButton);
 	  
 	  createTeamButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  requestNewTeam();
+					  if (teamNameTextBox.getText().equals("")){
+						  Window.alert("Debes indicar un nombre para el equipo");
+					  }
+					  else requestNewTeam();
 				  }
 			  });
   }
@@ -1137,11 +1168,12 @@ public class JocProg implements EntryPoint {
 	  Button addPlayersButton = new Button("Invitar");
 	  
 	  HorizontalPanel addPlayersHPanel = new HorizontalPanel();
+	  addPlayersHPanel.setSpacing(5);
 	  addPlayersHPanel.add(addPlayersDropBox);
 	  addPlayersHPanel.add(suggestNickBox);
 	  addPlayersHPanel.add(addPlayersButton);
 	  
-	  addPlayersVPanel.setSize("100%","100%");
+	  addPlayersVPanel.setSpacing(20);
 	  addPlayersVPanel.add(addPlayersLabel);
 	  addPlayersVPanel.add(addPlayersHPanel);
 	  
@@ -1149,10 +1181,22 @@ public class JocProg implements EntryPoint {
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
 					  if(addPlayersDropBox.getValue(0).equals("CAMPEONATOS")){
-						  requestAddPlayerToChamp();
+						  if (addPlayersDropBox.getSelectedIndex() == 0){
+							  Window.alert("Debes elegir un campeonato");
+						  }
+						  else if (suggestNickBox.getText().equals("")){
+							  Window.alert("Debes introducir el nombre del usuario al que quieres invitar");
+						  }
+						  else requestAddPlayerToChamp();
 					  }
 					  else if(addPlayersDropBox.getValue(0).equals("EQUIPOS")){
-						  requestAddPlayerToTeam();
+						  if (addPlayersDropBox.getSelectedIndex() == 0){
+							  Window.alert("Debes elegir un equipo");
+						  }
+						  else if (suggestNickBox.getText().equals("")){
+							  Window.alert("Debes introducir el nombre del usuario al que quieres invitar");
+						  }
+						  else requestAddPlayerToTeam();
 					  }
 				  }
 			  });  
@@ -1161,15 +1205,19 @@ public class JocProg implements EntryPoint {
   private void createInvitationsPanel() {
 	  
 	  invitationsVPanel.setSize("100%", "100%");
-	  invitationsVPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+	  invitationsVPanel.setSpacing(20);
 	  
 	  invitationsFlexTable.setText(0, 0, "Invitación");
 	  invitationsFlexTable.setText(0, 1, "Respuesta");
+	  // Add styles to elements in the invitations list table.
+	  invitationsFlexTable.getRowFormatter().addStyleName(0, "flexTableHeader");
+	  invitationsFlexTable.addStyleName("flexTable");
+	  invitationsFlexTable.getCellFormatter().addStyleName(0, 0, "invitationListFirstColumn");
+	  invitationsFlexTable.getCellFormatter().addStyleName(0, 1, "invitationListSecondColumn");
 	  invitationsVPanel.add(invitationsFlexTable);
   }
   
   
-
   private void requestLogin() {
 	  
 	  if (loginUserTextBox.getText().equals("") || loginPassword.getText().equals("")){
@@ -1311,7 +1359,7 @@ public class JocProg implements EntryPoint {
 	  } 
   }
   
-  private void requestRun(String code, String circuit,final HorizontalPanel animationControllersPanel,final HorizontalPanel buttonsPanel) {
+  private void requestRun(String code, String circuit, String championship, final HorizontalPanel animationControllersPanel,final HorizontalPanel buttonsPanel) {
 	  
 	  String url = JSON_URL;
 	  url = URL.encode(url);
@@ -1323,13 +1371,13 @@ public class JocProg implements EntryPoint {
 		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
 		  URL.encodeComponent("run")+"&"+URL.encodeComponent("code")+"="+
 				  URL.encodeComponent(code)+"&"+URL.encodeComponent("circuit")+"="+
-				  URL.encodeComponent(circuit), new RequestCallback() {
+				  URL.encodeComponent(circuit)+"&"+URL.encodeComponent("championship")+"="+
+				  URL.encodeComponent(championship), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
 		      public void onResponseReceived(Request request, Response response) {
 		    	  if (200 == response.getStatusCode()) {
-		    		  Window.alert(response.getText());
 		    		  JSonData res = asJSonData(response.getText());
 		    		 
 		    		  int cod = res.getInt("code");
@@ -1379,7 +1427,7 @@ public class JocProg implements EntryPoint {
 					  JSonData res = asJSonData(response.getText());
 					  //int nbytes = res.getInt("read_bytes");
 					  String dat = res.get("data");
-					  engine.addAnimation(new CarAnimation(imagePanel,dat), animationControllersPanel, buttonsPanel, imagePanel, inputTextArea);
+					  engine.addAnimation(new CarAnimation(imagePanel,progressAbsPanel,dat), animationControllersPanel, buttonsPanel, imagePanel, inputTextArea);
 				  } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 		          }
@@ -1450,15 +1498,14 @@ public class JocProg implements EntryPoint {
 					  // Create a table to layout the content
 					  VerticalPanel dialogContents = new VerticalPanel();
 					  dialogContents.setSize("100%","100%");
-					  dialogContents.setSpacing(4);
+					  dialogContents.setSpacing(5);
 					  dialogBox.setWidget(dialogContents);
 
 					  // Add some text to the top of the dialog
-					  HTML details = new HTML("Elige el archivo que quieres cargar: ");
-					  dialogContents.add(details);
-					  dialogContents.setCellHorizontalAlignment(details, HasHorizontalAlignment.ALIGN_CENTER);
+					  //HTML details = new HTML("Elige el archivo que quieres cargar: ");
+					  dialogContents.add(new HTML("Elige el archivo que quieres cargar: "));
+					  //dialogContents.setCellHorizontalAlignment(details, HasHorizontalAlignment.ALIGN_CENTER);
 					  
-					  // Add an image to the dialog
 					  final ListBox savedCodesMultiBox = new ListBox(true);
 					  savedCodesMultiBox.setSize("170px","200px");
 					  
@@ -1472,16 +1519,20 @@ public class JocProg implements EntryPoint {
 					  
 					  dialogContents.add(savedCodesMultiBox);
 					  dialogContents.setCellHorizontalAlignment(savedCodesMultiBox, HasHorizontalAlignment.ALIGN_CENTER);
+					  dialogContents.setCellVerticalAlignment(savedCodesMultiBox, HasVerticalAlignment.ALIGN_MIDDLE);
 					  
+					  HorizontalPanel buttonsContents = new HorizontalPanel();
+					  buttonsContents.setSpacing(5);
 					  // Add a load button at the bottom of the dialog
 					  Button loadButton = new Button("Cargar",
 							  new ClickHandler() {
 						  		public void onClick(ClickEvent event) {
+						  			if(savedCodesMultiBox.getSelectedIndex() == -1) Window.alert("Debes elegir el archivo que deseas cargar");
 						  			requestLoadCode(savedCodesMultiBox.getItemText(savedCodesMultiBox.getSelectedIndex()));
 						  			dialogBox.hide();
 						  		}
 					  });
-					  dialogContents.add(loadButton);
+					  buttonsContents.add(loadButton);
 
 					  // Add a cancel button at the bottom of the dialog
 					  Button closeButton = new Button("Cancelar",
@@ -1490,9 +1541,9 @@ public class JocProg implements EntryPoint {
 						  			dialogBox.hide();
 						  		}
 					  });
-					  dialogContents.add(closeButton);
-					  dialogContents.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_RIGHT);
-					  dialogContents.setCellHorizontalAlignment(loadButton, HasHorizontalAlignment.ALIGN_RIGHT);
+					  buttonsContents.add(closeButton);
+					  dialogContents.add(buttonsContents);
+					  dialogContents.setCellHorizontalAlignment(buttonsContents, HasHorizontalAlignment.ALIGN_RIGHT);
 					  
 					  dialogBox.center();
 					  dialogBox.show();
@@ -1780,43 +1831,27 @@ public class JocProg implements EntryPoint {
   
   private void requestNewChampionship() {
 
-	  Date today = new Date(); 
-	  if (champNameTextBox.getText().equals("")){
-		  Window.alert("Debes indicar un nombre para el circuito");
-	  } 
-	 else if (champDateBox.getValue() == null){
-		  Window.alert("Debes indicar una fecha correcta");
-	  }
-	  else if (champDateBox.getValue().before(today)){
-		  Window.alert("Debes seleccionar una fecha límite para las inscripciones posterior al día de creación");
-	  }
-	  else if (selectedMultiBox.getItemCount()==0){
-		  Window.alert("El nuevo campeonato debe constar de al menos un circuito");
+	  String url = JSON_URL;
+	  url = URL.encode(url);
+	  String dateString = DateTimeFormat.getFormat("dd/MM/yyyy").format(champDateBox.getValue());
+	  String arrayCircs = selectedMultiBox.getItemText(0);
+	  for (int i=1;i<selectedMultiBox.getItemCount();i++) arrayCircs += "+"+selectedMultiBox.getItemText(i);
+	  //Send request to server and catch any errors.
+	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
 		  
-	  }
-	  else{
-		  String url = JSON_URL;
-		  url = URL.encode(url);
-		  String dateString = DateTimeFormat.getFormat("dd/MM/yyyy").format(champDateBox.getValue());
-		  String arrayCircs = selectedMultiBox.getItemText(0);
-		  for (int i=1;i<selectedMultiBox.getItemCount();i++) { arrayCircs += "+"+selectedMultiBox.getItemText(i); }
-		  //Send request to server and catch any errors.
-		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
-		  Window.alert(arrayCircs);
-		  
-		  try {
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		      URL.encodeComponent("newChampionship")+"&"+URL.encodeComponent("name")+"="+
-		      URL.encodeComponent(champNameTextBox.getText())+"&"+URL.encodeComponent("date_limit")+"="+
-		      URL.encodeComponent(dateString)+"&"+URL.encodeComponent("circuits")+"="+
-		      URL.encodeComponent(arrayCircs), new RequestCallback() {
-		        public void onError(Request request, Throwable exception) {
-		        	Window.alert("Couldn't retrieve JSON");
-		        }
-		        public void onResponseReceived(Request request, Response response) {
-		          if (200 == response.getStatusCode()) {
-		        	  int res = asInt(response.getText());
+	  try {
+		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+				  URL.encodeComponent("newChampionship")+"&"+URL.encodeComponent("name")+"="+
+				  URL.encodeComponent(champNameTextBox.getText())+"&"+URL.encodeComponent("date_limit")+"="+
+				  URL.encodeComponent(dateString)+"&"+URL.encodeComponent("circuits")+"="+
+				  URL.encodeComponent(arrayCircs), new RequestCallback() {
+			  public void onError(Request request, Throwable exception) {
+				  Window.alert("Couldn't retrieve JSON");
+			  }
+			  public void onResponseReceived(Request request, Response response) {
+				  if (200 == response.getStatusCode()) {
+					  int res = asInt(response.getText());
 		        	  if(res==1) Window.alert("El nombre de campeonato elegido ya existe");
 		        	  else if(res==2) Window.alert("Se ha producido un error. Por favor, inténtalo de nuevo");
 		        	  else if (res==0){
@@ -1824,41 +1859,37 @@ public class JocProg implements EntryPoint {
 		        		  champNameTextBox.setText("");
 		        		  champDateBox.setValue(null);
 		        		  circuitsMultiBox.clear();
-		        		  for (int i=0; i<circuitsList.size(); i++) { circuitsMultiBox.addItem(circuitsList.get(i).name); }
+		        		  for (int i=0; i<circuitsList.size(); i++) circuitsMultiBox.addItem(circuitsList.get(i).name);
 		        		  selectedMultiBox.clear();
 		        	  }
 		          } else {
-		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+		        	  Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 		          }
-		        }
-		      });
-		    } catch (RequestException e) {
-		    	Window.alert("Couldn't retrieve JSON");
-		    }
+			  }
+		  });
+	  } catch (RequestException e) {
+		  Window.alert("Couldn't retrieve JSON");
 	  }
   }
   
   private void requestNewTeam() {
-	  if (teamNameTextBox.getText().equals("")){
-		  Window.alert("Debes indicar un nombre para el equipo");
-	  }
-	  else{
-		  String url = JSON_URL;
-		  url = URL.encode(url);
-		  //Send request to server and catch any errors.
-		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  
+	  String url = JSON_URL;
+	  url = URL.encode(url);
+	  //Send request to server and catch any errors.
+	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
 
-		  try {
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		      URL.encodeComponent("newTeam")+"&"+URL.encodeComponent("name")+"="+
-		      URL.encodeComponent(teamNameTextBox.getText()), new RequestCallback() {
-		        public void onError(Request request, Throwable exception) {
-		        	Window.alert("Couldn't retrieve JSON");
-		        }
-		        public void onResponseReceived(Request request, Response response) {
-		          if (200 == response.getStatusCode()) {
-		        	  int res = asInt(response.getText());
+	  try {
+		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+				  URL.encodeComponent("newTeam")+"&"+URL.encodeComponent("name")+"="+
+				  URL.encodeComponent(teamNameTextBox.getText()), new RequestCallback() {
+			  public void onError(Request request, Throwable exception) {
+				  Window.alert("Couldn't retrieve JSON");
+			  }
+			  public void onResponseReceived(Request request, Response response) {
+				  if (200 == response.getStatusCode()) {
+					  int res = asInt(response.getText());
 		        	  if(res==1) Window.alert("El nombre de equipo elegido ya existe");
 		        	  else if(res==2) Window.alert("Se ha producido un error. Por favor, inténtalo de nuevo");
 		        	  else if (res==0){
@@ -1868,11 +1899,10 @@ public class JocProg implements EntryPoint {
 		          } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 		          }
-		        }
-		      });
-		    } catch (RequestException e) {
-		    	Window.alert("Couldn't retrieve JSON");
-		    }
+			  }
+		  });
+	  } catch (RequestException e) {
+		  Window.alert("Couldn't retrieve JSON");
 	  }
   }
   
@@ -1959,32 +1989,26 @@ public class JocProg implements EntryPoint {
 }
   
   private void requestAddPlayerToChamp() {
-	  if (addPlayersDropBox.getSelectedIndex() == 0){
-		  Window.alert("Debes elegir un campeonato");
-	  }
-	  else if (suggestNickBox.getText().equals("")){
-		  Window.alert("Debes introducir el nombre del usuario al que quieres invitar");
-	  }
-	  else{
-		  String url = JSON_URL;
-		  url = URL.encode(url);
-		  //Send request to server and catch any errors.
-		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
-		  String name = addPlayersDropBox.getValue(addPlayersDropBox.getSelectedIndex());
-		  String nick = suggestNickBox.getText();
 
-		  try {
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		      URL.encodeComponent("addPlayerToChampionship")+"&"+URL.encodeComponent("name")+"="+
-		      URL.encodeComponent(name)+"&"+URL.encodeComponent("nick")+"="+
-		      URL.encodeComponent(nick), new RequestCallback() {
-		        public void onError(Request request, Throwable exception) {
-		        	Window.alert("Couldn't retrieve JSON");
-		        }
-		        public void onResponseReceived(Request request, Response response) {
-		          if (200 == response.getStatusCode()) {
-		        	  int res = asInt(response.getText());
+	  String url = JSON_URL;
+	  url = URL.encode(url);
+	  //Send request to server and catch any errors.
+	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  String name = addPlayersDropBox.getValue(addPlayersDropBox.getSelectedIndex());
+	  String nick = suggestNickBox.getText();
+
+	  try {
+		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+				  URL.encodeComponent("addPlayerToChampionship")+"&"+URL.encodeComponent("name")+"="+
+				  URL.encodeComponent(name)+"&"+URL.encodeComponent("nick")+"="+
+				  URL.encodeComponent(nick), new RequestCallback() {
+			  public void onError(Request request, Throwable exception) {
+				  Window.alert("Couldn't retrieve JSON");
+			  }
+			  public void onResponseReceived(Request request, Response response) {
+				  if (200 == response.getStatusCode()) {
+					  int res = asInt(response.getText());
 		    		  String name = addPlayersDropBox.getValue(addPlayersDropBox.getSelectedIndex());
 		    		  String nick = suggestNickBox.getText();
 		        	  if(res==1) Window.alert("No se ha enviado la invitación porque el usuario "+nick+" ya había sido invitado al campeonato "+name);
@@ -1994,44 +2018,37 @@ public class JocProg implements EntryPoint {
 		        		  Window.alert("La invitación para el usuario "+nick+" al campeonato "+name+" se ha enviado con éxito");
 		        		  suggestNickBox.setText("");
 		        	  }
-		          } else {
+				  } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 		          }
-		        }
-		      });
-		    } catch (RequestException e) {
-		    	Window.alert("Couldn't retrieve JSON");
-		    }
+			  }
+		  });
+	  } catch (RequestException e) {
+		  Window.alert("Couldn't retrieve JSON");
 	  }
 }
 
   private void requestAddPlayerToTeam() {
-	  if (addPlayersDropBox.getSelectedIndex() == 0){
-		  Window.alert("Debes elegir un equipo");
-	  }
-	  else if (suggestNickBox.getText().equals("")){
-		  Window.alert("Debes introducir el nombre del usuario al que quieres invitar");
-	  }
-	  else{
-		  String url = JSON_URL;
-		  url = URL.encode(url);
-		  //Send request to server and catch any errors.
-		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
-		  String name = addPlayersDropBox.getValue(addPlayersDropBox.getSelectedIndex());
-		  String nick = suggestNickBox.getText();
 
-		  try {
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		      URL.encodeComponent("addPlayerToTeam")+"&"+URL.encodeComponent("name")+"="+
-		      URL.encodeComponent(name)+"&"+URL.encodeComponent("nick")+"="+
-		      URL.encodeComponent(nick), new RequestCallback() {
-		        public void onError(Request request, Throwable exception) {
-		        	Window.alert("Couldn't retrieve JSON");
-		        }
-		        public void onResponseReceived(Request request, Response response) {
-		          if (200 == response.getStatusCode()) {
-		        	  int res = asInt(response.getText());
+	  String url = JSON_URL;
+	  url = URL.encode(url);
+	  //Send request to server and catch any errors.
+	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  String name = addPlayersDropBox.getValue(addPlayersDropBox.getSelectedIndex());
+	  String nick = suggestNickBox.getText();
+
+	  try {
+		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+				  URL.encodeComponent("addPlayerToTeam")+"&"+URL.encodeComponent("name")+"="+
+				  URL.encodeComponent(name)+"&"+URL.encodeComponent("nick")+"="+
+				  URL.encodeComponent(nick), new RequestCallback() {
+			  public void onError(Request request, Throwable exception) {
+				  Window.alert("Couldn't retrieve JSON");
+			  }
+			  public void onResponseReceived(Request request, Response response) {
+				  if (200 == response.getStatusCode()) {
+					  int res = asInt(response.getText());
 		    		  String name = addPlayersDropBox.getValue(addPlayersDropBox.getSelectedIndex());
 		    		  String nick = suggestNickBox.getText();
 		        	  if(res==1) Window.alert("No se ha enviado la invitación porque el usuario "+nick+" ya había sido invitado al equipo "+name);
@@ -2042,13 +2059,12 @@ public class JocProg implements EntryPoint {
 		        		  suggestNickBox.setText("");
 		        	  }
 		          } else {
-		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+		        	  Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 		          }
-		        }
-		      });
-		    } catch (RequestException e) {
-		    	Window.alert("Couldn't retrieve JSON");
-		    }
+			  }
+		  });
+	  } catch (RequestException e) {
+		  Window.alert("Couldn't retrieve JSON");
 	  }
 }
   
@@ -2135,7 +2151,7 @@ public class JocProg implements EntryPoint {
 	  }  
   }
   
-  private void setInvitationAnswer(String what, String name, int answer) {
+  private void setInvitationAnswer(String what, String name, final int answer) {
 	  
 	  String url = JSON_URL;
 	  url = URL.encode(url);
@@ -2154,7 +2170,9 @@ public class JocProg implements EntryPoint {
 				  }
 			      public void onResponseReceived(Request request, Response response) {
 			    	  if (200 == response.getStatusCode()) {
-			    		  //retornara algo??
+			    		//retornara algo??
+			    		  if(answer == 1) Window.alert("La invitación al campeonato ha sido aceptada");
+			    		  if(answer == 0) Window.alert("La invitación al campeonato ha sido rechazada");
 			    		  requestNInvitations();
 			          } else {
 			        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
@@ -2173,7 +2191,9 @@ public class JocProg implements EntryPoint {
 			      public void onResponseReceived(Request request, Response response) {
 			    	  if (200 == response.getStatusCode()) {
 			    		  //retornara algo??
-				          requestNInvitations();  //hacerlo sin llamada, modificando string!!
+			    		  if(answer == 1) Window.alert("La invitación al equipo ha sido aceptada");
+			    		  if(answer == 0) Window.alert("La invitación al equipo ha sido rechazada");
+				          requestNInvitations();
 			          } else {
 			        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 			          }
@@ -2189,7 +2209,7 @@ public class JocProg implements EntryPoint {
   
   private void logout(){
 	  USER = ""; 
-	  
+	  playMode = NONE;
 	  multiPanel.remove(perfilVPanel);
 	  
 	  regNickTextBox.setText("");  regNameTextBox.setText("");
@@ -2345,8 +2365,6 @@ public class JocProg implements EntryPoint {
   private void updateTable(JsArray<RankingUserData> rankInfo) {
 	int rows = rankingFlexTable.getRowCount();
     for (int i=1; i<rows; i++) rankingFlexTable.removeRow(1);    
-	//rankingFlexTable.setText(0, 0, "Usuario");
-	//rankingFlexTable.setText(0, 1, "Tiempo");
     for (int i=0; i<rankInfo.length(); i++) updateTable(rankInfo.get(i));
   }
   
@@ -2366,6 +2384,8 @@ public class JocProg implements EntryPoint {
      // Populate the "Usuario" and "Tiempo" fields with new data.
      rankingFlexTable.setText(row, 0, info.getNick());
      rankingFlexTable.setText(row, 1, info.getTiempo());
+     rankingFlexTable.getCellFormatter().addStyleName(row, 0, "rankingListColumn");
+     rankingFlexTable.getCellFormatter().addStyleName(row, 1, "rankingListColumn");
   }
   
   private void updateTable(JSonData info, String what) { 
@@ -2387,6 +2407,7 @@ public class JocProg implements EntryPoint {
 	        invitationsFlexTable.removeRow(removedIndex + 1);
 	      }
 	    });
+	  
 	  Button denyInvitationButton = new Button("Rechazar");
 	  denyInvitationButton.addClickHandler(new ClickHandler() {
 		  public void onClick(ClickEvent event) {
@@ -2396,10 +2417,13 @@ public class JocProg implements EntryPoint {
 	        invitationsFlexTable.removeRow(removedIndex + 1);
 	      }
 	    });
+	  
 	  HorizontalPanel buttonsHPanel = new HorizontalPanel();
+	  buttonsHPanel.setSpacing(5);
 	  buttonsHPanel.add(acceptInvitationButton);
 	  buttonsHPanel.add(denyInvitationButton);
 	  invitationsFlexTable.setWidget(row, 1, buttonsHPanel);
+	  invitationsFlexTable.getCellFormatter().setHorizontalAlignment(row,1, HasHorizontalAlignment.ALIGN_CENTER);
   }
   
   
@@ -2413,10 +2437,6 @@ public class JocProg implements EntryPoint {
   private final native UserData asUserData(String json) /*-{
 	return eval('('+json+')');
   }-*/;
-  
- //private final native JSonArrayData asJSonArrayData(String json) /*-{
- //	return eval('('+json+')');
- // }-*/;
   
   private final native JsArray<JSonData> asJsArrayJSonData(String json) /*-{
   	return eval('('+json+')');

@@ -3,6 +3,15 @@ package gwtJuego.client;
 import java.util.ArrayList;
 
 import com.google.gwt.core.client.Duration;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Image;
@@ -31,9 +40,17 @@ public class CarAnimation implements Animation {
      */
     private static int nextField;
     /**
+     * Flag that indicates whether or not the pointer is being dragged.
+     */
+    private static boolean dragging;
+    /**
      * The panel containing the widget being moved
      */
     protected final AbsolutePanel panel;
+    /**
+     * The panel containing the animation progress bar
+     */
+    protected final AbsolutePanel progressPanel;
     /**
      * The trace the widget should follow.
      */
@@ -41,8 +58,11 @@ public class CarAnimation implements Animation {
     /**
      * The widget being moved.
      */
-    //protected final Widget widget;
     protected Widget widget;
+    /**
+     * The pointer being moved.
+     */
+    protected Widget pointer;
     /**
      * The widget index.
      */
@@ -50,12 +70,10 @@ public class CarAnimation implements Animation {
     /**
      * The final X position for the widget.
      */
-    //private final int targetX;
     private int targetX;
     /**
      * The final Y position for the widget.
      */
-    //private final int targetY;
     private int targetY;
     /**
      * The final degrees for the widget.
@@ -73,6 +91,18 @@ public class CarAnimation implements Animation {
      * Initial Y position for the widget.
      */
     private int initialY;
+    /**
+     * Initial X position for the pointer.
+     */
+    private int pointerIniX;
+    /**
+     * The final X position for the pointer.
+     */
+    private int pointerX;
+    /**
+     * Initial X position for the pointer while dragging.
+     */
+    private int dragStartX;
 
     /**
      * Create an animation
@@ -82,7 +112,7 @@ public class CarAnimation implements Animation {
      * @param targetX The final X position the widget will end up in.
      * @param targetY The final Y position the widget will end up in.
      */
-    public CarAnimation(AbsolutePanel panel, String trace) {
+    public CarAnimation(AbsolutePanel panel, AbsolutePanel progressAbsPanel, String tr) {
     	
     	if (carImages.size() == 0) {
 	    	for(int i=0; i<=360-frec; i=i+frec) {
@@ -91,8 +121,9 @@ public class CarAnimation implements Animation {
 	    		carImages.add(c);
 	    	}
     	}
-    	getTrace(trace);
+    	getTrace(tr);
     	this.panel = panel;
+    	this.progressPanel = progressAbsPanel;
     	int x = (int)Float.parseFloat(getNextTraceField());
     	int y = (int)Float.parseFloat(getNextTraceField());
     	this.targetAngle = Float.parseFloat(getNextTraceField());
@@ -100,8 +131,83 @@ public class CarAnimation implements Animation {
     	int which = (int)((carImages.size()*((targetAngle + Math.PI)/(2*Math.PI)))+0.5);
     	indexWidget = which%carImages.size();
     	this.widget = carImages.get(indexWidget);
+    	this.pointer = this.progressPanel.getWidget(1);
+    	pointerIniX = 0;
 
     	convertMeasures(x,y,"initial");
+    	
+    	Image point = (Image)this.progressPanel.getWidget(1);
+    	point.addMouseDownHandler(
+    			new MouseDownHandler(){
+    				public void onMouseDown(MouseDownEvent event){
+    					dragging = true;
+    					//coger posicion inicial
+    					dragStartX = event.getClientX() - progressPanel.getAbsoluteLeft();
+    				}
+    			});
+    	point.addMouseUpHandler(
+    			new MouseUpHandler(){
+    				public void onMouseUp(MouseUpEvent event){
+    					//coger posicion final
+    					pointerIniX = event.getClientX() - progressPanel.getAbsoluteLeft();
+    		    		pointerIniX = Math.max(0, pointerIniX);
+    		    		pointerIniX = Math.min(pointerIniX, progressPanel.getOffsetWidth()-pointer.getOffsetWidth());
+    					double wBar = (progressPanel.getOffsetWidth()/(double)trace.size());
+    					nextField = (int)(pointerIniX/wBar);
+    					nextField = (nextField/3)*3+2;
+    					nextField = Math.max(nextField, 5);  //primera posicion de trace donde hay coordenada x
+    					nextField = Math.min(nextField, trace.size()-6);
+    			    	
+    			    	int x = (int)Float.parseFloat(getNextTraceField());
+    			    	int y = (int)Float.parseFloat(getNextTraceField());
+    			    	targetAngle = Float.parseFloat(getNextTraceField());
+    			    	convertMeasures(x,y,"initial");
+    			    	
+    			    	x = (int)Float.parseFloat(getNextTraceField());
+    			    	y = (int)Float.parseFloat(getNextTraceField());
+    			        targetAngle = Float.parseFloat(getNextTraceField());
+    			    	convertMeasures(x,y,"target");
+    			    	
+    					dragging = false;
+    				}
+    			});
+    	point.addMouseMoveHandler(
+    			new MouseMoveHandler(){
+    				public void onMouseMove(MouseMoveEvent event){
+    					if(dragging){
+    						//coger posicion y poner widget
+    						int newX = Math.max(0, event.getClientX() - progressPanel.getAbsoluteLeft());
+    						newX = Math.min(newX, progressPanel.getOffsetWidth()-pointer.getOffsetWidth());
+    						progressPanel.setWidgetPosition(pointer, newX,0);
+    					}
+    				}
+    			});
+    	
+    	Image bar = (Image)this.progressPanel.getWidget(0);
+    	bar.addMouseUpHandler(
+    			new MouseUpHandler(){
+    				public void onMouseUp(MouseUpEvent event){
+    					//coger posicion final
+    					pointerIniX = event.getClientX() - progressPanel.getAbsoluteLeft();
+    		    		pointerIniX = Math.max(0, pointerIniX);
+    		    		pointerIniX = Math.min(pointerIniX, progressPanel.getOffsetWidth()-pointer.getOffsetWidth());
+    					double wBar = (progressPanel.getOffsetWidth()/(double)trace.size());
+    					nextField = (int)(pointerIniX/wBar);
+    					nextField = (nextField/3)*3+2;
+    					nextField = Math.max(nextField, 5);  //primera posicion de trace donde hay coordenada x
+    					nextField = Math.min(nextField, trace.size()-6);
+    			    	
+    			    	int x = (int)Float.parseFloat(getNextTraceField());
+    			    	int y = (int)Float.parseFloat(getNextTraceField());
+    			    	targetAngle = Float.parseFloat(getNextTraceField());
+    			    	convertMeasures(x,y,"initial");
+    			    	
+    			    	x = (int)Float.parseFloat(getNextTraceField());
+    			    	y = (int)Float.parseFloat(getNextTraceField());
+    			        targetAngle = Float.parseFloat(getNextTraceField());
+    			    	convertMeasures(x,y,"target");
+    				}
+    			});
     }
 
     /**
@@ -120,14 +226,17 @@ public class CarAnimation implements Animation {
      * @return true if the animation is finished already, false if animateOneFrame should be called at least once.
      */
     public boolean beforeFirstFrame() {
-        startTime = new Duration();
     	int x = (int)Float.parseFloat(getNextTraceField());
     	int y = (int)Float.parseFloat(getNextTraceField());
     	convertMeasures(x,y,"target");
         targetAngle = Float.parseFloat(getNextTraceField());
+
         panel.add(this.widget, this.initialX, this.initialY);
+        
+    	progressPanel.setWidgetPosition(pointer, 0,0);
         // Widget is already in correct location.
         //return initialX == targetX && initialY == targetY;
+    	startTime = new Duration();
         return false;
     }
 
@@ -137,10 +246,6 @@ public class CarAnimation implements Animation {
      * @return true if the animation is finished, false if it should execute again.
      */
     public boolean animateOneFrame() {
-        // Check that the widget is still in the panel.
-        /*if (panel.getWidgetIndex(widget) == -1) {
-            return true;
-        }*/
         // How much time has elapsed since the start of the animation.
         final int elapsed = startTime.elapsedMillis();
         if (elapsed == 0) {
@@ -160,6 +265,7 @@ public class CarAnimation implements Animation {
     protected boolean animateOneFrame(float fraction) {
         // Check whether we actually have to move the widget. This is here in case a subclass calls this method
         // and the widget is already in the correct location.
+    	if(dragging) return false;
         if (initialX != targetX || initialY != targetY) {
             if (fraction >= 1.0f) {
                 // If all the time has passed then move to final location.
@@ -172,10 +278,12 @@ public class CarAnimation implements Animation {
                     panel.add(widget, targetX, targetY);
             	}
             	else panel.setWidgetPosition(widget, targetX, targetY);
+            	progressPanel.setWidgetPosition(pointer, pointerX,0);
             	
                 if (nextField < trace.size()){
                 	initialX = targetX;
                 	initialY = targetY;
+                	pointerIniX = pointerX;
                 	int x = (int)Float.parseFloat(getNextTraceField());
                 	int y = (int)Float.parseFloat(getNextTraceField());
                 	convertMeasures(x,y,"target");
@@ -189,12 +297,15 @@ public class CarAnimation implements Animation {
                 int x = Math.round(initialX + ((targetX - initialX) * fraction));
                 int y = Math.round(initialY + ((targetY - initialY) * fraction));
                 panel.setWidgetPosition(widget, x, y);
+                x = Math.round(pointerIniX + ((pointerX - pointerIniX) * fraction));
+                progressPanel.setWidgetPosition(pointer, x,0);
                 return false;
             }
         }
         else if (trace.size()>0) {
         	initialX = targetX;
         	initialY = targetY;
+        	pointerIniX = pointerX;
         	int x = (int)Float.parseFloat(getNextTraceField());
         	int y = (int)Float.parseFloat(getNextTraceField());
         	convertMeasures(x,y,"target");
@@ -212,6 +323,7 @@ public class CarAnimation implements Animation {
      */
     public void afterLastFrame() {
         // Do nothing here.
+    	progressPanel.setWidgetPosition(pointer, 0,0);
     }
     
     private void getTrace(String t) {
@@ -241,6 +353,7 @@ public class CarAnimation implements Animation {
     	if(w > h) newX = newX + (float)((w-h)/2);
     	newX = newX - (widgtH/2);
     	newY = newY - (widgtH/2);
+    	
     	if(what.equals("initial")){
     		this.initialX = (int)newX;
     		this.initialY = (int)newY;
@@ -248,6 +361,10 @@ public class CarAnimation implements Animation {
     	else if(what.equals("target")){
     		this.targetX = (int)newX;
     		this.targetY = (int)newY;
+    		double wBar = (this.progressPanel.getOffsetWidth()/(double)trace.size());
+    		pointerX = (int)(wBar*nextField);
+    		pointerX = Math.max(0, pointerX);
+    		pointerX = Math.min(pointerX, progressPanel.getOffsetWidth()-pointer.getOffsetWidth());
     	}
     }
 }
