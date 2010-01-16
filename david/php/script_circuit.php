@@ -32,4 +32,6 @@
 		if( !create_circuit( $name_circuit[0], $short_name, 1, 3, null, $dimension[0], $dimension[1]) )  echo "ERROR: No se ha podido insertar el circuto\n";
 		else echo "Se ha insertado correctamente el circuito\n";
 	}else echo "ERROR: El circuito insertado ya existe";
+	
+	close_connection($connection);
 ?>

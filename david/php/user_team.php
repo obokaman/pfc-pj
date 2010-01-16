@@ -26,7 +26,7 @@
 	/*Pre: - */
 		global $connection;
 		
-		$query =  "SELECT id_team FROM user_team WHERE id_user = '$id'";
+		$query =  "SELECT id_team FROM user_team WHERE id_user = '$id' AND active = 1";
 		$result_query = mysql_query($query, $connection) or  my_error('GET_TEAMS_OF_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
 		return(extract_rows($result_query)); 
@@ -41,7 +41,7 @@
 	/*Pre: - */
 		global $connection;
 		
-		$query =  "SELECT id_user FROM user_team WHERE id_team = '$id'";
+		$query =  "SELECT id_user FROM user_team WHERE id_team = '$id' AND active = 1";
 		$result_query = mysql_query($query, $connection) or  my_error('GET_USERS_OF_TEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		return(extract_rows($result_query)); 		
@@ -109,7 +109,7 @@ $result_query = mysql_query($query, $connection) or my_error('GET_STATUS-> '.mys
 			- active: Entero que representa el valor del estado del usuario respecto al equipo
 	*/
 	function set_user_team_status($id_user, $id_team, $active){
-	/*Pre: Los identificadores deben existir y no ser nulos, active contiene los valores 0 o 1 */
+	/*Pre: Los identificadores deben existir y no ser nulos, active contiene los valores 0 o 1 y  la invitacion esta inactiva */
 		global $connection;
 		
 		$query = "UPDATE user_team SET active='$active' WHERE id_user='$id_user' AND id_team='$id_team'";		

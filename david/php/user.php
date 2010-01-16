@@ -17,8 +17,8 @@
 		
 		/*Creamos la clave de activación del usuario*/
 		$key_act = make_activationkey();
-	    $query = "INSERT INTO user ( nick, name, surname1, surname2, email_user, city, school, email_school, type_user, pass, activation_key)
-						VALUES ('$nick',' $name',' $surname1',' $surname2',' $email_user',' $city',' $school',' $email_school','alumno','$pass', '$key_ac')";//<--- ACABAR DE RETOCAR LA QUERY CON EL TIPO DE ALUMNO
+	    $query = "INSERT INTO user ( nick, name, surname1, surname2, email_user, city, school, email_school, type_user, pass, activation_key, date_insertion)
+						VALUES ('$nick',' $name',' $surname1',' $surname2',' $email_user',' $city',' $school',' $email_school','alumno','$pass', '$key_ac', now())";//<--- ACABAR DE RETOCAR LA QUERY CON EL TIPO DE ALUMNO
 		if (!mysql_query($query, $connection)) {
 			if (exist_user_nick($nick)) return 1;
 			else{			

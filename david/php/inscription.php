@@ -26,7 +26,7 @@
 	/*Pre: El identificador del usuario no es nulo y debe de existir */
 		global $connection;
 		
-		$query =  "SELECT id_champ FROM inscription WHERE id_user = '$id'";
+		$query =  "SELECT id_champ FROM inscription WHERE id_user = '$id' AND active=1";
 		$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPS_OF_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
 		return(extract_row($result_query));
@@ -41,7 +41,7 @@
 	/*Pre: El identificador del campeonato debe existir*/
 		global $connection;
 		
-		$query =  "SELECT id_user FROM inscription WHERE id_champ = '$id'";
+		$query =  "SELECT id_user FROM inscription WHERE id_champ = '$id' AND active=1";
 		$result_query = mysql_query($query, $connection) or my_error('GET_USERS_OF_CHAMP-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
 		return(extract_row($result_query));
@@ -73,7 +73,7 @@
 	/*Pre: - */
 		global $connection;
 		
-		$query = " SELECT COUNT(*) AS num FROM inscription i WHERE i.id_user = '$id_user' AND i.active = 0";
+		$query = " SELECT COUNT(*) AS num FROM inscription i, championship c WHERE i.id_user = '$id_user' AND i.active = 0 AND c.id_champ = i.id_champ AND c.data_limit >= now()";
 		$result_query = mysql_query($query, $connection) or my_error('GET_NUM_INSCRIPTIONS_PENDENTS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		return( extract_row($result_query)->num );
@@ -95,7 +95,8 @@
 														championship c
 											WHERE i.id_user = '$id_user_session'
 											AND i.active = 0
-											AND c.id_champ = i.id_champ) a";					
+											AND c.id_champ = i.id_champ
+											AND c.data_limit >= now()) a";					
 				$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPIONSHIPS_INVITED-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 				
 				return extract_rows( $result_query );
@@ -110,7 +111,7 @@
 			- active: Entero con el nuevo valor del estado de la inscripcion
 	*/
 	function set_inscription_status($id_user, $id_champ, $active){
-	/*Pre: Los identificadores deben existir */
+	/*Pre: Los identificadores deben existir y la invitación no ha pasado la fecha limite para inscribirse del campeonato*/
 		global $connection;
 		
 		$query = "UPDATE inscription SET active='$active' WHERE id_user='$id_user' AND id_champ='$id_champ'";		

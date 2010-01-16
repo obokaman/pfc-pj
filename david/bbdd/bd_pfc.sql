@@ -16,6 +16,7 @@ CREATE TABLE user(
 	type_user	varchar(20) NOT NULL,
 	pass		varchar(20),
 	activated 	bool	    DEFAULT false,
+	date_insertion	date NOT NULL,
 	activation_key  varchar(20),
 
 	PRIMARY KEY (id_user),
@@ -118,7 +119,7 @@ CREATE TABLE game (
 
   PRIMARY KEY (id_game),
 
-  FOREIGN KEY (id_user)  REFERENCES user (id_user),
+  FOREIGN KEY (id_user)  REFERENCES user (id_user) ON DELETE CASCADE,
   FOREIGN KEY (id_circuit, id_champ) REFERENCES circuit_championship (id_circuit, id_champ)
 
 )
@@ -153,16 +154,16 @@ ENGINE = InnoDB
 CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 INSERT INTO user (nick, name, surname1, surname2, email_user,
-city, school, email_school, type_user, pass, activated) VALUES ('anonymous', 'anonymous', 'anonymous', null , 'anonymous@gmail.com', 'Blanes', 'Colegio1', 'cole@colegio1.com', 'alumno', '3434343434', 1);
+city, school, email_school, type_user, pass, activated, date_insertion) VALUES ('anonymous', 'anonymous', 'anonymous', null , 'anonymous@gmail.com', 'Blanes', 'Colegio1', 'cole@colegio1.com', 'alumno', '3434343434', 1, now());
 
 INSERT INTO user (nick, name, surname1, surname2, email_user,
-city, school, email_school, type_user, pass) VALUES ('dgb', 'David', 'Garcia', 'Bautista', 'dvdgarcia.83@gmail.com', 'Blanes', 'Colegio1', 'cole@colegio1.com', 'alumno', '123');
+city, school, email_school, type_user, pass, date_insertion) VALUES ('dgb', 'David', 'Garcia', 'Bautista', 'dvdgarcia.83@gmail.com', 'Blanes', 'Colegio1', 'cole@colegio1.com', 'alumno', '123', '2008-1-1');
 
 INSERT INTO user (nick, name, surname1, surname2, email_user,
-city, school, email_school, type_user, pass, activated) VALUES ('asd', 'Mari', 'Juana', 'Rica', 'mjuana@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'alumno', '123', 1);
+city, school, email_school, type_user, pass, activated, date_insertion) VALUES ('asd', 'Mari', 'Juana', 'Rica', 'mjuana@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'alumno', '123', 1, now());
 
 INSERT INTO user (nick, name, surname1, surname2, email_user,
-city, school, email_school, type_user, pass, activated) VALUES ('qwe', 'Omer', 'Jimenez', 'algo', 'omer.jimenez@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'tutor', '123', 1);
+city, school, email_school, type_user, pass, activated, date_insertion) VALUES ('qwe', 'Omer', 'Jimenez', 'algo', 'omer.jimenez@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'tutor', '123', 1, now());
 
 INSERT INTO team (name, id_founded) VALUES ('Escuderia1', 3);
 
@@ -194,9 +195,9 @@ INSERT INTO circuit (name, short_name, level, n_laps, time, width, height) VALUE
 
 INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato1', '2009-01-31', 3);
 
-INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato2', '2010-01-31', 3);
+INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato2', '2011-01-31', 3);
 
-INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato3', '2010-01-31', 3);
+INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato3', '2011-01-31', 3);
 
 INSERT INTO inscription (id_user, id_champ, active) VALUES (1, 1, 1);
 
@@ -206,9 +207,9 @@ INSERT INTO inscription (id_user, id_champ, active) VALUES (2, 2, 1);
 
 INSERT INTO inscription (id_user, id_champ, active) VALUES (2, 3, 0);
 
-INSERT INTO inscription (id_user, id_champ, active) VALUES (3, 1, 1);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (3, 1, 0);
 
-INSERT INTO inscription (id_user, id_champ, active) VALUES (3, 2, 1);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (3, 2, 0);
 
 INSERT INTO inscription (id_user, id_champ, active) VALUES (3, 3, 1);
 
