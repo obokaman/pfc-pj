@@ -12,6 +12,13 @@ body {
   padding: 10px;
 }
 
+/* login form border */
+.loginForm {
+  border: 2px solid #2062B8;
+  padding: 2px;
+  margin-bottom:6px;
+}
+
 /* flex table header row */
 .flexTableHeader {
   background-color: #2062B8;

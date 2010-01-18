@@ -74,6 +74,7 @@ public class JocProg implements EntryPoint {
 	
 	private AnimationEngine engine = new AnimationEngine();
 
+	private TabPanel mainPanel = new TabPanel();
 	private HorizontalSplitPanel correPanel = new HorizontalSplitPanel();
 	private AbsolutePanel imagePanel = new AbsolutePanel();
 	private AbsolutePanel progressAbsPanel = new AbsolutePanel();
@@ -81,7 +82,6 @@ public class JocProg implements EntryPoint {
 	private HorizontalPanel consolaPanel = new HorizontalPanel();
 	private HTMLPanel centerImagePanel;
 	private DialogBox modeDialogBox = new DialogBox();
-	//private VerticalPanel popupVPanel = new VerticalPanel();
 	private VerticalPanel rankingVPanel = new VerticalPanel();
 	private HorizontalPanel rankingHPanel = new HorizontalPanel();
 	private HorizontalPanel ranking2HPanel = new HorizontalPanel();
@@ -106,7 +106,7 @@ public class JocProg implements EntryPoint {
 	private ListBox sizePagesDropBox = new ListBox(false);
 	private ListBox circuitsMultiBox = new ListBox(true);
 	private ListBox selectedMultiBox = new ListBox(true);
-	private FlexTable rankingFlexTable = new FlexTable();   ///
+	private FlexTable rankingFlexTable = new FlexTable();
 	private TextBox loginUserTextBox = new TextBox();
 	private PasswordTextBox loginPassword = new PasswordTextBox();
 	private TextBox regNickTextBox = new TextBox();
@@ -120,6 +120,8 @@ public class JocProg implements EntryPoint {
 	private PasswordTextBox regPassword = new PasswordTextBox();
 	private PasswordTextBox regNewPassword = new PasswordTextBox();
 	private PasswordTextBox regConfirmPassword = new PasswordTextBox();
+	private Label newPswdLabel = new Label("Nueva contraseña");
+	private Label confirmPswdLabel = new Label("Confirmar contraseña");
 	
 	private TextBox champNameTextBox = new TextBox();
 	private TextBox teamNameTextBox = new TextBox();
@@ -136,7 +138,7 @@ public class JocProg implements EntryPoint {
 	private SuggestBox suggestNickBox;
 	private ListBox addPlayersDropBox = new ListBox(false);
 	private Label addPlayersLabel = new Label();
-	private FlexTable invitationsFlexTable = new FlexTable();  //////
+	private FlexTable invitationsFlexTable = new FlexTable();
 
 	private Button loginButton = new Button("Entrar");
 	private Button logoutButton = new Button("Cerrar sesión");
@@ -192,15 +194,15 @@ public class JocProg implements EntryPoint {
 
 	  requestCircuits();
 	  createLoginPanel();
+	  createAdminPanel();
 	  multiPanel.setSize("100%","100%");
-	  if(USER=="") multiPanel.add(loginVPanel);
+	  if(USER.equals("")) multiPanel.add(loginVPanel);
 	  else{
 		  createPerfilPanel();
-		  multiPanel.add(perfilVPanel);
+		  multiPanel.add(adminHPanel);
 	  }
 	  createCorrePanel();
 	  createRankingPanel();
-	  createAdminPanel();
 	  createPopupPanel();
 
 	    
@@ -237,15 +239,16 @@ public class JocProg implements EntryPoint {
 
 
 	  //Assemble Main panel.
-	  TabPanel mainPanel = new TabPanel();
+	  //TabPanel mainPanel = new TabPanel();
+
 	  //mainPanel.setAnimationEnabled(true);
-	  mainPanel.add(multiPanel,"Login/User");
+	  mainPanel.add(multiPanel,"Inicio");
 	  mainPanel.add(codiPanel,"Corre");
 	  mainPanel.add(rankingVPanel,"Ranking");
 	  mainPanel.add(new HTML("Help Tab"),"Help");
-	  mainPanel.add(adminHPanel,"Administración");
+	  //mainPanel.add(adminHPanel,"Administración");
 	  mainPanel.selectTab(0);
-		  
+	  
 	  mainPanel.setSize("100%","100%");
 	  mainPanel.getDeckPanel().setHeight("100%");
 	  mainPanel.addTabListener(new TabListener() {
@@ -253,6 +256,9 @@ public class JocProg implements EntryPoint {
 			  return true;
 		  } 
 		  public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
+			  if(tabIndex==0 && !USER.equals("")){ 
+				  requestNInvitations();
+			  }
 			  if(tabIndex==1){
 				  switch (modeOn){
 				  	case CODE:
@@ -289,9 +295,6 @@ public class JocProg implements EntryPoint {
 				  int rows = rankingFlexTable.getRowCount();
 				  for (int i=1; i<rows; i++) rankingFlexTable.removeRow(1); 
 			  }
-			  else if(tabIndex==4){ 
-				  requestNInvitations();
-			  }
 		  }
 	  });
 	  
@@ -301,62 +304,56 @@ public class JocProg implements EntryPoint {
   
   
   private void createLoginPanel(){
-		
-	  Grid loginLayout = new Grid(4, 2);
-	  loginLayout.setCellSpacing(5);
-	  CellFormatter loginCellFormatter = loginLayout.getCellFormatter();
-	
+			
 	  // Add a title to the form
 	  loginVPanel.clear();
-	  Label loginLabel = new Label("Identifícate para acceder a tu cuenta:");
-	  loginVPanel.add(loginLabel);
-	  loginVPanel.setCellVerticalAlignment(loginLabel,HasVerticalAlignment.ALIGN_BOTTOM);
-	  
-	  // Add login form
-	  loginLayout.setHTML(1, 0, "Usuario: ");
-	  loginLayout.setWidget(1, 1, loginUserTextBox);
-	  loginLayout.setHTML(2, 0, "Contraseña: ");
-	  loginLayout.setWidget(2, 1, loginPassword);
-	  loginLayout.setWidget(3, 1, loginButton);
-	  loginCellFormatter.setHorizontalAlignment(3,1,HasHorizontalAlignment.ALIGN_RIGHT);
 	  loginVPanel.setSize("100%", "100%");
-	  loginVPanel.add(loginLayout);
-	  loginVPanel.setCellHeight(loginLayout, "135px");
-	  loginVPanel.setCellVerticalAlignment(loginLayout,HasVerticalAlignment.ALIGN_TOP);
+	  loginVPanel.setSpacing(10);
+	  
+	  VerticalPanel loginFormPanel = new VerticalPanel();
+	  loginFormPanel.setSpacing(15);
+	  Label loginLabel = new Label("Identifícate para acceder a tu cuenta:");
+	  Grid loginLayout = new Grid(2, 2);
+	  loginLayout.setCellSpacing(10);
+	  // Add login form
+	  loginLayout.setHTML(0, 0, "Usuario: ");
+	  loginLayout.setWidget(0, 1, loginUserTextBox);
+	  loginLayout.setHTML(1, 0, "Contraseña: ");
+	  loginLayout.setWidget(1, 1, loginPassword);
+	  loginFormPanel.add(loginLabel);
+	  loginFormPanel.add(loginLayout);
+	  loginFormPanel.add(loginButton);
+	  loginFormPanel.setCellHorizontalAlignment(loginButton, HasHorizontalAlignment.ALIGN_CENTER);
+	  loginFormPanel.addStyleName("loginForm");
 	  
 	  // Create register form
-	  Grid regOptions = new Grid(11, 2);
-	  regOptions.setCellSpacing(6);
-	  regOptions.setHTML(0, 0, "Usuario: ");
-	  regOptions.setWidget(0, 1, regNickTextBox);
-	  regOptions.setHTML(1, 0, "Name: ");
-	  regOptions.setWidget(1, 1, regNameTextBox);
-	  regOptions.setHTML(2, 0, "Primer apellido: ");
-	  regOptions.setWidget(2, 1, regSurname1TextBox);
-	  regOptions.setHTML(3, 0, "Segundo apellido: ");
-	  regOptions.setWidget(3, 1, regSurname2TextBox);
-	  regOptions.setHTML(5, 0, "Ciudad: ");
-	  regOptions.setWidget(5, 1, regCityTextBox);
-	  regOptions.setHTML(4, 0, "Email: ");
-	  regOptions.setWidget(4, 1, regEmailUserTextBox);
-	  regOptions.setHTML(6, 0, "Escuela: ");
-	  regOptions.setWidget(6, 1, regSchoolTextBox);
-	  regOptions.setHTML(7, 0, "Email de la escuela: ");
-	  regOptions.setWidget(7, 1, regEmailSchoolTextBox);
-	  regOptions.setHTML(8, 0, "Contraseña: ");
-	  regOptions.setWidget(8, 1, regPassword);
-	  regOptions.setHTML(9, 0, "Confirmar contraseña: ");
-	  regOptions.setWidget(9, 1, regConfirmPassword);
-	  regOptions.setWidget(10, 1, regButton);
+	  Grid regOptions = new Grid(6, 3);
+	  regOptions.setWidget(0, 0, addInVerticalPanel(new Label("Usuario:"), regNickTextBox));
+	  regOptions.setWidget(1, 0, addInVerticalPanel(new Label("Nombre:"), regNameTextBox));
+	  regOptions.setWidget(1, 1, addInVerticalPanel(new Label("Primer apellido:"), regSurname1TextBox));
+	  regOptions.setWidget(1, 2, addInVerticalPanel(new Label("Segundo apellido:"), regSurname2TextBox));
+	  regOptions.setWidget(2, 0, addInVerticalPanel(new Label("Email:"), regEmailUserTextBox));
+	  regOptions.setWidget(2, 1, addInVerticalPanel(new Label("Ciudad:"), regCityTextBox));
+	  regOptions.setWidget(3, 0, addInVerticalPanel(new Label("Escuela:"), regSchoolTextBox));
+	  regOptions.setWidget(3, 1, addInVerticalPanel(new Label("Email de la escuela:"), regEmailSchoolTextBox));
+	  regOptions.setWidget(4, 0, addInVerticalPanel(new Label("Contraseña:"), regPassword));
+	  regOptions.setWidget(4, 1, addInVerticalPanel(new Label("Confirmar contraseña:"), regConfirmPassword));
+	  regOptions.setWidget(5, 1, regButton);
 	  CellFormatter regOpsCellFormatter = regOptions.getCellFormatter();
-	  regOpsCellFormatter.setHorizontalAlignment(10,1,HasHorizontalAlignment.ALIGN_RIGHT);
-	  
+	  regOpsCellFormatter.setHeight(5, 1,"40px");
+	  regOpsCellFormatter.setVerticalAlignment(5,1,HasVerticalAlignment.ALIGN_BOTTOM);
+	  regOpsCellFormatter.setHorizontalAlignment(5,1,HasHorizontalAlignment.ALIGN_CENTER);
+	 
 	  // Add register form in a disclosure panel
 	  registerDisclosure.setAnimationEnabled(true);
 	  registerDisclosure.setContent(regOptions);
+	  
 	  loginVPanel.add(registerDisclosure);
+	  loginVPanel.add(loginFormPanel);
+
+	  loginVPanel.setCellVerticalAlignment(loginFormPanel,HasVerticalAlignment.ALIGN_TOP);
 	  loginVPanel.setCellVerticalAlignment(registerDisclosure,HasVerticalAlignment.ALIGN_TOP);
-	  //loginVPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+	  loginVPanel.setCellHorizontalAlignment(loginFormPanel,HasHorizontalAlignment.ALIGN_CENTER);
   }
   
   private void createPerfilPanel(){
@@ -379,67 +376,73 @@ public class JocProg implements EntryPoint {
 		    		  UserData res = asUserData(response.getText());
 		    		  
 		    		  perfilVPanel.clear();
-		    		  perfilVPanel.add(logoutButton);
 
-		    		  Grid perfilInfo = new Grid(8,4);
-		    		  perfilInfo.setCellSpacing(6);
-		    		  perfilInfo.setHTML(0, 0, "Usuario: ");
+		    		  Grid perfilInfo = new Grid(5,3);
+		    		  perfilInfo.setCellSpacing(5);
+		    		  
 		    		  regNickTextBox.setText(res.get("nick"));
 		    		  regNickTextBox.setEnabled(false);
-		    		  perfilInfo.setWidget(0, 1, regNickTextBox);
-		    		  perfilInfo.setHTML(1, 0, "Name: ");
+		    		  perfilInfo.setWidget(0, 0, addInVerticalPanel(new Label("Usuario:"), regNickTextBox));
+		    		  
 		    		  regNameTextBox.setText(res.getName());
 		    		  regNameTextBox.setEnabled(false);
-		    		  perfilInfo.setWidget(1, 1, regNameTextBox);
-		    		  perfilInfo.setHTML(2, 0, "Primer apellido: ");
+		    		  perfilInfo.setWidget(1, 0, addInVerticalPanel(new Label("Nombre:"), regNameTextBox));
+		    		  
 		    		  regSurname1TextBox.setText(res.getSurname1());
 		    		  regSurname1TextBox.setEnabled(false);
-		    		  perfilInfo.setWidget(2, 1, regSurname1TextBox);
-		    		  perfilInfo.setHTML(2, 2, "Segundo apellido: ");
+		    		  perfilInfo.setWidget(1, 1, addInVerticalPanel(new Label("Primer apellido:"), regSurname1TextBox));
+
 		    		  regSurname2TextBox.setText(res.getSurname2());
 		    		  regSurname2TextBox.setEnabled(false);
-		    		  perfilInfo.setWidget(2, 3, regSurname2TextBox);
-		    		  perfilInfo.setHTML(3, 0, "Ciudad: ");
-		    		  regCityTextBox.setText(res.getCity());
-		    		  regCityTextBox.setEnabled(false);
-		    		  perfilInfo.setWidget(3, 1, regCityTextBox);
-		    		  perfilInfo.setHTML(3, 2, "Email: ");
+		    		  perfilInfo.setWidget(1, 2, addInVerticalPanel(new Label("Segundo apellido:"), regSurname2TextBox));
+		    		  
 		    		  regEmailUserTextBox.setText(res.getEmailUser());
 		    		  regEmailUserTextBox.setEnabled(false);
-		    		  perfilInfo.setWidget(3, 3, regEmailUserTextBox);
-		    		  perfilInfo.setHTML(5, 0, "Escuela: ");
+		    		  perfilInfo.setWidget(2, 0, addInVerticalPanel(new Label("Email:"), regEmailUserTextBox));
+
+		    		  regCityTextBox.setText(res.getCity());
+		    		  regCityTextBox.setEnabled(false);
+		    		  perfilInfo.setWidget(2, 1, addInVerticalPanel(new Label("Ciudad:"), regCityTextBox));
+		    		  
 		    		  regSchoolTextBox.setText(res.getSchool());
 		    		  regSchoolTextBox.setEnabled(false);
-		    		  perfilInfo.setWidget(5, 1, regSchoolTextBox);
-		    		  perfilInfo.setHTML(5, 2, "Email de la escuela: ");
+		    		  perfilInfo.setWidget(3, 0, addInVerticalPanel(new Label("Escuela:"), regSchoolTextBox));
+		    		  
 		    		  regEmailSchoolTextBox.setText(res.getEmailSchool());
 		    		  regEmailSchoolTextBox.setEnabled(false);
-		    		  perfilInfo.setWidget(5, 3, regEmailSchoolTextBox);
-		    		  perfilInfo.setHTML(6, 0, "Contraseña: ");
+		    		  perfilInfo.setWidget(3, 1, addInVerticalPanel(new Label("Email de la escuela:"), regEmailSchoolTextBox));
+		    		  
 		    		  regPassword.setText("password");
 		    		  regPassword.setEnabled(false);
-		    		  perfilInfo.setWidget(6, 1, regPassword);
-		    		  perfilInfo.setHTML(7, 0, "Nueva contraseña");
+		    		  perfilInfo.setWidget(4, 0, addInVerticalPanel(new Label("Contraseña:"), regPassword));
+		    		  
+		    		  newPswdLabel.setVisible(false);
 		    		  regNewPassword.setText("");
 		    		  regNewPassword.setEnabled(false);
 		    		  regNewPassword.setVisible(false);
-		    		  perfilInfo.setWidget(7, 1, regNewPassword);
-		    		  perfilInfo.setHTML(7, 2, "Confirmar contraseña: ");
+		    		  perfilInfo.setWidget(4, 1, addInVerticalPanel(newPswdLabel, regNewPassword));
+		    		  
+		    		  confirmPswdLabel.setVisible(false);
 		    		  regConfirmPassword.setText("");
 		    		  regConfirmPassword.setEnabled(false);
 		    		  regConfirmPassword.setVisible(false);
-		    		  perfilInfo.setWidget(7, 3, regConfirmPassword);
-		    		  //CellFormatter perfilInfoCellFormatter = perfilInfo.getCellFormatter();
-		    		  //perfilInfoCellFormatter.setHorizontalAlignment(8,3,HasHorizontalAlignment.ALIGN_RIGHT);
-		    		  perfilVPanel.setSize("100%","100%");
-		    		  perfilVPanel.add(perfilInfo);
-		    		  perfilVPanel.add(changeButton);
+		    		  perfilInfo.setWidget(4, 2, addInVerticalPanel(confirmPswdLabel, regConfirmPassword));
+		    		  
+		    		  VerticalPanel formVPanel = new VerticalPanel();
+		    		  formVPanel.setSpacing(10);
+		    		  formVPanel.add(perfilInfo);
+		    		  formVPanel.add(changeButton);
 		    		  saveChangeButton.setEnabled(false);
 		    		  saveChangeButton.setVisible(false);
-		    		  perfilVPanel.add(saveChangeButton);
-		    		  perfilVPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);  
-		
-		    		  	    		  
+		    		  formVPanel.add(saveChangeButton);
+		    		  formVPanel.setCellHorizontalAlignment(changeButton,HasHorizontalAlignment.ALIGN_CENTER);
+		    		  formVPanel.setCellHorizontalAlignment(saveChangeButton,HasHorizontalAlignment.ALIGN_CENTER);
+		    		  formVPanel.addStyleName("loginForm");
+		    		  
+		    		  perfilVPanel.setSize("100%","100%");
+		    		  perfilVPanel.add(formVPanel);
+		    		  perfilVPanel.setCellHorizontalAlignment(formVPanel,HasHorizontalAlignment.ALIGN_CENTER);
+	    		  
 		          } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 		          }
@@ -450,6 +453,14 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
+  private VerticalPanel addInVerticalPanel(Label l, TextBox box){  
+	  VerticalPanel newVPanel = new VerticalPanel();
+	  newVPanel.setSpacing(5);
+	  newVPanel.add(l);
+	  newVPanel.add(box);
+	  return newVPanel;  
+  }
+ 
   private void createCorrePanel(){
 
 	  //Text areas
@@ -961,28 +972,50 @@ public class JocProg implements EntryPoint {
 	  createNewTeamPanel();
 	  createAddPlayersPanel();
 	  createInvitationsPanel();
+	  
+	  final VerticalPanel adminVPanel = new VerticalPanel();
+	  adminVPanel.setSpacing(5);
+	  adminVPanel.setWidth("100%");
+	  adminVPanel.add(logoutButton);
+	  adminVPanel.setCellHeight(logoutButton, "50px");
+	  adminVPanel.setCellVerticalAlignment(logoutButton, HasVerticalAlignment.ALIGN_TOP);
+	  adminVPanel.setCellHorizontalAlignment(logoutButton, HasHorizontalAlignment.ALIGN_RIGHT);
   
 	  adminHPanel.setSize("100%","100%");
 	  adminHPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 	  adminStckPanel.setSize("205px","50%");
+
+	  final Tree UserTree = new Tree();
+	  final TreeItem ItemPerfil = UserTree.addItem("Información de perfil");
+	  UserTree.addSelectionHandler(new SelectionHandler<TreeItem>(){
+		  public void onSelection(SelectionEvent<TreeItem> event){
+			  TreeItem it = UserTree.getSelectedItem();
+			  if(it.equals(ItemPerfil)){
+				  int n = adminVPanel.getWidgetCount();
+				  if (n == 2) adminVPanel.remove(n-1);
+				  adminVPanel.add(perfilVPanel);
+			  }
+		  }
+	  });
+	  
 	  ItemNewChamp = ChampsTree.addItem("Crear nuevo");
 	  ItemAddChamp = ChampsTree.addItem("Invitar a jugadores");
 	  ChampsTree.addSelectionHandler(new SelectionHandler<TreeItem>(){
 		  public void onSelection(SelectionEvent<TreeItem> event){
 			  TreeItem it = ChampsTree.getSelectedItem();
 			  if(it.equals(ItemNewChamp)){
-				  int n = adminHPanel.getWidgetCount();
-				  if (n == 2) adminHPanel.remove(n-1);
-				  adminHPanel.add(newChampVPanel);
+				  int n = adminVPanel.getWidgetCount();
+				  if (n == 2) adminVPanel.remove(n-1);
+				  adminVPanel.add(newChampVPanel);
 			  }
 			  else if(it.equals(ItemAddChamp)){
-				  int n = adminHPanel.getWidgetCount();
-				  if (n == 2) adminHPanel.remove(n-1);
+				  int n = adminVPanel.getWidgetCount();
+				  if (n == 2) adminVPanel.remove(n-1);
 				  addPlayersLabel.setText("¡ Invita a tus amigos a participar en tus campeonatos !");
 				  refreshAddPlayersDropBox(1);
 				  requestAllNicks();
 				  suggestNickBox = new SuggestBox(oracle);
-				  adminHPanel.add(addPlayersVPanel);
+				  adminVPanel.add(addPlayersVPanel);
 			  }
 		  }
 	  });
@@ -993,18 +1026,18 @@ public class JocProg implements EntryPoint {
 		  public void onSelection(SelectionEvent<TreeItem> event){
 			  TreeItem it = TeamsTree.getSelectedItem();
 			  if(it.equals(ItemNewTeam)){
-				  int n = adminHPanel.getWidgetCount();
-				  if (n == 2) adminHPanel.remove(n-1);
-				  adminHPanel.add(newTeamVPanel);
+				  int n = adminVPanel.getWidgetCount();
+				  if (n == 2) adminVPanel.remove(n-1);
+				  adminVPanel.add(newTeamVPanel);
 			  }
 			  else if(it.equals(ItemAddTeam)){
-				  int n = adminHPanel.getWidgetCount();
-				  if (n == 2) adminHPanel.remove(n-1);
+				  int n = adminVPanel.getWidgetCount();
+				  if (n == 2) adminVPanel.remove(n-1);
 				  addPlayersLabel.setText("¡ Invita a tus amigos a unirse a tus equipos !");
 				  refreshAddPlayersDropBox(2);
 				  requestAllNicks();
 				  suggestNickBox = new SuggestBox(oracle);
-				  adminHPanel.add(addPlayersVPanel);
+				  adminVPanel.add(addPlayersVPanel);
 			  }
 		  }
 	  });
@@ -1015,57 +1048,58 @@ public class JocProg implements EntryPoint {
 		  public void onSelection(SelectionEvent<TreeItem> event){
 			  TreeItem it = InvitationsTree.getSelectedItem();
 			  if(it.equals(ItemChampInvitations)){
-				  int n = adminHPanel.getWidgetCount();
-				  if (n == 2) adminHPanel.remove(n-1);
+				  int n = adminVPanel.getWidgetCount();
+				  if (n == 2) adminVPanel.remove(n-1);
 				  refreshInvitationsTable("champs");
 				  requestNInvitations();
-				  adminHPanel.add(invitationsVPanel);
+				  adminVPanel.add(invitationsVPanel);
 			  }
 			  else if(it.equals(ItemTeamInvitations)){
-				  int n = adminHPanel.getWidgetCount();
-				  if (n == 2) adminHPanel.remove(n-1);
+				  int n = adminVPanel.getWidgetCount();
+				  if (n == 2) adminVPanel.remove(n-1);
 				  refreshInvitationsTable("teams");
 				  requestNInvitations();
-				  adminHPanel.add(invitationsVPanel);
+				  adminVPanel.add(invitationsVPanel);
 			  }
 		  }
 	  });
 	
+	  adminStckPanel.add(UserTree, "Usuario");
 	  adminStckPanel.add(ChampsTree, "Campeonatos");
 	  adminStckPanel.add(TeamsTree, "Equipos");
 	  adminStckPanel.add(InvitationsTree, "Invitaciones");
 	  adminHPanel.add(adminStckPanel);
+	  adminHPanel.add(adminVPanel);
   }
   
   private void createNewChampPanel(){
 	  
 	  VerticalPanel champNameVPanel = new VerticalPanel();
 	  
-	  Grid champNameGrid = new Grid(3,2);
-	  champNameGrid.setWidget(0,0,new HTML("Nombre del campeonato: "));
+	  Grid champNameGrid = new Grid(2,2);
+	  champNameGrid.setCellSpacing(10);
+	  champNameGrid.setWidget(0,0,new Label("Nombre del campeonato:"));
 	  champNameGrid.setWidget(0,1,champNameTextBox);
-	  champNameGrid.setWidget(1,0,new HTML("Fecha límite inscripciones: "));
+	  champNameGrid.setWidget(1,0,new Label("Fecha límite inscripciones:"));
 	  champDateBox.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("dd/MM/yyyy")));
-	  champNameGrid.setWidget(1,1,champDateBox);
+	  champNameGrid.setWidget(1,1,champDateBox);  
 	  champNameVPanel.add(champNameGrid);
 	  
 	  VerticalPanel champChooseVPanel = new VerticalPanel();
-	  champChooseVPanel.setSize("100%","100%");
-	  champChooseVPanel.setSpacing(5);
-	  champChooseVPanel.add(new HTML("Circuitos disponibles:"));
+	  champChooseVPanel.setSpacing(10);
+	  champChooseVPanel.add(new Label("Circuitos disponibles:"));
 	  Grid dispCircuitsGrid = new Grid(1,2);
 	  circuitsMultiBox.setSize("130px","200px");
 	  dispCircuitsGrid.setWidget(0,0,circuitsMultiBox);
-	  Button addCircuitsButton = new Button("Añadir circuito -->");
+	  Button addCircuitsButton = new Button("Añadir circuito ->");
 	  dispCircuitsGrid.setWidget(0,1,addCircuitsButton);
 	  CellFormatter dispCircsCellFormatter = dispCircuitsGrid.getCellFormatter();
 	  dispCircsCellFormatter.setVerticalAlignment(0,1,HasVerticalAlignment.ALIGN_TOP);
 	  champChooseVPanel.add(dispCircuitsGrid);
-	  champChooseVPanel.add(new HTML("(para selección múltiple mantén pulsado 'Ctrl')"));
+	  champChooseVPanel.add(new Label("(para selección múltiple mantén pulsado 'Ctrl')"));
 	  
 	  VerticalPanel champAddVPanel = new VerticalPanel();
-	  champAddVPanel.setSpacing(5);
-	  champAddVPanel.setSize("100%","100%");
+	  champAddVPanel.setSpacing(10);
 	  champAddVPanel.add(new HTML("Circuitos seleccionados:"));
 	  Grid selectedCircuitsGrid = new Grid(1,2);
 	  selectedMultiBox.setSize("130px","200px");
@@ -1082,12 +1116,14 @@ public class JocProg implements EntryPoint {
 	  newChampHPanel.add(champAddVPanel);
 
 	  newChampVPanel.setSize("100%","100%");
-	  newChampVPanel.setSpacing(20);
+	  newChampVPanel.setSpacing(10);
 	  newChampVPanel.add(champNameVPanel);
 	  newChampVPanel.add(newChampHPanel);
 	  Button createChampButton = new Button("Crear campeonato");
 	  newChampVPanel.add(createChampButton);
 	  newChampVPanel.setCellHorizontalAlignment(champNameVPanel, HasHorizontalAlignment.ALIGN_LEFT);
+	  newChampVPanel.setCellHeight(createChampButton,"50px");
+	  newChampVPanel.setCellHorizontalAlignment(createChampButton, HasHorizontalAlignment.ALIGN_CENTER);
 
 	  
 	  addCircuitsButton.addClickHandler( 
@@ -1246,8 +1282,11 @@ public class JocProg implements EntryPoint {
 		        	  else if (res==0){
 		        		  USER = loginUserTextBox.getText();
 		        		  createPerfilPanel();
+		        		  requestNInvitations();
 		        		  multiPanel.remove(loginVPanel);
-		        		  multiPanel.add(perfilVPanel);
+		        		  multiPanel.add(adminHPanel);
+		        		  mainPanel.insert(multiPanel,"Administración", 0);
+		        		  mainPanel.selectTab(0);
 		        		  loginUserTextBox.setText("");
 		        		  loginPassword.setText("");
 		        	  }		        	  
@@ -1427,7 +1466,7 @@ public class JocProg implements EntryPoint {
 					  JSonData res = asJSonData(response.getText());
 					  //int nbytes = res.getInt("read_bytes");
 					  String dat = res.get("data");
-					  engine.addAnimation(new CarAnimation(imagePanel,progressAbsPanel,dat), animationControllersPanel, buttonsPanel, imagePanel, inputTextArea);
+					  engine.addAnimation(new CarAnimation(imagePanel,progressAbsPanel,circuitWidth,circuitHeight,dat), animationControllersPanel, buttonsPanel, imagePanel, inputTextArea);
 				  } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 		          }
@@ -1502,9 +1541,7 @@ public class JocProg implements EntryPoint {
 					  dialogBox.setWidget(dialogContents);
 
 					  // Add some text to the top of the dialog
-					  //HTML details = new HTML("Elige el archivo que quieres cargar: ");
 					  dialogContents.add(new HTML("Elige el archivo que quieres cargar: "));
-					  //dialogContents.setCellHorizontalAlignment(details, HasHorizontalAlignment.ALIGN_CENTER);
 					  
 					  final ListBox savedCodesMultiBox = new ListBox(true);
 					  savedCodesMultiBox.setSize("170px","200px");
@@ -2091,7 +2128,7 @@ public class JocProg implements EntryPoint {
 					  String nToChamps = res.get("nChamps");
 					  String nToTeams = res.get("nTeams");
 					  int total = Integer.parseInt(nToChamps) + Integer.parseInt(nToTeams);
-					  adminStckPanel.setStackText(2, "Invitaciones ("+total+")");
+					  adminStckPanel.setStackText(3, "Invitaciones ("+total+")");
 					  ItemChampInvitations.setText("A campeonatos ("+nToChamps+")");
 					  ItemTeamInvitations.setText("A equipos ("+nToTeams+")");
 
@@ -2205,12 +2242,42 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
+private void requestLogout() {
+	  
+	  String url = JSON_URL;
+	  url = URL.encode(url);
+	  //Send request to server and catch any errors.
+	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+
+	  try {
+		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+				  URL.encodeComponent("logout"), new RequestCallback() {
+			  public void onError(Request request, Throwable exception) {
+				  Window.alert("Couldn't retrieve JSON");
+			  }
+			  public void onResponseReceived(Request request, Response response) {
+				  if (200 == response.getStatusCode()) {
+					  //ok
+				  } else {
+		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+		          }
+			  }
+		  });
+	  } catch (RequestException e) {
+		  Window.alert("Couldn't retrieve JSON");
+	  }
+  }
+  
 
   
   private void logout(){
+	  
+	  requestLogout();
 	  USER = ""; 
 	  playMode = NONE;
-	  multiPanel.remove(perfilVPanel);
+	  //multiPanel.remove(perfilVPanel);
+	  multiPanel.remove(adminHPanel);
 	  
 	  regNickTextBox.setText("");  regNameTextBox.setText("");
 	  regSurname1TextBox.setText("");  regSurname2TextBox.setText("");
@@ -2226,6 +2293,8 @@ public class JocProg implements EntryPoint {
 	  regConfirmPassword.setVisible(true);
 	  createLoginPanel();
 	  multiPanel.add(loginVPanel);
+	  mainPanel.insert(multiPanel,"Inicio", 0);
+	  mainPanel.selectTab(0);
 	  
 	  circuitsDropBox.setSelectedIndex(0);
 	  champsDropBox.clear();
@@ -2247,6 +2316,7 @@ public class JocProg implements EntryPoint {
 	  regSchoolTextBox.setEnabled(true);  regEmailSchoolTextBox.setEnabled(true);
 	  regPassword.setText("");  
 	  regPassword.setEnabled(true); 
+	  newPswdLabel.setVisible(true); confirmPswdLabel.setVisible(true);
 	  regNewPassword.setText(""); regConfirmPassword.setText("");
 	  regNewPassword.setEnabled(true); regConfirmPassword.setEnabled(true);
 	  regNewPassword.setVisible(true); regConfirmPassword.setVisible(true);
@@ -2261,6 +2331,7 @@ public class JocProg implements EntryPoint {
 	  regSchoolTextBox.setEnabled(false);  regEmailSchoolTextBox.setEnabled(false);
 	  regPassword.setText("password");  
 	  regPassword.setEnabled(false); 
+	  newPswdLabel.setVisible(false); confirmPswdLabel.setVisible(false);
 	  regNewPassword.setText(""); regConfirmPassword.setText("");
 	  regNewPassword.setEnabled(false); regConfirmPassword.setEnabled(false);
 	  regNewPassword.setVisible(false); regConfirmPassword.setVisible(false);
