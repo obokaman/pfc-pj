@@ -3,16 +3,12 @@ package gwtJuego.client;
 import java.util.ArrayList;
 
 import com.google.gwt.core.client.Duration;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -38,11 +34,11 @@ public class CarAnimation implements Animation {
     /**
      * The next field to read from trace
      */
-    private static int nextField;
+    private int nextField;
     /**
      * Flag that indicates whether or not the pointer is being dragged.
      */
-    private static boolean dragging;
+    private boolean dragging;
     /**
      * The panel containing the widget being moved
      */
@@ -55,6 +51,14 @@ public class CarAnimation implements Animation {
      * The trace the widget should follow.
      */
     protected final ArrayList<String> trace = new ArrayList<String>();
+    /**
+     * The circuit image width.
+     */
+    protected final int circuitWidth;
+    /**
+     * The circuit image height.
+     */
+    protected final int circuitHeight;
     /**
      * The widget being moved.
      */
@@ -99,10 +103,6 @@ public class CarAnimation implements Animation {
      * The final X position for the pointer.
      */
     private int pointerX;
-    /**
-     * Initial X position for the pointer while dragging.
-     */
-    private int dragStartX;
 
     /**
      * Create an animation
@@ -112,7 +112,7 @@ public class CarAnimation implements Animation {
      * @param targetX The final X position the widget will end up in.
      * @param targetY The final Y position the widget will end up in.
      */
-    public CarAnimation(AbsolutePanel panel, AbsolutePanel progressAbsPanel, String tr) {
+    public CarAnimation(AbsolutePanel panel, AbsolutePanel progressAbsPanel, int circWidth, int circHeight, String tr) {
     	
     	if (carImages.size() == 0) {
 	    	for(int i=0; i<=360-frec; i=i+frec) {
@@ -124,6 +124,8 @@ public class CarAnimation implements Animation {
     	getTrace(tr);
     	this.panel = panel;
     	this.progressPanel = progressAbsPanel;
+    	this.circuitWidth = circWidth;
+    	this.circuitHeight = circHeight;
     	int x = (int)Float.parseFloat(getNextTraceField());
     	int y = (int)Float.parseFloat(getNextTraceField());
     	this.targetAngle = Float.parseFloat(getNextTraceField());
@@ -141,8 +143,6 @@ public class CarAnimation implements Animation {
     			new MouseDownHandler(){
     				public void onMouseDown(MouseDownEvent event){
     					dragging = true;
-    					//coger posicion inicial
-    					dragStartX = event.getClientX() - progressPanel.getAbsoluteLeft();
     				}
     			});
     	point.addMouseUpHandler(
@@ -344,13 +344,18 @@ public class CarAnimation implements Animation {
     private void convertMeasures(int x, int y, String what) {
     	int h = this.panel.getOffsetHeight();
     	int w = this.panel.getOffsetWidth();
-    	int widgtH = h*80/1000;
+    	int imgWidth = (h*circuitWidth)/circuitHeight;
+    	int widgtH = h*80/circuitHeight;  //dividido entre circuitHeight o circuitWidth??
     	
     	widget.setHeight(widgtH + "px");
     	
-    	float newX = (float)(x/1000.0)*h;
-    	float newY = (float)(y/1000.0)*h;
-    	if(w > h) newX = newX + (float)((w-h)/2);
+    	//float newX = (float)(x/1000.0)*h;
+    	//float newY = (float)(y/1000.0)*h;
+    	float newY = (y/(float)circuitHeight)*h;
+    	float newX = (x/(float)circuitWidth)*imgWidth;
+
+    	//if(w > h) newX = newX + (float)((w-h)/2);
+    	if(w > imgWidth) newX = newX + (float)((w-imgWidth)/2);
     	newX = newX - (widgtH/2);
     	newY = newY - (widgtH/2);
     	
