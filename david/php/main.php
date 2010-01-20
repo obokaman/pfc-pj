@@ -14,6 +14,7 @@ $f = clean("function", "string");
 /*Según la función que nos haya pedido el cliente, seleccionamos el codigo que hace referencia a dicha función. En este archivo podremos ver las principales funciones que puede realizar el cliente. Cada función o seccion de codigo para una operacion tiene un filtrado de parametros, para mantener la cohesion del codigo y evitar inyeccion de codigo SQL que podria provocar el mal funcionamiento de la base de datos. 
 Si queremos saber mas sobre las funciones que son llamadas, podemos ver una explicación mas detallada sobre cada una de ellas en los archivos que aparecen listados en el include.php*/
 
+
 /*Funcion que realiza el logueo de los usuarios*/
 if ($f == "login") {
 /*Pre: - */

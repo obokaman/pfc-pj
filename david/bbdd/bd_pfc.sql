@@ -82,7 +82,6 @@ CREATE TABLE circuit (
   id_circuit	integer	 NOT NULL AUTO_INCREMENT,
   name		varchar(20)  NOT NULL,
   short_name 	varchar(20)  NOT NULL,
-  code_description text ,
   level		integer ,
   n_laps	integer ,
   time		time	DEFAULT NULL,
