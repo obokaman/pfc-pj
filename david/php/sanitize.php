@@ -16,7 +16,7 @@
 					break;
 					case 'string':
 						$var = trim ( $var );	
-						$var = mysql_real_escape_string( stripslashes($var)); 
+						//$var = mysql_real_escape_string( stripslashes($var)); 
 					break;
 					case 'array':
 						my_error($var, 1);
@@ -29,7 +29,7 @@
 					break;
 					case 'sql': 
 						$var = trim ( $var );
-						$var = mysql_real_escape_string(stripslashes($var)); /*limpia el parametros evitando la inyección de codigo SQL
+						/*$var = mysql_real_escape_string(stripslashes($var)); /*limpia el parametros evitando la inyección de codigo SQL
 	ademas de colocar barras en caracteres especiales*/
 					break;
 					case 'email':
