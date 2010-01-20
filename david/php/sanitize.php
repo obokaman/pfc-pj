@@ -16,6 +16,7 @@
 					break;
 					case 'string':
 						$var = trim ( $var );	
+						$var = mysql_real_escape_string($var); 
 					break;
 					case 'array':
 						my_error($var, 1);
