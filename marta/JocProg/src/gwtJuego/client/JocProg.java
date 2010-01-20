@@ -324,7 +324,7 @@ public class JocProg implements EntryPoint {
 	  loginFormPanel.add(loginLayout);
 	  loginFormPanel.add(loginButton);
 	  loginFormPanel.setCellHorizontalAlignment(loginButton, HasHorizontalAlignment.ALIGN_CENTER);
-	  loginFormPanel.addStyleName("loginForm");
+	  loginFormPanel.addStyleName("inputForm");
 	  
 	  // Create register form
 	  Grid regOptions = new Grid(6, 3);
@@ -437,7 +437,7 @@ public class JocProg implements EntryPoint {
 		    		  formVPanel.add(saveChangeButton);
 		    		  formVPanel.setCellHorizontalAlignment(changeButton,HasHorizontalAlignment.ALIGN_CENTER);
 		    		  formVPanel.setCellHorizontalAlignment(saveChangeButton,HasHorizontalAlignment.ALIGN_CENTER);
-		    		  formVPanel.addStyleName("loginForm");
+		    		  formVPanel.addStyleName("inputForm");
 		    		  
 		    		  perfilVPanel.setSize("100%","100%");
 		    		  perfilVPanel.add(formVPanel);
@@ -883,7 +883,7 @@ public class JocProg implements EntryPoint {
 	    
 	  // Create table for ranking data.
 	  rankingFlexTable.setText(0, 0, "Usuario");
-	  rankingFlexTable.setText(0, 1, "Tiempo");
+	  rankingFlexTable.setText(0, 1, "Tiempo (MM:ss.mmm)");
 	  // Add styles to elements in the ranking list table.
 	  rankingFlexTable.getRowFormatter().addStyleName(0, "flexTableHeader");
 	  rankingFlexTable.addStyleName("flexTable");
@@ -1301,7 +1301,7 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
-  private void requestRegistration() {  //solo se permiten letras y numeros y..
+  private void requestRegistration() {
 
 	  if (regNickTextBox.getText().equals("") || regNameTextBox.getText().equals("")
 		|| regSurname1TextBox.getText().equals("") || regSurname2TextBox.getText().equals("")
@@ -1310,6 +1310,12 @@ public class JocProg implements EntryPoint {
 		|| regPassword.getText().equals("") || regConfirmPassword.getText().equals("")){
 		  Window.alert("Debes rellenar todos los campos");
 	  }
+	  /*else if(!checkEmail(regEmailUserTextBox.getText())) {
+		  
+	  }
+	  else if(!checkEmail(regEmailSchoolTextBox.getText())){
+		  
+	  }*/
 	  else if(!regPassword.getText().equals(regConfirmPassword.getText())){
 		  Window.alert("La contraseña y su confirmación no coinciden. Por favor, introdúcelas de nuevo");
 		  regPassword.setText("");
@@ -2454,7 +2460,12 @@ private void requestLogout() {
      int row = rankingFlexTable.getRowCount();
      // Populate the "Usuario" and "Tiempo" fields with new data.
      rankingFlexTable.setText(row, 0, info.getNick());
-     rankingFlexTable.setText(row, 1, info.getTiempo());
+     int tiempo = Integer.parseInt(info.getTiempo());
+     int milesimas = tiempo%1000;
+     int segs = tiempo/1000;
+     segs = segs%60;
+     int mins = segs/60;
+     rankingFlexTable.setText(row, 1, mins+":"+segs+"."+milesimas);
      rankingFlexTable.getCellFormatter().addStyleName(row, 0, "rankingListColumn");
      rankingFlexTable.getCellFormatter().addStyleName(row, 1, "rankingListColumn");
   }

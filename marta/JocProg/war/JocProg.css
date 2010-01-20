@@ -13,7 +13,7 @@ body {
 }
 
 /* login form border */
-.loginForm {
+.inputForm {
   border: 2px solid #2062B8;
   padding: 2px;
   margin-bottom:6px;
