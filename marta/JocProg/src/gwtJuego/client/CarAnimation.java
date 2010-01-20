@@ -32,6 +32,10 @@ public class CarAnimation implements Animation {
      */
     protected final static int animationTime = 100;
     /**
+     * The URL where images are.
+     */
+    private final static String IMG_URL = "http://localhost/img/";
+    /**
      * The next field to read from trace
      */
     private int nextField;
@@ -117,7 +121,7 @@ public class CarAnimation implements Animation {
     	if (carImages.size() == 0) {
 	    	for(int i=0; i<=360-frec; i=i+frec) {
 	    		Image c = new Image();
-	    		c.setUrl("http://localhost/img/car-"+String.valueOf(i)+".gif");
+	    		c.setUrl(IMG_URL+"car-"+String.valueOf(i)+".gif");
 	    		carImages.add(c);
 	    	}
     	}
