@@ -8,10 +8,10 @@
 	- pack: Directorio con contenido necesario para ejecutar una partida 
 */
 
-$path = Array( 'circuits' => '/var/local/share/pfc-pj/circuits/',
-		'images' =>  '/var/www/img/',
+$path = Array( 'circuits' => '/var/local/share/racing/circuits/',
+		'images' =>  '/var/www/racing/img/',
 	        'url-images' => '/img/',
-		'bin' => '/var/local/share/pfc-pj/bin/',
-		'games' => '/var/local/share/pfc-pj/games/',
-		'pack' => '/var/local/share/pfc-pj/pack/'  );
+		'bin' => '/var/local/share/racing/bin/',
+		'games' => '/var/local/share/racing/games/',
+		'pack' => '/var/local/share/racing/pack/'  );
 ?>
