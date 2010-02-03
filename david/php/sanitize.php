@@ -16,7 +16,8 @@
 					break;
 					case 'string':
 						$var = trim ( $var );	
-						$var = mysql_real_escape_string( stripslashes($var)); 
+						$var = mysql_real_escape_string( stripslashes($var));  /*limpia el parametros evitando la inyección de codigo SQL
+	ademas de colocar barras en caracteres especiales*/
 					break;
 					case 'array':
 						my_error($var, 1);
@@ -26,14 +27,6 @@
 						$arr = Array();
 						$arr = explode("/",$var);
 						$var = date( "Y/m/d", mktime(0, 0, 0, $arr[1],$arr[0],$arr[2]) ); 
-					break;
-					case 'sql': 
-						$var = trim ( $var );
-						$var = mysql_real_escape_string(stripslashes($var)); /*limpia el parametros evitando la inyección de codigo SQL
-	ademas de colocar barras en caracteres especiales*/
-					break;
-					case 'email':
-						//buscar que tenga un formato con @
 					break;
 					case 'json':
 						$var = json_decode($var);						
