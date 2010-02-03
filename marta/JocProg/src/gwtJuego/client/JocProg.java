@@ -171,7 +171,7 @@ public class JocProg implements EntryPoint {
 	private int playMode = NONE;
 	private String champOn = "";
 	private String circuitOn = "Montmelo";
-	private String circuitURL = "http://localhost/img/basic.png";
+	private String circuitURL = IMG_URL+"basic.png";
 	private int circuitWidth = 0;
 	private int circuitHeight = 0;
 	private int indexToShow = 0;
@@ -631,8 +631,8 @@ public class JocProg implements EntryPoint {
 	  Image moveLeft = new Image();
 	  Image moveRight = new Image();
 	  
-	  moveLeft.setUrl("http://localhost/next_left.png");
-	  moveRight.setUrl("http://localhost/next_right.png");
+	  moveLeft.setUrl(IMG_URL+"next_left.png");
+	  moveRight.setUrl(IMG_URL+"next_right.png");
 	  firstCirc.setSize("150px", "150px");
 	  secondCirc.setSize("150px", "150px");
 	  thirdCirc.setSize("150px", "150px");
@@ -778,7 +778,7 @@ public class JocProg implements EntryPoint {
 						  }
 
 						  imagePanel.remove(centerImagePanel);
-						  centerImagePanel = new HTMLPanel("<div align='center' style='background-color:#80FF80'><img src='http://localhost/"+circuitURL+"' height='100%'></div>");
+						  centerImagePanel = new HTMLPanel("<div align='center' style='background-color:#80FF80'><img src='"+LOCAL_URL+circuitURL+"' height='100%'></div>");
 						  imagePanel.add(centerImagePanel);
 						  modeDialogBox.hide();
 						  modeListBox.setSelectedIndex(0);
@@ -835,19 +835,19 @@ public class JocProg implements EntryPoint {
 		thirdRadioButton.setVisible(false);
 	  
 		if (indexToShow < list.size()){
-			firstCirc.setUrl("http://localhost"+list.get(indexToShow).url);
+			firstCirc.setUrl(LOCAL_URL+list.get(indexToShow).url);
 			firstCirc.setVisible(true);
 			firstRadioButton.setText(list.get(indexToShow).name);
 			firstRadioButton.setVisible(true);
 		}
 		if (indexToShow+1 < list.size()){
-			secondCirc.setUrl("http://localhost"+list.get(indexToShow+1).url);
+			secondCirc.setUrl(LOCAL_URL+list.get(indexToShow+1).url);
 			secondCirc.setVisible(true);
 			secondRadioButton.setText(list.get(indexToShow+1).name);
 			secondRadioButton.setVisible(true);
 		}
 		if (indexToShow+2 < list.size()){
-			thirdCirc.setUrl("http://localhost"+list.get(indexToShow+2).url);
+			thirdCirc.setUrl(LOCAL_URL+list.get(indexToShow+2).url);
 			thirdCirc.setVisible(true);
 			thirdRadioButton.setText(list.get(indexToShow+2).name);
 			thirdRadioButton.setVisible(true);
@@ -1310,12 +1310,12 @@ public class JocProg implements EntryPoint {
 		|| regPassword.getText().equals("") || regConfirmPassword.getText().equals("")){
 		  Window.alert("Debes rellenar todos los campos");
 	  }
-	  /*else if(!checkEmail(regEmailUserTextBox.getText())) {
-		  
+	  else if(!checkEmail(regEmailUserTextBox.getText())) {
+		  Window.alert("El email de usuario debe ser una cuenta de correo válida");
 	  }
 	  else if(!checkEmail(regEmailSchoolTextBox.getText())){
-		  
-	  }*/
+		  Window.alert("El email de la escuela debe ser una cuenta de correo válida");
+	  }
 	  else if(!regPassword.getText().equals(regConfirmPassword.getText())){
 		  Window.alert("La contraseña y su confirmación no coinciden. Por favor, introdúcelas de nuevo");
 		  regPassword.setText("");
@@ -1368,6 +1368,20 @@ public class JocProg implements EntryPoint {
 		    	Window.alert("Couldn't retrieve JSON");
 		    }
 	  }
+  }
+  
+  private boolean checkEmail(String email){
+	  boolean arr = false;
+	  boolean dot = false;
+	  for(int i=0;i<email.length();i++){
+		  if(email.charAt(i)=='@'&& i==0) return false;
+		  else if(email.charAt(i)=='.'&& i==(email.length()-1)) return false;
+		  else if(arr && email.charAt(i)=='@') return false;
+		  else if(!arr && email.charAt(i)=='@') arr = true;
+		  else if(arr && !dot && email.charAt(i)=='.' && !(email.charAt(i-1)=='@')) dot = true;
+		  else if(arr && dot && email.charAt(i)=='.') return false;
+	  }
+	  return dot;
   }
   
   private void requestCircuitInfo(String circuit, final int index) {
@@ -2352,7 +2366,13 @@ private void requestLogout() {
 			  || regCityTextBox.getText().equals("") || regSchoolTextBox.getText().equals("") 
 			  || regEmailSchoolTextBox.getText().equals("")){
 				  Window.alert("Debes rellenar todos los campos");
-			  }
+	  }
+	  else if(!checkEmail(regEmailUserTextBox.getText())) {
+		  Window.alert("El email de usuario debe ser una cuenta de correo válida");
+	  }
+	  else if(!checkEmail(regEmailSchoolTextBox.getText())){
+		  Window.alert("El email de la escuela debe ser una cuenta de correo válida");
+	  }
 	  else if (!regNewPassword.getText().equals("") && regConfirmPassword.getText().equals("")){
 		  Window.alert("Debes introducir la confirmación de la nueva contraseña");
 	  }
