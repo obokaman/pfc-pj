@@ -14,6 +14,10 @@
 					case 'int':
 						$var = (int) $var;
 					break;
+					case 'code':
+						$var = trim ( $var );	
+						$var = stripslashes($var);
+					break;
 					case 'string':
 						$var = trim ( $var );	
 						$var = mysql_real_escape_string( stripslashes($var));  /*limpia el parametros evitando la inyección de codigo SQL

@@ -464,7 +464,7 @@ else if( $f == "run" ) {
 /*Pre: - */
 	send(
 		run( 			
-			clean("code", "json"),
+			clean("code", "code"),
 			clean("circuit", "string"),
 			clean("championship", "string")
 		)

@@ -1,5 +1,5 @@
 <?php include("conf.php");?>
-<?php include("includes.php");?>
+<?php include("dincludes.php");?>
 <?php	
 	/*Este script se encarga de limpiar los datos que sean innecesarios para la base de datos o algún directorio. Los dato que se limpiarán serán: 
 			- Los usuarios no activados desde un mes de su inserción
