@@ -54,7 +54,7 @@
 	/*Post: Devuelve una array de string con los nombres de los equipos a los que pertencen el usuario con el identificador igual al de la entrada, en caso de que el usuario que hace la peticion no este loguedo retorna un valor nulo*/	
 	
 	
-	/*La función devuelve una lista de nombres de equipos a los que pertenece el usuario que esta logueado, teniendo el cuenta si hay nombre de circuito y de campeonato, filtrando los equipos a los que pertenece el usuario logueado que ha participado en el campeonato con el mismo nombre que el campeonato de la entrada y corrido en el circuito con el mismo nombre de la entrada que la entrada. Si el nombre de campeonato es nulo retorna todos los equipos en los que esta inscrito el usuario logueado
+	/*La función devuelve una lista de nombres de equipos a los que pertenece el usuario que esta logueado, teniendo en cuenta si hay nombre de circuito y de campeonato, filtrando los equipos a los que pertenece el usuario logueado que ha participado en el campeonato con el mismo nombre que el campeonato de la entrada y corrido en el circuito con el mismo nombre de la entrada que la entrada. Si el nombre de campeonato es nulo retorna todos los equipos en los que esta inscrito el usuario logueado
 			- name_circuit: Nombre del circuito
 			- name_champ: Nombre del campeonato
 	*/
