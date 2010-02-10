@@ -62,9 +62,12 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 
 public class JocProg implements EntryPoint {
 	
-	private static final String LOCAL_URL = "http://localhost/";
-	private static final String JSON_URL = "http://localhost/php/main.php?";
-	private static final String IMG_URL = "http://localhost/img/";
+	//private static final String LOCAL_URL = "http://localhost/";
+	//private static final String JSON_URL = "http://localhost/php/main.php?";
+	//private static final String IMG_URL = "http://localhost/img/";
+	private static final String LOCAL_URL = "http://gabarro.org/racing/";
+	private static final String JSON_URL = "http://gabarro.org/racing/php/main.php?";
+	private static final String IMG_URL = "http://gabarro.org/racing/img/";
 	private static final int CODE = 1;
 	private static final int DEBUG = 2;
 	private static final int EXECUTION = 3;
@@ -76,25 +79,17 @@ public class JocProg implements EntryPoint {
 
 	private TabPanel mainPanel = new TabPanel();
 	private HorizontalSplitPanel correPanel = new HorizontalSplitPanel();
-	private AbsolutePanel imagePanel = new AbsolutePanel();
-	private AbsolutePanel progressAbsPanel = new AbsolutePanel();
 	private VerticalSplitPanel codiPanel = new VerticalSplitPanel();
-	private HorizontalPanel consolaPanel = new HorizontalPanel();
+	private AbsolutePanel imagePanel = new AbsolutePanel();
+	private AbsolutePanel progressAbsPanel = new AbsolutePanel();  //se podria (pasando parametros)
 	private HTMLPanel centerImagePanel;
 	private DialogBox modeDialogBox = new DialogBox();
-	private VerticalPanel rankingVPanel = new VerticalPanel();
-	private HorizontalPanel rankingHPanel = new HorizontalPanel();
-	private HorizontalPanel ranking2HPanel = new HorizontalPanel();
+	private VerticalPanel rankingVPanel = new VerticalPanel();  //se podria (return)
 	private HorizontalPanel multiPanel = new HorizontalPanel();
 	private VerticalPanel loginVPanel = new VerticalPanel();
-	private DisclosurePanel registerDisclosure = new DisclosurePanel("¿Aún no estás registrado?");
 	private VerticalPanel perfilVPanel = new VerticalPanel();
 	private HorizontalPanel adminHPanel = new HorizontalPanel();
 	private DecoratedStackPanel adminStckPanel = new DecoratedStackPanel();
-	private VerticalPanel newChampVPanel = new VerticalPanel();
-	private VerticalPanel newTeamVPanel = new VerticalPanel();
-	private VerticalPanel addPlayersVPanel = new VerticalPanel();
-	private VerticalPanel invitationsVPanel = new VerticalPanel();
 	
 	private TextArea inputTextArea = new TextArea();
 	private TextArea consolaTextArea = new TextArea();
@@ -123,16 +118,10 @@ public class JocProg implements EntryPoint {
 	private Label newPswdLabel = new Label("Nueva contraseña");
 	private Label confirmPswdLabel = new Label("Confirmar contraseña");
 	
-	private TextBox champNameTextBox = new TextBox();
-	private TextBox teamNameTextBox = new TextBox();
-	private DateBox champDateBox = new DateBox();
-	private Tree ChampsTree = new Tree();
-	private TreeItem ItemNewChamp = new TreeItem();
-	private TreeItem ItemAddChamp = new TreeItem();
-	private Tree TeamsTree = new Tree();
-	private TreeItem ItemNewTeam = new TreeItem();
-	private TreeItem ItemAddTeam = new TreeItem();
-	private Tree InvitationsTree = new Tree();
+	private TextBox champNameTextBox = new TextBox(); //
+	private TextBox teamNameTextBox = new TextBox(); //
+	private DateBox champDateBox = new DateBox(); //
+	
 	private TreeItem ItemChampInvitations = new TreeItem();
 	private TreeItem ItemTeamInvitations = new TreeItem();
 	private SuggestBox suggestNickBox;
@@ -151,9 +140,9 @@ public class JocProg implements EntryPoint {
 	
 	private ArrayList<CircuitInfo> circuitsList = new ArrayList<CircuitInfo>();
 	private ArrayList<CircuitInfo> champCircuitsList = new ArrayList<CircuitInfo>();
-   	private ArrayList<String> champsList = new ArrayList<String>();
-   	private ArrayList<String> teamsList = new ArrayList<String>();
-   	private ArrayList<String> invitationsList = new ArrayList<String>();
+   	private ArrayList<String> champsList = new ArrayList<String>(); //??
+   	private ArrayList<String> teamsList = new ArrayList<String>(); //??
+   	private ArrayList<String> invitationsList = new ArrayList<String>(); //??
    	//private String[] pageSizes = {"Tamaño","10","25","50","75","100"};
    	private String[] pageSizes = {"Tamaño","1","2","3","4","5","6","7","8","9","10"};
    	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
@@ -170,7 +159,7 @@ public class JocProg implements EntryPoint {
 	
 	private int playMode = NONE;
 	private String champOn = "";
-	private String circuitOn = "Montmelo";
+	private String circuitOn = "Montmelo";   //que poner en default??
 	private String circuitURL = IMG_URL+"basic.png";
 	private int circuitWidth = 0;
 	private int circuitHeight = 0;
@@ -186,7 +175,6 @@ public class JocProg implements EntryPoint {
 	private RadioButton thirdRadioButton = new RadioButton("circuits", "");
 	
 
-   
    /**
    * Entry point method.
    */
@@ -237,16 +225,12 @@ public class JocProg implements EntryPoint {
 				  }	
 			  });
 
-
 	  //Assemble Main panel.
-	  //TabPanel mainPanel = new TabPanel();
-
 	  //mainPanel.setAnimationEnabled(true);
 	  mainPanel.add(multiPanel,"Inicio");
 	  mainPanel.add(codiPanel,"Corre");
 	  mainPanel.add(rankingVPanel,"Ranking");
 	  mainPanel.add(new HTML("Help Tab"),"Help");
-	  //mainPanel.add(adminHPanel,"Administración");
 	  mainPanel.selectTab(0);
 	  
 	  mainPanel.setSize("100%","100%");
@@ -345,6 +329,7 @@ public class JocProg implements EntryPoint {
 	  regOpsCellFormatter.setHorizontalAlignment(5,1,HasHorizontalAlignment.ALIGN_CENTER);
 	 
 	  // Add register form in a disclosure panel
+	  DisclosurePanel registerDisclosure = new DisclosurePanel("¿Aún no estás registrado?");
 	  registerDisclosure.setAnimationEnabled(true);
 	  registerDisclosure.setContent(regOptions);
 	  
@@ -380,7 +365,7 @@ public class JocProg implements EntryPoint {
 		    		  Grid perfilInfo = new Grid(5,3);
 		    		  perfilInfo.setCellSpacing(5);
 		    		  
-		    		  regNickTextBox.setText(res.get("nick"));
+		    		  regNickTextBox.setText(res.getNick());
 		    		  regNickTextBox.setEnabled(false);
 		    		  perfilInfo.setWidget(0, 0, addInVerticalPanel(new Label("Usuario:"), regNickTextBox));
 		    		  
@@ -464,6 +449,7 @@ public class JocProg implements EntryPoint {
   private void createCorrePanel(){
 
 	  //Text areas
+	  HorizontalPanel consolaPanel = new HorizontalPanel();
 	  consolaTextArea.setText("consola de salida");
 	  consolaTextArea.setSize("100%","100%");
 	  consolaPanel.setSize("100%","100%");
@@ -506,7 +492,6 @@ public class JocProg implements EntryPoint {
 	  Image rightProgressImg = new Image();
 	  leftProgressImg.setUrl(LOCAL_URL+"barra1.png");
 	  progressImg.setUrl(LOCAL_URL+"barra2.png");
-	  //HTMLPanel progressImg = new HTMLPanel("<div align='center'><img src='"+LOCAL_URL+"barra2.png' width='100%' height='100%'></div>");
 	  rightProgressImg.setUrl(LOCAL_URL+"barra3.png");
 	  Image pointerImg = new Image();
 	  pointerImg.setUrl(LOCAL_URL+"pointer.png");
@@ -583,7 +568,7 @@ public class JocProg implements EntryPoint {
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
 					  if(codeNameTextBox.getText().equals("")) Window.alert("Debes introducir un nombre para el archivo de guardado");
-					  else requestSaveCode(inputTextArea.getText(),codeNameTextBox.getText());
+					  else codeNameTextBox.setText("");
 				  }
 			  });
 	  loadCodeButton.addClickHandler( 
@@ -863,12 +848,10 @@ public class JocProg implements EntryPoint {
   }
   
   private void createRankingPanel(){
-	  
-	  // Create a panel to align the Widgets
-	  rankingHPanel.setSize("100%", "30%");
-	  rankingHPanel.setSpacing(10);
-	  rankingHPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
+	  // Create a panel to align the Widgets
+	  HorizontalPanel boxesHPanel = new HorizontalPanel();
+	  boxesHPanel.setSpacing(20);
 	  // Add drop boxs with the lists
 	  if(circuitsDropBox.getItemCount()==0) circuitsDropBox.addItem("CIRCUITOS");
 	  champsDropBox.clear();
@@ -877,9 +860,16 @@ public class JocProg implements EntryPoint {
 	  teamsDropBox.clear();
 	  teamsDropBox.addItem("EQUIPOS");
 	  teamsDropBox.setEnabled(false);
-	  rankingHPanel.add(circuitsDropBox);
-	  rankingHPanel.add(champsDropBox);
-	  rankingHPanel.add(teamsDropBox);
+	  boxesHPanel.add(circuitsDropBox);
+	  boxesHPanel.add(champsDropBox);
+	  boxesHPanel.add(teamsDropBox);
+	  
+	  VerticalPanel boxesVPanel = new VerticalPanel();
+	  //boxesVPanel.setHeight("30%");
+	  boxesVPanel.addStyleName("inputForm");
+	  boxesVPanel.setSpacing(5);
+	  boxesVPanel.add(new Label("Filtrar ranking según:"));
+	  boxesVPanel.add(boxesHPanel);
 	    
 	  // Create table for ranking data.
 	  rankingFlexTable.setText(0, 0, "Usuario");
@@ -898,17 +888,25 @@ public class JocProg implements EntryPoint {
 	  rankPagesDropBox.setEnabled(false);
 	  
 	  Grid dropBoxes = new Grid (2,1);
+	  dropBoxes.setCellSpacing(5);
 	  dropBoxes.setWidget(0,0,sizePagesDropBox);
 	  dropBoxes.setWidget(1,0,rankPagesDropBox);
 	  
-	  ranking2HPanel.setSize("100%", "70%");
-	  ranking2HPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-	  ranking2HPanel.add(rankingFlexTable);
-	  ranking2HPanel.add(dropBoxes);
+	  HorizontalPanel rankingHPanel = new HorizontalPanel();
+	  //rankingHPanel.setWidth("100%");
+	  rankingHPanel.setSpacing(10);
+	  rankingHPanel.add(rankingFlexTable);
+	  rankingHPanel.add(dropBoxes);
+	  //rankingHPanel.setCellHorizontalAlignment(rankingFlexTable,HasHorizontalAlignment.ALIGN_CENTER);
+	  //rankingHPanel.setCellVerticalAlignment(rankingFlexTable,HasVerticalAlignment.ALIGN_TOP);
 	    
 	  rankingVPanel.setSize("100%","100%");
+	  rankingVPanel.setSpacing(20);
+	  rankingVPanel.add(boxesVPanel);
 	  rankingVPanel.add(rankingHPanel);
-	  rankingVPanel.add(ranking2HPanel);
+	  rankingVPanel.setCellHorizontalAlignment(boxesVPanel,HasHorizontalAlignment.ALIGN_CENTER);
+	  rankingVPanel.setCellHorizontalAlignment(rankingHPanel,HasHorizontalAlignment.ALIGN_CENTER);
+	  rankingVPanel.setCellVerticalAlignment(rankingHPanel,HasVerticalAlignment.ALIGN_TOP);
 	  
 	  // Listen for events on the DropBoxs.
 	  circuitsDropBox.addChangeHandler(new ChangeHandler() {
@@ -968,10 +966,10 @@ public class JocProg implements EntryPoint {
   
   private void createAdminPanel(){
 
-	  createNewChampPanel();
-	  createNewTeamPanel();
-	  createAddPlayersPanel();
-	  createInvitationsPanel();
+	  final VerticalPanel newChampVPanel = createNewChampPanel();
+	  final VerticalPanel newTeamVPanel = createNewTeamPanel();
+	  final VerticalPanel addPlayersVPanel = createAddPlayersPanel();
+	  final VerticalPanel invitationsVPanel = createInvitationsPanel();
 	  
 	  final VerticalPanel adminVPanel = new VerticalPanel();
 	  adminVPanel.setSpacing(5);
@@ -998,8 +996,9 @@ public class JocProg implements EntryPoint {
 		  }
 	  });
 	  
-	  ItemNewChamp = ChampsTree.addItem("Crear nuevo");
-	  ItemAddChamp = ChampsTree.addItem("Invitar a jugadores");
+	  final Tree ChampsTree = new Tree();
+	  final TreeItem ItemNewChamp = ChampsTree.addItem("Crear nuevo");
+	  final TreeItem ItemAddChamp = ChampsTree.addItem("Invitar a jugadores");
 	  ChampsTree.addSelectionHandler(new SelectionHandler<TreeItem>(){
 		  public void onSelection(SelectionEvent<TreeItem> event){
 			  TreeItem it = ChampsTree.getSelectedItem();
@@ -1020,8 +1019,9 @@ public class JocProg implements EntryPoint {
 		  }
 	  });
 	
-	  ItemNewTeam = TeamsTree.addItem("Crear nuevo");
-	  ItemAddTeam = TeamsTree.addItem("Invitar a jugadores");
+	  final Tree TeamsTree = new Tree();
+	  final TreeItem ItemNewTeam = TeamsTree.addItem("Crear nuevo");
+	  final TreeItem ItemAddTeam = TeamsTree.addItem("Invitar a jugadores");
 	  TeamsTree.addSelectionHandler(new SelectionHandler<TreeItem>(){
 		  public void onSelection(SelectionEvent<TreeItem> event){
 			  TreeItem it = TeamsTree.getSelectedItem();
@@ -1042,6 +1042,7 @@ public class JocProg implements EntryPoint {
 		  }
 	  });
 	
+	  final Tree InvitationsTree = new Tree();
 	  ItemChampInvitations = InvitationsTree.addItem("A campeonatos");
 	  ItemTeamInvitations = InvitationsTree.addItem("A equipos");
 	  InvitationsTree.addSelectionHandler(new SelectionHandler<TreeItem>(){
@@ -1072,7 +1073,7 @@ public class JocProg implements EntryPoint {
 	  adminHPanel.add(adminVPanel);
   }
   
-  private void createNewChampPanel(){
+  private VerticalPanel createNewChampPanel(){
 	  
 	  VerticalPanel champNameVPanel = new VerticalPanel();
 	  
@@ -1115,6 +1116,7 @@ public class JocProg implements EntryPoint {
 	  newChampHPanel.add(champChooseVPanel);
 	  newChampHPanel.add(champAddVPanel);
 
+	  VerticalPanel newChampVPanel = new VerticalPanel();
 	  newChampVPanel.setSize("100%","100%");
 	  newChampVPanel.setSpacing(10);
 	  newChampVPanel.add(champNameVPanel);
@@ -1170,10 +1172,11 @@ public class JocProg implements EntryPoint {
 					  else requestNewChampionship();
 				  }
 			  });
-
+	  
+	  return newChampVPanel;
   }
   
-  private void createNewTeamPanel(){
+  private VerticalPanel createNewTeamPanel(){
 	  
 	  Grid newTeam = new Grid(1,2);
 	  newTeam.setWidget(0,0,new HTML("Nombre: "));
@@ -1181,6 +1184,7 @@ public class JocProg implements EntryPoint {
 	  
 	  Button createTeamButton = new Button("Crear equipo");
 
+	  VerticalPanel newTeamVPanel = new VerticalPanel();
 	  newTeamVPanel.setSpacing(20);
 	  newTeamVPanel.add(new HTML("¡Crea un nuevo equipo del que serás propietario!"));
 	  newTeamVPanel.add(newTeam);
@@ -1195,9 +1199,11 @@ public class JocProg implements EntryPoint {
 					  else requestNewTeam();
 				  }
 			  });
+	  return newTeamVPanel;  
   }
   
-  private void createAddPlayersPanel(){
+  
+  private VerticalPanel createAddPlayersPanel(){
 	  
 	  requestAllNicks();
 	  suggestNickBox = new SuggestBox(oracle);
@@ -1209,6 +1215,7 @@ public class JocProg implements EntryPoint {
 	  addPlayersHPanel.add(suggestNickBox);
 	  addPlayersHPanel.add(addPlayersButton);
 	  
+	  VerticalPanel addPlayersVPanel = new VerticalPanel();
 	  addPlayersVPanel.setSpacing(20);
 	  addPlayersVPanel.add(addPlayersLabel);
 	  addPlayersVPanel.add(addPlayersHPanel);
@@ -1236,10 +1243,12 @@ public class JocProg implements EntryPoint {
 					  }
 				  }
 			  });  
+	  return addPlayersVPanel;
   }
   
-  private void createInvitationsPanel() {
+  private VerticalPanel createInvitationsPanel() {
 	  
+	  VerticalPanel invitationsVPanel = new VerticalPanel();
 	  invitationsVPanel.setSize("100%", "100%");
 	  invitationsVPanel.setSpacing(20);
 	  
@@ -1251,53 +1260,54 @@ public class JocProg implements EntryPoint {
 	  invitationsFlexTable.getCellFormatter().addStyleName(0, 0, "invitationListFirstColumn");
 	  invitationsFlexTable.getCellFormatter().addStyleName(0, 1, "invitationListSecondColumn");
 	  invitationsVPanel.add(invitationsFlexTable);
+	  
+	  return invitationsVPanel;
   }
   
   
   private void requestLogin() {
-	  
 	  if (loginUserTextBox.getText().equals("") || loginPassword.getText().equals("")){
 		  Window.alert("Debes indicar tu nombre de usuario y contraseña");
 	  }
-	  else{
+	  else {
 		  String url = JSON_URL;
 		  url = URL.encode(url);
 		  //Send request to server and catch any errors.
 		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
 		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
-
+	
 		  try {
 			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		      URL.encodeComponent("login")+"&"+URL.encodeComponent("nick")+"="+
-		      URL.encodeComponent(loginUserTextBox.getText())+"&"+URL.encodeComponent("password")+"="+
-		      URL.encodeComponent(loginPassword.getText()), new RequestCallback() {
-		        public void onError(Request request, Throwable exception) {
-		        	Window.alert("Couldn't retrieve JSON");
-		        }
-		        public void onResponseReceived(Request request, Response response) {
-		          if (200 == response.getStatusCode()) {
-		        	  int res = asInt(response.getText());
-		        	  if(res==1) Window.alert("Usuario o contraseña incorrectos");
-		        	  else if(res==2) Window.alert("Usuario pendiente de activación");
-		        	  else if (res==0){
-		        		  USER = loginUserTextBox.getText();
-		        		  createPerfilPanel();
-		        		  requestNInvitations();
-		        		  multiPanel.remove(loginVPanel);
-		        		  multiPanel.add(adminHPanel);
-		        		  mainPanel.insert(multiPanel,"Administración", 0);
-		        		  mainPanel.selectTab(0);
-		        		  loginUserTextBox.setText("");
-		        		  loginPassword.setText("");
-		        	  }		        	  
-		          } else {
-		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
-		          }
-		        }
-		      });
-		    } catch (RequestException e) {
-		    	Window.alert("Couldn't retrieve JSON");
-		    }
+					  URL.encodeComponent("login")+"&"+URL.encodeComponent("nick")+"="+
+					  URL.encodeComponent(loginUserTextBox.getText())+"&"+URL.encodeComponent("password")+"="+
+					  URL.encodeComponent(loginPassword.getText()), new RequestCallback() {
+			        	public void onError(Request request, Throwable exception) {
+			        		Window.alert("Couldn't retrieve JSON");
+			        	}
+			        	public void onResponseReceived(Request request, Response response) {
+			        		if (200 == response.getStatusCode()) {
+			        			int res = asInt(response.getText());
+			        			if(res==1) Window.alert("Usuario o contraseña incorrectos");
+			        			else if(res==2) Window.alert("Usuario pendiente de activación");
+			        			else if (res==0){
+			        				USER = loginUserTextBox.getText();
+			        				createPerfilPanel();
+			        				requestNInvitations();
+			        				multiPanel.remove(loginVPanel);
+			        				multiPanel.add(adminHPanel);
+			        				mainPanel.insert(multiPanel,"Administración", 0);
+			        				mainPanel.selectTab(0);
+			        				loginUserTextBox.setText("");
+			        				loginPassword.setText("");
+			        			}		        	  
+			        		} else {
+			        			Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+			        		}
+			        	}
+			  });
+		  } catch (RequestException e) {
+			  Window.alert("Couldn't retrieve JSON");
+		  }
 	  }
   }
   
@@ -1570,8 +1580,7 @@ public class JocProg implements EntryPoint {
 						  JSonData info = res.get(i);
 						  String name = info.get("name");
 						  String date = info.get("date");
-						  //savedCodesMultiBox.addItem(name +"  ("+date+")");
-						  savedCodesMultiBox.addItem(name);
+						  savedCodesMultiBox.addItem(name +"  ("+date+")");
 					  }
 					  
 					  dialogContents.add(savedCodesMultiBox);
@@ -1585,8 +1594,13 @@ public class JocProg implements EntryPoint {
 							  new ClickHandler() {
 						  		public void onClick(ClickEvent event) {
 						  			if(savedCodesMultiBox.getSelectedIndex() == -1) Window.alert("Debes elegir el archivo que deseas cargar");
-						  			requestLoadCode(savedCodesMultiBox.getItemText(savedCodesMultiBox.getSelectedIndex()));
-						  			dialogBox.hide();
+						  			else {
+							  			String str = savedCodesMultiBox.getItemText(savedCodesMultiBox.getSelectedIndex());
+							  			String[] file = str.split("[ ]");
+							  			requestLoadCode(file[0]);
+							  			//requestLoadCode(savedCodesMultiBox.getItemText(savedCodesMultiBox.getSelectedIndex()));
+							  			dialogBox.hide();
+						  			}
 						  		}
 					  });
 					  buttonsContents.add(loadButton);
@@ -1646,7 +1660,7 @@ public class JocProg implements EntryPoint {
   }
   
   
-  private void requestCircuits() {    //al iniciar la aplicacion una sola vez
+  private void requestCircuits() {
 	  
 	  String url = JSON_URL;
 	  url = URL.encode(url);
@@ -1686,7 +1700,7 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
-  private void refreshListBox(final ListBox listBox) {  //getMyChampionships
+  private void refreshListBox(final ListBox listBox) {
 	  String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
@@ -1716,7 +1730,7 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
-  private void requestChampionshipCircuits(String name) {  //getMyChampionships
+  private void requestChampionshipCircuits(String name) {
 	  String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
@@ -1762,7 +1776,7 @@ public class JocProg implements EntryPoint {
   }
   
   
-  private void refreshDropBoxs() {   //cuando se elija la pestaña de ranking
+  private void refreshDropBoxs() {
 	  
 	  if (circuitsDropBox.getSelectedIndex() != 0){
 		  String circ = circuitsDropBox.getValue(circuitsDropBox.getSelectedIndex());
@@ -2141,10 +2155,7 @@ public class JocProg implements EntryPoint {
 			  }
 			  public void onResponseReceived(Request request, Response response) {
 				  if (200 == response.getStatusCode()) {
-					  //JSonArrayData res = asJSonArrayData(response.getText());
 					  JSonData res = asJSonData(response.getText());
-					  //int nToChamps = res.getInt("nChamps");
-					  //int nToTeams = res.getInt("nTeams");
 					  String nToChamps = res.get("nChamps");
 					  String nToTeams = res.get("nTeams");
 					  int total = Integer.parseInt(nToChamps) + Integer.parseInt(nToTeams);
@@ -2227,7 +2238,6 @@ public class JocProg implements EntryPoint {
 				  }
 			      public void onResponseReceived(Request request, Response response) {
 			    	  if (200 == response.getStatusCode()) {
-			    		//retornara algo??
 			    		  if(answer == 1) Window.alert("La invitación al campeonato ha sido aceptada");
 			    		  if(answer == 0) Window.alert("La invitación al campeonato ha sido rechazada");
 			    		  requestNInvitations();
@@ -2247,7 +2257,6 @@ public class JocProg implements EntryPoint {
 				  }
 			      public void onResponseReceived(Request request, Response response) {
 			    	  if (200 == response.getStatusCode()) {
-			    		  //retornara algo??
 			    		  if(answer == 1) Window.alert("La invitación al equipo ha sido aceptada");
 			    		  if(answer == 0) Window.alert("La invitación al equipo ha sido rechazada");
 				          requestNInvitations();
@@ -2296,7 +2305,6 @@ private void requestLogout() {
 	  requestLogout();
 	  USER = ""; 
 	  playMode = NONE;
-	  //multiPanel.remove(perfilVPanel);
 	  multiPanel.remove(adminHPanel);
 	  
 	  regNickTextBox.setText("");  regNameTextBox.setText("");
@@ -2540,12 +2548,12 @@ private void requestLogout() {
 	return eval('('+json+')');
   }-*/;
   
-  private final native JsArray<JSonData> asJsArrayJSonData(String json) /*-{
+  private final native JSonData asJSonData(String json) /*-{
   	return eval('('+json+')');
   }-*/;
   
-  private final native JSonData asJSonData(String json) /*-{
-  	return eval('('+json+')');
+  private final native JsArray<JSonData> asJsArrayJSonData(String json) /*-{
+	return eval('('+json+')');
   }-*/;
   
   private final native int asInt(String json) /*-{
