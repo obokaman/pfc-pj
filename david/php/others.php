@@ -165,4 +165,18 @@
 	/*Post: Si la simulacion se realiza con exito creamos un directorio donde se guarda todos los archivos necesarios de la simulacion junto con los resultados de esta, añadimos la partida realizada a la base de datos y retornamos el identificador de la partida, el codigo del error que es igual a 0 y el mensaje de exito de la partida. En caso de fallida, retornamos el codigo del error y el mensaje del error*/
 	
 	
+	/*La función envia un correo a la dirección de correo indicado en la entrada con la clave de activación del usuario*/
+	function enviar_mail($to, $activation_key){
+	/*Pre: Los valores de la entrada no pueden ser nulos*/	
+	
+		$subject = "Enlace de activación de la cuenta de usuario";
+		$message = "Para activar su cuenta de usuario haga click en el siguiente enlace:\n
+							--> CLAVE DE ACTIVACION = ".$activation_key;
+	
+		return(mail($to, $subject, $message) );		
+	}
+	/*Post: Envia un correo a la dirección de correo indicada en la entrada con la clave de activación para activar la cuenta del usuario*/
+	
+	
+	
 ?>

@@ -33,19 +33,25 @@ else if ($f=="logout"){
 /*Función que nos inserta los nuevos usuarios en la base de datos*/
 else if ($f == "newUser") {
 /*Pre: - */
-	send(
-		create_user(
-			clean("nick", "string"),
+	$email_user = clean("email_user", "string");
+	$nick = clean("nick", "string");
+	$result = create_user(
+			$nick,
 			clean("name", "string"),
 			clean("surname1", "string"),
 			clean("surname2", "string"),
-			clean("email_user", "string"),
+			$email_user,
 			clean("city", "string"),
 			clean("school", "string"),
 			clean("email_school", "string"),
 			clean("password", "string")
-		)
-	);
+		);
+	
+	if ($result == 0){
+		enviar_mail( $email_user, get_activation_key($nick) );		
+	}
+	
+	send($result);
 }
 /*Post: */
 
@@ -455,7 +461,7 @@ else if( $f == "run" ) {
 /*Pre: - */
 	send(
 		run( 			
-			clean("code", "json"),
+			clean("code", "code"),
 			clean("circuit", "string"),
 			clean("championship", "string")
 		)

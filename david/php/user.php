@@ -49,6 +49,21 @@
 	/*Post: Retorna un entero que representa el identificador del usuario*/
 	
 	
+	/*La funcion nos retorna la clave de activación del usuario con el mismo nick que el de la entrada
+			- nick: Nick del usuario
+	*/
+	function get_activation_key($nick){
+	/*Pre: - */
+		global $connection;
+		
+		$query = "SELECT u.activation_key FROM user u WHERE u.nick = '$nick'";	
+		$result_query = mysql_query($query, $connection) or my_error('GET_ACTIVATION_KEY-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+		
+		return extract_row($result_query)->activation_key;		
+	}
+	/*Post: Retorna la cadena de caracteres que representa la clave de activación del usuario con el mismo nick que el de la entrada*/
+	
+	
 	/*La función nos devuelve la lista de todos los nicks de los usuarios que estan almacenados en la BBDD*/
 	function get_users(){
 	/*Pre: - */	

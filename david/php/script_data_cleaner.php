@@ -1,5 +1,5 @@
-<?php include("/var/www/conf/conf.php");?>
-<?php include("/home/dvd/Escritorio/pfc-pj/david/php/includes.php");?>
+<?php include("conf.php");?>
+<?php include("dincludes.php");?>
 <?php	
 	/*Este script se encarga de limpiar los datos que sean innecesarios para la base de datos o algún directorio. Los dato que se limpiarán serán: 
 			- Los usuarios no activados desde un mes de su inserción
@@ -38,6 +38,26 @@
 	for ($i = 0; $i < count($arr); $i++)		delete_inscription($arr[$i]->id_user, $arr[$i]->id_champ);
 	
 	echo "Realizado el proceso de eliminación de las invitaciones pendientes de los campeonatos caducadas\n";
+	
+	
+	/*Eliminar partidas de la base de datos y sus carpetas de usuarios anonimos*/
+	
+	$query = "SELECT g.id_game
+					FROM game g
+					WHERE g.id_user = 1";
+	
+	$result_query = mysql_query($query, $connection) or my_error('SCRIPT_DATA_CLEANER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+	
+	$arr = extract_rows($result_query);
+	
+	for ($i = 0; $i < count($arr); $i++){
+			delete_game( $arr[$i]->id_game );
+			`rm -r ${path['games']}/$id_game`; 
+	}		
+	
+	
+	
+	
 	
 	
 	close_connection($connection);

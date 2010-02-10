@@ -99,7 +99,7 @@ Parametros de entrada:
 			$query = "select u.nick, g.time_result from 	circuit c, game g,";			
 			if ($championship!=null) 	$query = $query. "championship ch,";			
 			if ($team!=null) 	$query = $query." team t,	user_team ut,";			
-			$query = $query."user u  where u.id_user = g.id_user	and 	c.name = '$circuit' and 	c.id_circuit = g.id_circuit";			
+			$query = $query."user u  where u.id_user = g.id_user	and g.id_user <> 1   and 	c.name = '$circuit' and 	c.id_circuit = g.id_circuit";			
 			if ($team!=null) 	$query = $query." and  t.name = '$team'	and 	t.id_team = ut.id_team and 	ut.id_user = u.id_user";			
 			if ($championship!=null) 	$query = $query. " and 	ch.name = '$championship' and 	ch.id_champ = g.id_champ";			
 			$query = $query." order by g.time_result, g.id_user" ;		
