@@ -173,7 +173,7 @@
 		$message = "Para activar su cuenta de usuario haga click en el siguiente enlace:\n
 							--> CLAVE DE ACTIVACION = ".$activation_key;
 	
-		return(mail('david_gos1001@hotmail.com', 'titulo', 'mensaje') );		
+		return(mail($to, $subject, $message) );		
 	}
 	/*Post: Envia un correo a la dirección de correo indicada en la entrada con la clave de activación para activar la cuenta del usuario*/
 	
