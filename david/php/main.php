@@ -48,10 +48,7 @@ else if ($f == "newUser") {
 		);
 	
 	if ($result == 0){
-		if( enviar_mail( $email_user, get_activation_key($nick) )) 
-			echo "Se ha enviado el correo";
-		else	echo "No se ha enviado el correo";
-		
+		enviar_mail( $email_user, get_activation_key($nick) );		
 	}
 	
 	send($result);

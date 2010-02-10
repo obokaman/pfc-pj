@@ -10,6 +10,14 @@
 					fwrite($x,  date("l,M d, Y g:i:s")." - ".$message."\n");	
 					fclose($x);
 			}
+			if ($option == 2) {
+				   $x = fopen("/tmp/pfc.php.log", "a+");
+				   fwrite($x, date("l,M d, Y g:i:s").": \n");
+				   foreach ($message as $k=>$v) {
+						   fwrite($x, $k." => ".$v."\n");
+				   }
+                    fclose($x);
+			}
 	}
 
 ?>

@@ -9,7 +9,7 @@
 */
 
 $path = Array( 'circuits' => '/var/local/share/racing/circuits/',
-		'images' =>  '/var/www/img/',
+		'images' =>  '/var/www/racing/img/',
 	        'url-images' => '/img/',
 		'bin' => '/var/local/share/racing/bin/',
 		'games' => '/var/local/share/racing/games/',
