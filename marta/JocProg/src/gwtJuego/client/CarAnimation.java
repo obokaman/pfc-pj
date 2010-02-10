@@ -34,7 +34,8 @@ public class CarAnimation implements Animation {
     /**
      * The URL where images are.
      */
-    private final static String IMG_URL = "http://localhost/img/";
+    //private final static String IMG_URL = "http://localhost/img/";
+    private final static String IMG_URL = "http://gabarro.org/racing/img/";
     /**
      * The next field to read from trace
      */
@@ -352,13 +353,10 @@ public class CarAnimation implements Animation {
     	int widgtH = h*80/circuitHeight;  //dividido entre circuitHeight o circuitWidth??
     	
     	widget.setHeight(widgtH + "px");
-    	
-    	//float newX = (float)(x/1000.0)*h;
-    	//float newY = (float)(y/1000.0)*h;
+
     	float newY = (y/(float)circuitHeight)*h;
     	float newX = (x/(float)circuitWidth)*imgWidth;
 
-    	//if(w > h) newX = newX + (float)((w-h)/2);
     	if(w > imgWidth) newX = newX + (float)((w-imgWidth)/2);
     	newX = newX - (widgtH/2);
     	newY = newY - (widgtH/2);
