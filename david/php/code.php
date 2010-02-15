@@ -47,8 +47,8 @@
 		$result_query = mysql_query($query, $connection) or my_error('GET_CODE-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		return extract_rows($result_query);
-	}
-	/*Post:  Devuelve el codigo asociado al nombre de fichera de la entrada y el identificador del usuario*/
+	
+	/*Post:  Devuelve lista con los pares, el nombre de la partida  y la fecha del guardado del código, del usuario de la entrada */
 
 
 	/*La funcion comprueba que existe el codigo con el mismo nombre de fichero y de identificador de usuario que la entrada

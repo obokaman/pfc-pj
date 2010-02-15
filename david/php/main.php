@@ -20,19 +20,22 @@ if ($f == "login") {
 /*Pre: - */
 	send( login( clean("nick", "string"),	clean("password", "string") ) );
 }
-/*Post: */
+/*Post: La función puede devolver varios valores:
+				- 0 si nick y password son correctos, ademas creada una variable session con el nick del usuario logueado
+				- 1 si nick no existe, o password es incorrecto
+				- 2 si nick y password son correctos, pero no esta activado*/
 
 
 else if ($f=="logout"){
 /*Pre: - */
 	session_unset();
 }
-/*Post: */
+/*Post: Cierra la variables de la sesión activadas por el usuario*/
 
 
 /*Función que nos inserta los nuevos usuarios en la base de datos*/
 else if ($f == "newUser") {
-/*Pre: - */
+/*Pre: Ningún parámetro de la entrada puede ser nulo a excepción de 'surname2' y  'email_school' */
 	$email_user = clean("email_user", "string");
 	$nick = clean("nick", "string");
 	$result = create_user(
@@ -48,17 +51,20 @@ else if ($f == "newUser") {
 		);
 	
 	if ($result == 0){
-		enviar_mail( $email_user, get_activation_key($nick) );		
+		send_mail( $nick, $email_user);		
 	}
 	
 	send($result);
 }
-/*Post: */
+/* Post: La función devolverá según el comportamiento de la inserción del nuevo usuario:
+				- Un 0, si el usuario se ha insertado correctamente y envia un correo a la dirección del usuario
+				- Un 1, en caso de que el nick del nuevo usuario ya exista
+				- Un 2 si se ha producido algún error en el momento de insertar en nuevo usuario */
 
 
 /*Función para cambiar los parametros de los usuarios registrados*/
 else if ($f == "changeUser") {	
-/*Pre: - */
+/*Pre: Ningún parámetro de la entrada puede ser nulo a excepción de 'surname2' y  'email_school' */
 		send(
 			set_user(
 				clean("name", "string"),
@@ -74,7 +80,10 @@ else if ($f == "changeUser") {
 			)
 		);
 }
-/*Post: */
+/*Post: La función retorna enteros distintos dependiendo del comportamiento que siga:
+				- 1 si el usuario de la sesion no esta logueado
+				- 0 se realiza el cambio correctamente ya que el 'old_pass' es correcto para el usuario logueado
+				- 2 el 'old_pass' no corresponde al usuario logueado*/
 
 
 /*La función nos devuelve información de los usuarios*/
@@ -86,12 +95,15 @@ else if ($f == "getUser") {
 			)
 		);
 }
-/*Post: */
+/*Post: La función devolvera información distinta en diferentes casos:
+				- Devuelve toda la información del usuario, si el nick de la entrada es el mismo que el nick del usuario logueado de la session.
+				- Devuelve el nick, en nombre, población y colegio si el nick de la entrada es distinto que el nick del usuario logueado de la session.
+				- No devuelve nada en caso de que el usuario de la session no este logueado. */
 
 
-/*Función que devuelve los equipos a los que esta inscrito el usuario loguado*/
+/*Función que devuelve los equipos a los que esta inscrito el usuario logueado*/
 else if ($f == "getMyTeams") {	
-/*Pre: - */
+/*Pre: Los nombres han de existir y no ser nulos */
 		send(
 			get_my_teams(
 				clean("circuit", "sql"),
@@ -99,19 +111,19 @@ else if ($f == "getMyTeams") {
 			)
 		);
 }
-/*Post: */
+/*Post:  Devuelve una array de nombres de equipos a los que pertenece el usuario logueado*/
 
 
 /*Función que devuelve los campeonatos a los que esta inscritos el usuario logueado*/
 else if ($f == "getMyChampionships") {	
-/*Pre: - */
+/*Pre: Los nombres han de existir y no ser nulos */
 		send(
-			getMyChampionships(
+			get_my_championships(
 				clean("circuit", "sql")			
 			)
 		);
 }
-/*Post: */
+/*Post:  Devuelve una array de strings con los nombres de los campeonatos a los que esta inscrito el usuario logueado y que ademas contienen el circuito de la entrada. En caso de que el usuario no este logueado o no exista el circuito de la entrada dentro del campeonato, retorna una array vacia*/
 
 
 /*Función que devuelve los circuitos que hay en la base de datos*/
@@ -121,7 +133,7 @@ else if ($f == "getCircuits") {
 			get_circuits()
 		);
 }
-
+/*Post: La función nos devuelve una array de strings con los nombres de todos los circuitos que estan almacenados en la base de datos*/
 
 
 /*Función que comprueba la clave de activacion de una cuenta de usuario, y devuelve un codigo HTML con un mensaje en caso de exito o de fallida. Esta funcion no devuelve el resultado en formato JSON*/
@@ -132,12 +144,12 @@ else if ($f == "activated") {
 			clean("activation_key", "string")
 		);
 }
-/*Post: */
+/*Post: Devuelve código HTML con el mensaje de la operación si se ha realizado con exito o no*/
 
 
 /*Esta función devuelve un fragmento del ranking realizado a partir de los parametros circuit, team y championship (nombre del circuito, nombre del equipo y nombre del campeonato, respectivamente). Este fragmento, lo llamaremos pagina, y es lo que devolveremos.*/
 else if ($f == "getRankings") {	
-/*Pre: - */
+/*Pre: El circuito no puede ser nulo */
 		send(
 			getRankings(
 				clean("circuit", "string"),
@@ -148,12 +160,15 @@ else if ($f == "getRankings") {
 			)
 		);
 }
-/*Post: */
+/*Post: La funcion nos devolvera 3 valores:
+			- page: Un entero que corresponde a el numero de la pagina del ranking
+			- numpages: Numero total de paginas que hay en el ranking realizado
+			- data: Un array con los pares nick de usuario y tiempo realizado en una partida. Esta array como maximo puede contener sizepage elementos*/
 
 
 /*Función que nos crea un nuevo campeonato en la base de datos, y nos incluye los circuitos en los que se realiza el campenato*/
 else if ($f == "newChampionship") {	
-/*Pre: - */
+/*Pre: Los parámetros que se reciben no puede ser nulos */
 		$name = clean("name", "string");
 		$date_limit = clean("date_limit", "date");
 		$circuits = Array();
@@ -222,7 +237,7 @@ else if ($f == "getMyOwnChampionships") {
 			get_championships_by_founded()
 		);
 }
-/*Post: */
+/*Post: Devuelve una array de string con los nombres de los campeonatos que ha fundado el usuario que esta logueado*/
 
 
 /*La función nos dice los equipos a los que pertence el usuario logueado*/
@@ -232,7 +247,7 @@ else if ($f == "getMyOwnTeams") {
 			get_teams_by_founded()
 		);
 }
-/*Post: */
+/*Post: Retorna una array de cadenas de carácteres con los nombres de los equipos que ha fundado el usuario que esta logueado*/
 
 
 /*La función retorna todos los nicks de los usuarios registrados en la base de datos*/
@@ -242,7 +257,7 @@ else if ($f == "getAllNicks") {
 			get_users()
 		);
 }
-/*Post: */
+/*Post: La función nos devuelve una array de strings de todos los nicks de los  usuarios que estan almacenados en la base de datos*/
 
 
 /*La funcion crea una invitación pendiente de confirmar del usuario con el nick y el nombre del campeonato de entrada*/
@@ -291,7 +306,7 @@ else if ($f == "addPlayerToTeam") {
 
 /*La función retorna el número de peticiones pendientes de los campeonatos y el número de peticiones pendientes de los equipos*/
 else if ($f == "getNInvitations") {		
-/*Pre: - */
+/*Pre: Debe haber un usuario logueado */
 		class obj{
 				public $nChamps;
 				public $nTeams;					
@@ -313,7 +328,7 @@ else if ($f == "getChampionshipsInvited") {
 /*Pre: - */
 			send( get_championships_invited() );		
 }
-/*Post: */
+/*Post: Devuelve una array de objetos con el par nick y name donde el primero es el nick del fundador del campeonto al que el usuario logueado esta pendiente y el nombre de dicho campeonato*/
 
 
 /*La función devuelve información sobre todas las invitaciones a equipos hechas al usuario logueado que estan pendientes de confirmar/rechazar */
@@ -321,7 +336,7 @@ else if ($f == "getTeamsInvited") {
 /*Pre: - */
 			send( get_teams_invited() );		
 }
-/*Post: */
+/*Post: Devuelve una array de objetos con el par nick y name donde el primero es el nick del fundador del equipo al que el usuario logueado esta pendiente y el nombre de dicho equipo*/
 
 
 /*La función modifica el estado de la inscripcion entre el usuario logueado y el campeonato identificado por el nombre en la entrada. Si 'answer' es igual a 1, la petición correspondiente queda aceptada, en el caso que 'answer' es igual a 0, la petición queda rechazada*/
@@ -337,7 +352,7 @@ else if ($f == "setChampionshipAnswer") {
 			if ( ( $answer == 0 ) and ( get_status_inscription( get_id_user( $_SESSION[ 'user' ] ), get_id_championship ( $name_champ ) ) == 0 ) )  delete_inscription( get_id_user( $_SESSION[ 'user' ] ), get_id_championship ( $name_champ ) );			
 		}
 }
-/*Post: */
+/*Post: Actualiza el estado de la invitación pendiente del campeonato con el mismo nombre que el de la entrada del usuario que esta logueado, en caso de que la rechace se elimina de la base de datos de la invitación. En caso de que el usuario no este logueado no se realiza ninguna actualización*/
 
 
 /*La función modifica el estado de la peticion de ingresar en un equipo identificado por el nombre de la entrada y el usuario logueado. Si 'answer' es igual a 1, la petición correspondiente queda aceptada, en el caso que 'answer' es igual a 0, la petición queda rechazada*/
@@ -353,7 +368,7 @@ else if ($f == "setTeamAnswer") {
 			if ( ( $answer == 0 ) and ( get_status( get_id_user( $_SESSION[ 'user' ] ), get_id_team ( $name_team ) ) == 0 ) )  delete_user_team( get_id_user( $_SESSION[ 'user' ] ), get_id_team ( $name_team ) );			
 		}
 }
-/*Post: */
+/*Post: Actualiza el estado de la invitación pendiente de equipo con el mismo nombre que el de la entrada del usuario que esta logueado, en caso de que la rechace se elimina de la base de datos la invitación. Si no hay ningún usuario logueado no se realiza ninugna actualización.*/
 
 
 /*La función devuelve información sobre un circuito*/
@@ -363,7 +378,7 @@ else if ($f == "getCircuitInfo") {
 			get_circuit( clean("name", "string") )
 		);
 }
-/*Post: */
+/*Post: La función nos devuelve una array de strings donde los elementos estan indexados con 'url', 'width', 'height', 'level' y 'n_laps'*/
 
 
 /*La función devuelve información sobre un campeonato*/
@@ -373,7 +388,7 @@ else if ($f == "getChampionshipCircuits") {
 			get_championship_circuits( clean("name", "string") )
 		);
 }
-/*Post: */
+/*Post:Devuelve una array de string con los nombres de los circuitos que pertenecen al campeonato con el mismo nombre que la entrada*/
 
 
 /*La función inserta en la base de datos el codigo nuevo con el nombre de fichero indicado en la entrada*/
@@ -413,7 +428,7 @@ else if( $f == "loadCode" ) {
 		);
 	}
 }
-/*Post: */
+/*Post: Devuelve el codigo asociado al nombre de fichera de la entrada y el identificador del usuario*/
 
 
 /*La función devuelve el nombre de todas las partidas guardadas por el usuario logueado*/
@@ -425,12 +440,12 @@ else if( $f == "getSavedCodes" ) {
 		);
 	}
 }
-/*Post: */
+/*Post:Devuelve lista con los pares, el nombre de la partida  y la fecha del guardado del código, del usuario de la entrada */
 
 
 /*La función retorna un fragmento de codigo de una partida*/
 else if( $f == "getTraceFragment" ) {	
-/*Pre: - */
+/*Pre: El identificador de la partida existe */
 	send(
 		get_trace_fragment( 			
 			clean("id_game", "int"),
@@ -439,12 +454,12 @@ else if( $f == "getTraceFragment" ) {
 		)
 	);	
 }
-/*Post: */
+/*Post: Retorna dos valores, el tamaño del código leído y el contenido del código que se ha leído*/
 
 
 /*La función retorna el contenido entero del codigo de una partida*/
 else if( $f == "getFullTrace" ) {	
-/*Pre: - */
+/*Pre: El identificador de la partida existe */
 	send(
 		get_trace_fragment( 			
 			clean("id_game", "int"),
@@ -453,12 +468,12 @@ else if( $f == "getFullTrace" ) {
 		)
 	);	
 }
-/*Post: */
+/*Post:Retorna dos valores, el tamaño de todo el código leído y el contenido del código*/
 
 
 /*La función envia un codigo de partida para que lo compile y lo ejecute en el simulador, indicandole ademas el circuito donde se realizara la partida*/
 else if( $f == "run" ) {	
-/*Pre: - */
+/*Pre: El circuito no puede ser nulo */
 	send(
 		run( 			
 			clean("code", "code"),
@@ -467,7 +482,7 @@ else if( $f == "run" ) {
 		)
 	);	
 }
-/*Post: */
+/*Post: Retorna un mensaje con el código de error, un entero, con el cual identifica el tiepo de error. Y en caso de éxito de la función también retorna el valor del identificador de la partida en la base de datos*/
 
 
 close_connection($connection);

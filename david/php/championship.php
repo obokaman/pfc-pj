@@ -35,7 +35,7 @@
 	
 	/*La función retorna todos los nombres de los campeonatos que ha fundado el usuario que esta logueado*/
 	function get_championships_by_founded(){
-	/*Pre: Debe haber un usuario logueado */
+	/*Pre: - */
 		if ( isset($_SESSION['user']) ) {
 			
 			global $connection;
@@ -62,7 +62,7 @@
 	/*La función devuelve una lista de nombres de campeonatos a los que pertenece el usuario que esta logueado, y el circuito
 			- name_circuit: Nombre del circuito
 	*/
-	function getMyChampionships($name_circuit){
+	function get_my_championships($name_circuit){
 	/*Pre: - */			
 		if(isset($_SESSION["user"])){			
 			$nick_session = $_SESSION["user"]; 

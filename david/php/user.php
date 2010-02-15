@@ -219,7 +219,7 @@
 			- activation_key: Clave de activacion
 	*/
 	function activated($nick, $activation_key){
-	/*Pre: -*/			
+	/*Pre: - */			
 		global $connection;
 		
 		$message = " <html> 
@@ -242,13 +242,14 @@
 		else if ($activation_key <>$arr->activation_key){//La clave de activacion es incorrecta
 			$message = $message.'ERROR: La clave de activación es incorrecta';			
 		}else{
-			$query = "UPDATE user SET activated= 1";		
+			/*Activamos la cuenta del usuario*/
+			$query = "UPDATE user SET activated= 1 WHERE nick = '$nick'";		
 			$result_query = mysql_query($query, $connection) or my_error('ACTIVATED-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
-			$message = $message. "Has sido activado. Serás dirigido automáticamente en cinco segundos. En caso contrario, puedes acceder haciendo click <a href='http://www.cristalab.com'>aquí</a>";
+			$message = $message. "Has sido activado. Serás dirigido automáticamente en cinco segundos. En caso contrario, puedes acceder haciendo click <a href='http://gabarro.org/racing/JocProg'>aquí</a>";
 		}		
 		$message = $message."</body></html>";		
 		return $message;		
 	}
-	/*Post: Devuelve codigo HTML con el mensaje de la operacion si se ha realizado con exito o no*/
+	/*Post: Devuelve código HTML con el mensaje de la operación si se ha realizado con exito o no*/
 	
 ?>
