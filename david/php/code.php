@@ -47,7 +47,7 @@
 		$result_query = mysql_query($query, $connection) or my_error('GET_CODE-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 		
 		return extract_rows($result_query);
-	
+	}
 	/*Post:  Devuelve lista con los pares, el nombre de la partida  y la fecha del guardado del código, del usuario de la entrada */
 
 
@@ -66,5 +66,4 @@
 		else return true;
 	}
 	/*Post: Retorna cierto si ha encontrado una fila con el mismo nombre de fichero que el de la entrada y caso contrario retorna falso*/
-
 ?>
