@@ -34,8 +34,8 @@ public class CarAnimation implements Animation {
     /**
      * The URL where images are.
      */
-    //private final static String IMG_URL = "http://localhost/img/";
-    private final static String IMG_URL = "http://gabarro.org/racing/img/";
+    private final static String IMG_URL = "http://localhost/img/";
+    //private final static String IMG_URL = "http://gabarro.org/racing/img/";
     /**
      * The next field to read from trace
      */

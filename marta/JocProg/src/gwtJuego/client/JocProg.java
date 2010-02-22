@@ -62,12 +62,12 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 
 public class JocProg implements EntryPoint {
 	
-	//private static final String LOCAL_URL = "http://localhost/";
-	//private static final String JSON_URL = "http://localhost/php/main.php?";
-	//private static final String IMG_URL = "http://localhost/img/";
-	private static final String LOCAL_URL = "http://gabarro.org/racing/";
-	private static final String JSON_URL = "http://gabarro.org/racing/php/main.php?";
-	private static final String IMG_URL = "http://gabarro.org/racing/img/";
+	private static final String LOCAL_URL = "http://localhost/";
+	private static final String JSON_URL = "http://localhost/php/main.php?";
+	private static final String IMG_URL = "http://localhost/img/";
+	//private static final String LOCAL_URL = "http://gabarro.org/racing/";
+	//private static final String JSON_URL = "http://gabarro.org/racing/php/main.php?";
+	//private static final String IMG_URL = "http://gabarro.org/racing/img/";
 	private static final int CODE = 1;
 	private static final int DEBUG = 2;
 	private static final int EXECUTION = 3;
@@ -76,6 +76,7 @@ public class JocProg implements EntryPoint {
 	private static final int NONE = 0;
 	
 	private AnimationEngine engine = new AnimationEngine();
+	private static RequestBuilder builder;
 
 	private TabPanel mainPanel = new TabPanel();
 	private HorizontalSplitPanel correPanel = new HorizontalSplitPanel();
@@ -179,6 +180,12 @@ public class JocProg implements EntryPoint {
    * Entry point method.
    */
   public void onModuleLoad() {
+	  
+	  String url = JSON_URL;
+	  url = URL.encode(url);
+	  //Send request to server and catch any errors.
+	  builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
 
 	  requestCircuits();
 	  createLoginPanel();
@@ -343,16 +350,20 @@ public class JocProg implements EntryPoint {
   
   private void createPerfilPanel(){
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("getUser")+"&"+URL.encodeComponent("nick")+"="+
-		  URL.encodeComponent(USER), new RequestCallback() {
+		  String requestStr = encodeParam("function", "getUser")+"&"+
+		  	encodeParam("nick", USER);
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+		  //Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+		  //URL.encodeComponent("getUser")+"&"+URL.encodeComponent("nick")+"="+
+		  //URL.encodeComponent(USER), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -467,16 +478,16 @@ public class JocProg implements EntryPoint {
 	  correPanel.setRightWidget(consolaPanel);
 	  
 	  Image playButtonImg = new Image();
-	  playButtonImg.setUrl(LOCAL_URL+"play.png");
+	  playButtonImg.setUrl(IMG_URL+"play.png");
 	  playButtonImg.setHeight("21px");
 	  Image stopButtonImg = new Image();
-	  stopButtonImg.setUrl(LOCAL_URL+"stop.png");
+	  stopButtonImg.setUrl(IMG_URL+"stop.png");
 	  stopButtonImg.setHeight("21px");
 	  Image pauseButtonImg = new Image();
-	  pauseButtonImg.setUrl(LOCAL_URL+"pause.png");
+	  pauseButtonImg.setUrl(IMG_URL+"pause.png");
 	  pauseButtonImg.setHeight("21px");
 	  Image play2ButtonImg = new Image();
-	  play2ButtonImg.setUrl(LOCAL_URL+"play.png");
+	  play2ButtonImg.setUrl(IMG_URL+"play.png");
 	  play2ButtonImg.setHeight("21px");
 	  
 	  playButton = new PushButton(playButtonImg);
@@ -490,11 +501,11 @@ public class JocProg implements EntryPoint {
 	  Image progressImg = new Image();
 	  Image leftProgressImg = new Image();
 	  Image rightProgressImg = new Image();
-	  leftProgressImg.setUrl(LOCAL_URL+"barra1.png");
-	  progressImg.setUrl(LOCAL_URL+"barra2.png");
-	  rightProgressImg.setUrl(LOCAL_URL+"barra3.png");
+	  leftProgressImg.setUrl(IMG_URL+"barra1.png");
+	  progressImg.setUrl(IMG_URL+"barra2.png");
+	  rightProgressImg.setUrl(IMG_URL+"barra3.png");
 	  Image pointerImg = new Image();
-	  pointerImg.setUrl(LOCAL_URL+"pointer.png");
+	  pointerImg.setUrl(IMG_URL+"pointer.png");
 	  progressAbsPanel.setSize("100%", "100%");
 	  progressAbsPanel.add(progressImg);
 	  progressAbsPanel.add(pointerImg,0,0);
@@ -1270,17 +1281,22 @@ public class JocProg implements EntryPoint {
 		  Window.alert("Debes indicar tu nombre de usuario y contraseña");
 	  }
 	  else {
-		  String url = JSON_URL;
+		  /*String url = JSON_URL;
 		  url = URL.encode(url);
 		  //Send request to server and catch any errors.
 		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 	
 		  try {
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-					  URL.encodeComponent("login")+"&"+URL.encodeComponent("nick")+"="+
-					  URL.encodeComponent(loginUserTextBox.getText())+"&"+URL.encodeComponent("password")+"="+
-					  URL.encodeComponent(loginPassword.getText()), new RequestCallback() {
+			  String requestStr = encodeParam("function", "login")+"&"+
+			  	encodeParam("nick", loginUserTextBox.getText())+"&"+
+				encodeParam("password", loginPassword.getText());
+
+			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//					  URL.encodeComponent("login")+"&"+URL.encodeComponent("nick")+"="+
+//					  URL.encodeComponent(loginUserTextBox.getText())+"&"+URL.encodeComponent("password")+"="+
+//					  URL.encodeComponent(loginPassword.getText()), new RequestCallback() {
 			        	public void onError(Request request, Throwable exception) {
 			        		Window.alert("Couldn't retrieve JSON");
 			        	}
@@ -1332,24 +1348,36 @@ public class JocProg implements EntryPoint {
 		  regConfirmPassword.setText("");
 	  }
 	  else{
-		  String url = JSON_URL;
+		  /*String url = JSON_URL;
 		  url = URL.encode(url);
 		  //Send request to server and catch any errors.
 		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 		  try {
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		      URL.encodeComponent("newUser")+"&"+URL.encodeComponent("nick")+"="+
-		      URL.encodeComponent(regNickTextBox.getText())+"&"+URL.encodeComponent("name")+"="+
-		      URL.encodeComponent(regNameTextBox.getText())+"&"+URL.encodeComponent("surname1")+"="+
-		      URL.encodeComponent(regSurname1TextBox.getText())+"&"+URL.encodeComponent("surname2")+"="+
-		      URL.encodeComponent(regSurname2TextBox.getText())+"&"+URL.encodeComponent("email_user")+"="+
-		      URL.encodeComponent(regEmailUserTextBox.getText())+"&"+URL.encodeComponent("city")+"="+
-		      URL.encodeComponent(regCityTextBox.getText())+"&"+URL.encodeComponent("school")+"="+
-		      URL.encodeComponent(regSchoolTextBox.getText())+"&"+URL.encodeComponent("email_school")+"="+
-		      URL.encodeComponent(regEmailSchoolTextBox.getText())+"&"+URL.encodeComponent("password")+"="+
-		      URL.encodeComponent(regPassword.getText()), new RequestCallback() {
+			  String requestStr = encodeParam("function", "newUser")+"&"+
+				encodeParam("nick", regNickTextBox.getText())+"&"+
+				encodeParam("name", regNameTextBox.getText())+"&"+
+				encodeParam("surname1", regSurname1TextBox.getText())+"&"+
+				encodeParam("surname2", regSurname2TextBox.getText())+"&"+
+				encodeParam("email_user", regEmailUserTextBox.getText())+"&"+
+				encodeParam("city", regCityTextBox.getText())+"&"+
+				encodeParam("school", regSchoolTextBox.getText())+"&"+
+				encodeParam("email_school", regEmailSchoolTextBox.getText())+"&"+
+				encodeParam("password", regPassword.getText());
+
+			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//		      URL.encodeComponent("newUser")+"&"+URL.encodeComponent("nick")+"="+
+//		      URL.encodeComponent(regNickTextBox.getText())+"&"+URL.encodeComponent("name")+"="+
+//		      URL.encodeComponent(regNameTextBox.getText())+"&"+URL.encodeComponent("surname1")+"="+
+//		      URL.encodeComponent(regSurname1TextBox.getText())+"&"+URL.encodeComponent("surname2")+"="+
+//		      URL.encodeComponent(regSurname2TextBox.getText())+"&"+URL.encodeComponent("email_user")+"="+
+//		      URL.encodeComponent(regEmailUserTextBox.getText())+"&"+URL.encodeComponent("city")+"="+
+//		      URL.encodeComponent(regCityTextBox.getText())+"&"+URL.encodeComponent("school")+"="+
+//		      URL.encodeComponent(regSchoolTextBox.getText())+"&"+URL.encodeComponent("email_school")+"="+
+//		      URL.encodeComponent(regEmailSchoolTextBox.getText())+"&"+URL.encodeComponent("password")+"="+
+//		      URL.encodeComponent(regPassword.getText()), new RequestCallback() {
 		        public void onError(Request request, Throwable exception) {
 		        	Window.alert("Couldn't retrieve JSON");
 		        }
@@ -1396,16 +1424,20 @@ public class JocProg implements EntryPoint {
   
   private void requestCircuitInfo(String circuit, final int index) {
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-				  URL.encodeComponent("getCircuitInfo")+"&"+URL.encodeComponent("name")+"="+
-				  URL.encodeComponent(String.valueOf(circuit)), new RequestCallback() {
+		  String requestStr = encodeParam("function", "getCircuitInfo")+"&"+
+			encodeParam("name", String.valueOf(circuit));
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//				  URL.encodeComponent("getCircuitInfo")+"&"+URL.encodeComponent("name")+"="+
+//				  URL.encodeComponent(String.valueOf(circuit)), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -1430,18 +1462,24 @@ public class JocProg implements EntryPoint {
   
   private void requestRun(String code, String circuit, String championship, final HorizontalPanel animationControllersPanel,final HorizontalPanel buttonsPanel) {
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("run")+"&"+URL.encodeComponent("code")+"="+
-				  URL.encodeComponent(code)+"&"+URL.encodeComponent("circuit")+"="+
-				  URL.encodeComponent(circuit)+"&"+URL.encodeComponent("championship")+"="+
-				  URL.encodeComponent(championship), new RequestCallback() {
+		  String requestStr = encodeParam("function", "run")+"&"+
+			encodeParam("code", code)+"&"+
+			encodeParam("circuit", circuit)+"&"+
+			encodeParam("championship", championship);
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//		  URL.encodeComponent("run")+"&"+URL.encodeComponent("code")+"="+
+//				  URL.encodeComponent(code)+"&"+URL.encodeComponent("circuit")+"="+
+//				  URL.encodeComponent(circuit)+"&"+URL.encodeComponent("championship")+"="+
+//				  URL.encodeComponent(championship), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -1478,16 +1516,20 @@ public class JocProg implements EntryPoint {
   
   private void requestTrace(int id_game,final HorizontalPanel animationControllersPanel, final HorizontalPanel buttonsPanel) {
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-				  URL.encodeComponent("getFullTrace")+"&"+URL.encodeComponent("id_game")+"="+
-				  URL.encodeComponent(String.valueOf(id_game)), new RequestCallback() {
+		  String requestStr = encodeParam("function", "getFullTrace")+"&"+
+			encodeParam("id_game", String.valueOf(id_game));
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//				  URL.encodeComponent("getFullTrace")+"&"+URL.encodeComponent("id_game")+"="+
+//				  URL.encodeComponent(String.valueOf(id_game)), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -1509,17 +1551,22 @@ public class JocProg implements EntryPoint {
   
   private void requestSaveCode(String code, String name) {
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("saveCode")+"&"+URL.encodeComponent("code")+"="+
-				  URL.encodeComponent(code)+"&"+URL.encodeComponent("name")+"="+
-				  URL.encodeComponent(name), new RequestCallback() {
+		  String requestStr = encodeParam("function", "saveCode")+"&"+
+			encodeParam("code", code)+"&"+
+			encodeParam("name", name);
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//		  URL.encodeComponent("saveCode")+"&"+URL.encodeComponent("code")+"="+
+//				  URL.encodeComponent(code)+"&"+URL.encodeComponent("name")+"="+
+//				  URL.encodeComponent(name), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -1543,15 +1590,18 @@ public class JocProg implements EntryPoint {
   
   private void requestGetSavedCodes() {
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("getSavedCodes"), new RequestCallback() {
+		  String requestStr = encodeParam("function", "getSavedCodes");
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//		  URL.encodeComponent("getSavedCodes"), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -1631,16 +1681,20 @@ public class JocProg implements EntryPoint {
   
   private void requestLoadCode(String name) {
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("loadCode")+"&"+URL.encodeComponent("name")+"="+
-				  URL.encodeComponent(name), new RequestCallback() {
+		  String requestStr = encodeParam("function", "loadCode")+"&"+
+			encodeParam("name", name);
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//		  URL.encodeComponent("loadCode")+"&"+URL.encodeComponent("name")+"="+
+//				  URL.encodeComponent(name), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -1662,15 +1716,18 @@ public class JocProg implements EntryPoint {
   
   private void requestCircuits() {
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("getCircuits"), new RequestCallback() {
+		  String requestStr = encodeParam("function", "getCircuits");
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//		  URL.encodeComponent("getCircuits"), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -1700,17 +1757,25 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
+  private static String encodeParam(String param, String value) {
+	  return URL.encodeComponent(param)+"="+URL.encodeComponent(value);
+  }
+  
   private void refreshListBox(final ListBox listBox) {
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 	
 	  try{
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("getMyChampionships")+"&"+URL.encodeComponent("circuit")+"="+
-		  URL.encodeComponent(""), new RequestCallback() {
+		  String requestStr = encodeParam("function", "getMyChampionships")+"&"+
+		  					encodeParam("circuit", "");
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {			  	  
+		  //Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+		  //URL.encodeComponent("getMyChampionships")+"&"+URL.encodeComponent("circuit")+"="+
+		  //URL.encodeComponent(""), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -1731,16 +1796,20 @@ public class JocProg implements EntryPoint {
   }
   
   private void requestChampionshipCircuits(String name) {
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 	
 	  try{
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("getChampionshipCircuits")+"&"+URL.encodeComponent("name")+"="+
-		  URL.encodeComponent(name), new RequestCallback() {
+		  String requestStr = encodeParam("function", "getChampionshipCircuits")+"&"+
+			encodeParam("name", name);
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//		  URL.encodeComponent("getChampionshipCircuits")+"&"+URL.encodeComponent("name")+"="+
+//		  URL.encodeComponent(name), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -1780,16 +1849,20 @@ public class JocProg implements EntryPoint {
 	  
 	  if (circuitsDropBox.getSelectedIndex() != 0){
 		  String circ = circuitsDropBox.getValue(circuitsDropBox.getSelectedIndex());
-		  String url = JSON_URL;
+		  /*String url = JSON_URL;
 		  url = URL.encode(url);
 		  //Send request to server and catch any errors.
 		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 		
 		  try{
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-			  URL.encodeComponent("getMyChampionships")+"&"+URL.encodeComponent("circuit")+"="+
-			  URL.encodeComponent(circ), new RequestCallback() {
+			  String requestStr = encodeParam("function", "getMyChampionships")+"&"+
+				encodeParam("circuit", circ);
+
+			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//			  URL.encodeComponent("getMyChampionships")+"&"+URL.encodeComponent("circuit")+"="+
+//			  URL.encodeComponent(circ), new RequestCallback() {
 				  public void onError(Request request, Throwable exception) {
 					  Window.alert("Couldn't retrieve JSON");
 				  }
@@ -1814,10 +1887,15 @@ public class JocProg implements EntryPoint {
 		  if(champsDropBox.getSelectedIndex() != 0) champ = champsDropBox.getValue(champsDropBox.getSelectedIndex());
 	  
 		  try {
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-			  URL.encodeComponent("getMyTeams")+"&"+URL.encodeComponent("circuit")+"="+
-			  URL.encodeComponent(circ)+"&"+URL.encodeComponent("championship")+"="+
-			  URL.encodeComponent(champ), new RequestCallback() {
+			  String requestStr = encodeParam("function", "getMyTeams")+"&"+
+				encodeParam("circuit", circ)+"&"+
+				encodeParam("championship", champ);
+
+			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//			  URL.encodeComponent("getMyTeams")+"&"+URL.encodeComponent("circuit")+"="+
+//			  URL.encodeComponent(circ)+"&"+URL.encodeComponent("championship")+"="+
+//			  URL.encodeComponent(champ), new RequestCallback() {
 				  public void onError(Request request, Throwable exception) {
 					  Window.alert("Couldn't retrieve JSON");
 				  }
@@ -1856,20 +1934,28 @@ public class JocProg implements EntryPoint {
 		  if(teamsDropBox.getSelectedIndex()==0) team = "";
 		  else team = (String)teamsList.get(teamsDropBox.getSelectedIndex() - 1);
 
-		  String url = JSON_URL;
+		  /*String url = JSON_URL;
 		  url = URL.encode(url);
 		  // Send request to server and catch any errors.
 		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 		  try {
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-					  URL.encodeComponent("getRankings")+"&"+URL.encodeComponent("circuit")+"="+
-					  URL.encodeComponent(circuit)+"&"+URL.encodeComponent("team")+"="+
-					  URL.encodeComponent(team)+"&"+URL.encodeComponent("championship")+"="+
-					  URL.encodeComponent(champ)+"&"+URL.encodeComponent("page")+"="+
-					  URL.encodeComponent(String.valueOf(page))+"&"+URL.encodeComponent("sizepage")+"="+
-					  URL.encodeComponent(String.valueOf(sizepage)), new RequestCallback() {
+			  String requestStr = encodeParam("function", "getRankings")+"&"+
+				encodeParam("circuit", circuit)+"&"+
+				encodeParam("team", team)+"&"+
+				encodeParam("championship", champ)+"&"+
+				encodeParam("page", String.valueOf(page))+"&"+
+				encodeParam("sizepage", String.valueOf(sizepage));
+
+			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//					  URL.encodeComponent("getRankings")+"&"+URL.encodeComponent("circuit")+"="+
+//					  URL.encodeComponent(circuit)+"&"+URL.encodeComponent("team")+"="+
+//					  URL.encodeComponent(team)+"&"+URL.encodeComponent("championship")+"="+
+//					  URL.encodeComponent(champ)+"&"+URL.encodeComponent("page")+"="+
+//					  URL.encodeComponent(String.valueOf(page))+"&"+URL.encodeComponent("sizepage")+"="+
+//					  URL.encodeComponent(String.valueOf(sizepage)), new RequestCallback() {
 				  public void onError(Request request, Throwable exception) {
 					  Window.alert("Couldn't retrieve JSON");
 				  }
@@ -1902,21 +1988,27 @@ public class JocProg implements EntryPoint {
   
   private void requestNewChampionship() {
 
-	  String url = JSON_URL;
-	  url = URL.encode(url);
+	  /*String url = JSON_URL;
+	  url = URL.encode(url);*/
 	  String dateString = DateTimeFormat.getFormat("dd/MM/yyyy").format(champDateBox.getValue());
 	  String arrayCircs = selectedMultiBox.getItemText(0);
 	  for (int i=1;i<selectedMultiBox.getItemCount();i++) arrayCircs += "+"+selectedMultiBox.getItemText(i);
 	  //Send request to server and catch any errors.
-	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  /*RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 		  
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-				  URL.encodeComponent("newChampionship")+"&"+URL.encodeComponent("name")+"="+
-				  URL.encodeComponent(champNameTextBox.getText())+"&"+URL.encodeComponent("date_limit")+"="+
-				  URL.encodeComponent(dateString)+"&"+URL.encodeComponent("circuits")+"="+
-				  URL.encodeComponent(arrayCircs), new RequestCallback() {
+		  String requestStr = encodeParam("function", "newChampionship")+"&"+
+			encodeParam("name", champNameTextBox.getText())+"&"+
+			encodeParam("date_limit", dateString)+"&"+
+			encodeParam("circuits", arrayCircs);
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//				  URL.encodeComponent("newChampionship")+"&"+URL.encodeComponent("name")+"="+
+//				  URL.encodeComponent(champNameTextBox.getText())+"&"+URL.encodeComponent("date_limit")+"="+
+//				  URL.encodeComponent(dateString)+"&"+URL.encodeComponent("circuits")+"="+
+//				  URL.encodeComponent(arrayCircs), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -1945,16 +2037,20 @@ public class JocProg implements EntryPoint {
   
   private void requestNewTeam() {
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-				  URL.encodeComponent("newTeam")+"&"+URL.encodeComponent("name")+"="+
-				  URL.encodeComponent(teamNameTextBox.getText()), new RequestCallback() {
+		  String requestStr = encodeParam("function", "newTeam")+"&"+
+			encodeParam("name", teamNameTextBox.getText());
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//				  URL.encodeComponent("newTeam")+"&"+URL.encodeComponent("name")+"="+
+//				  URL.encodeComponent(teamNameTextBox.getText()), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -1979,15 +2075,18 @@ public class JocProg implements EntryPoint {
   
   private void requestAllNicks() {
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-		  URL.encodeComponent("getAllNicks"), new RequestCallback() {
+		  String requestStr = encodeParam("function", "getAllNicks");
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//		  URL.encodeComponent("getAllNicks"), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -2007,16 +2106,19 @@ public class JocProg implements EntryPoint {
 
   private void refreshAddPlayersDropBox(int op) {
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
 		  if(op == 1){
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-					  URL.encodeComponent("getMyOwnChampionships"), new RequestCallback() {
+			  String requestStr = encodeParam("function", "getMyOwnChampionships");
+
+			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//					  URL.encodeComponent("getMyOwnChampionships"), new RequestCallback() {
 				  public void onError(Request request, Throwable exception) {
 					  Window.alert("Couldn't retrieve JSON");
 				  }
@@ -2035,8 +2137,11 @@ public class JocProg implements EntryPoint {
 			  });
 		  }
 		  else if(op == 2){
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-					  URL.encodeComponent("getMyOwnTeams"), new RequestCallback() {
+			  String requestStr = encodeParam("function", "getMyOwnTeams");
+
+			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//					  URL.encodeComponent("getMyOwnTeams"), new RequestCallback() {
 				  public void onError(Request request, Throwable exception) {
 					  Window.alert("Couldn't retrieve JSON");
 				  }
@@ -2061,19 +2166,24 @@ public class JocProg implements EntryPoint {
   
   private void requestAddPlayerToChamp() {
 
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 	  String name = addPlayersDropBox.getValue(addPlayersDropBox.getSelectedIndex());
 	  String nick = suggestNickBox.getText();
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-				  URL.encodeComponent("addPlayerToChampionship")+"&"+URL.encodeComponent("name")+"="+
-				  URL.encodeComponent(name)+"&"+URL.encodeComponent("nick")+"="+
-				  URL.encodeComponent(nick), new RequestCallback() {
+		  String requestStr = encodeParam("function", "addPlayerToChampionship")+"&"+
+			encodeParam("name", name)+"&"+
+			encodeParam("nick", nick);
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//				  URL.encodeComponent("addPlayerToChampionship")+"&"+URL.encodeComponent("name")+"="+
+//				  URL.encodeComponent(name)+"&"+URL.encodeComponent("nick")+"="+
+//				  URL.encodeComponent(nick), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -2101,19 +2211,24 @@ public class JocProg implements EntryPoint {
 
   private void requestAddPlayerToTeam() {
 
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 	  String name = addPlayersDropBox.getValue(addPlayersDropBox.getSelectedIndex());
 	  String nick = suggestNickBox.getText();
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-				  URL.encodeComponent("addPlayerToTeam")+"&"+URL.encodeComponent("name")+"="+
-				  URL.encodeComponent(name)+"&"+URL.encodeComponent("nick")+"="+
-				  URL.encodeComponent(nick), new RequestCallback() {
+		  String requestStr = encodeParam("function", "addPlayerToTeam")+"&"+
+			encodeParam("name", name)+"&"+
+			encodeParam("nick", nick);
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//				  URL.encodeComponent("addPlayerToTeam")+"&"+URL.encodeComponent("name")+"="+
+//				  URL.encodeComponent(name)+"&"+URL.encodeComponent("nick")+"="+
+//				  URL.encodeComponent(nick), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -2141,15 +2256,18 @@ public class JocProg implements EntryPoint {
   
   private void requestNInvitations() {
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-				  URL.encodeComponent("getNInvitations"), new RequestCallback() {
+		  String requestStr = encodeParam("function", "getNInvitations");
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//				  URL.encodeComponent("getNInvitations"), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -2175,16 +2293,19 @@ public class JocProg implements EntryPoint {
   
   private void refreshInvitationsTable(String what) {
 
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  // Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
 		  if (what.equals("champs")){
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-					  URL.encodeComponent("getChampionshipsInvited"), new RequestCallback() {
+			  String requestStr = encodeParam("function", "getChampionshipsInvited");
+
+			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//					  URL.encodeComponent("getChampionshipsInvited"), new RequestCallback() {
 				  public void onError(Request request, Throwable exception) {
 					  Window.alert("Couldn't retrieve JSON");
 				  }
@@ -2199,8 +2320,11 @@ public class JocProg implements EntryPoint {
 			  });
 		  }
 		  else if (what.equals("teams")) {
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-					  URL.encodeComponent("getTeamsInvited"), new RequestCallback() {
+			  String requestStr = encodeParam("function", "getTeamsInvited");
+
+			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//					  URL.encodeComponent("getTeamsInvited"), new RequestCallback() {
 				  public void onError(Request request, Throwable exception) {
 					  Window.alert("Couldn't retrieve JSON");
 				  }
@@ -2221,18 +2345,23 @@ public class JocProg implements EntryPoint {
   
   private void setInvitationAnswer(String what, String name, final int answer) {
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 	  
 	  try {
 		  if(what.equals("campeonato")){
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-					  URL.encodeComponent("setChampionshipAnswer")+"&"+URL.encodeComponent("name")+"="+
-					  URL.encodeComponent(name)+"&"+URL.encodeComponent("answer")+"="+
-					  URL.encodeComponent(String.valueOf(answer)), new RequestCallback() {
+			  String requestStr = encodeParam("function", "setChampionshipAnswer")+"&"+
+				encodeParam("name", name)+"&"+
+				encodeParam("answer", String.valueOf(answer));
+
+			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//					  URL.encodeComponent("setChampionshipAnswer")+"&"+URL.encodeComponent("name")+"="+
+//					  URL.encodeComponent(name)+"&"+URL.encodeComponent("answer")+"="+
+//					  URL.encodeComponent(String.valueOf(answer)), new RequestCallback() {
 				  public void onError(Request request, Throwable exception) {
 					  Window.alert("Couldn't retrieve JSON");
 				  }
@@ -2248,10 +2377,15 @@ public class JocProg implements EntryPoint {
 			  });
 		  }
 		  else if(what.equals("equipo")){
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-					  URL.encodeComponent("setTeamAnswer")+"&"+URL.encodeComponent("name")+"="+
-					  URL.encodeComponent(name)+"&"+URL.encodeComponent("answer")+"="+
-					  URL.encodeComponent(String.valueOf(answer)), new RequestCallback() {
+			  String requestStr = encodeParam("function", "setTeamAnswer")+"&"+
+				encodeParam("name", name)+"&"+
+				encodeParam("answer", String.valueOf(answer));
+
+			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//					  URL.encodeComponent("setTeamAnswer")+"&"+URL.encodeComponent("name")+"="+
+//					  URL.encodeComponent(name)+"&"+URL.encodeComponent("answer")+"="+
+//					  URL.encodeComponent(String.valueOf(answer)), new RequestCallback() {
 				  public void onError(Request request, Throwable exception) {
 					  Window.alert("Couldn't retrieve JSON");
 				  }
@@ -2273,15 +2407,18 @@ public class JocProg implements EntryPoint {
   
 private void requestLogout() {
 	  
-	  String url = JSON_URL;
+	  /*String url = JSON_URL;
 	  url = URL.encode(url);
 	  //Send request to server and catch any errors.
 	  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
-		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-				  URL.encodeComponent("logout"), new RequestCallback() {
+		  String requestStr = encodeParam("function", "logout");
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//		  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//				  URL.encodeComponent("logout"), new RequestCallback() {
 			  public void onError(Request request, Throwable exception) {
 				  Window.alert("Couldn't retrieve JSON");
 			  }
@@ -2394,24 +2531,36 @@ private void requestLogout() {
 		  regConfirmPassword.setText("");
 	  }
 	  else{
-		  String url = JSON_URL;
+		  /*String url = JSON_URL;
 		  url = URL.encode(url);
 		  //Send request to server and catch any errors.
 		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");
+		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 		  try {
-			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
-					  URL.encodeComponent("changeUser")+"&"+URL.encodeComponent("name")+"="+
-				      URL.encodeComponent(regNameTextBox.getText())+"&"+URL.encodeComponent("surname1")+"="+
-				      URL.encodeComponent(regSurname1TextBox.getText())+"&"+URL.encodeComponent("surname2")+"="+
-				      URL.encodeComponent(regSurname2TextBox.getText())+"&"+URL.encodeComponent("email_user")+"="+
-				      URL.encodeComponent(regEmailUserTextBox.getText())+"&"+URL.encodeComponent("city")+"="+
-				      URL.encodeComponent(regCityTextBox.getText())+"&"+URL.encodeComponent("school")+"="+
-				      URL.encodeComponent(regSchoolTextBox.getText())+"&"+URL.encodeComponent("email_school")+"="+
-				      URL.encodeComponent(regEmailSchoolTextBox.getText())+"&"+URL.encodeComponent("oldpassword")+"="+
-				      URL.encodeComponent(regPassword.getText())+"&"+URL.encodeComponent("password")+"="+
-				      URL.encodeComponent(regNewPassword.getText()), new RequestCallback() {
+			  String requestStr = encodeParam("function", "changeUser")+"&"+
+				encodeParam("name", regNameTextBox.getText())+"&"+
+				encodeParam("surname1", regSurname1TextBox.getText())+"&"+
+				encodeParam("surname2", regSurname2TextBox.getText())+"&"+
+				encodeParam("email_user", regEmailUserTextBox.getText())+"&"+
+				encodeParam("city", regCityTextBox.getText())+"&"+
+				encodeParam("school", regSchoolTextBox.getText())+"&"+
+				encodeParam("email_school", regEmailSchoolTextBox.getText())+"&"+
+				encodeParam("oldpassword", regPassword.getText())+"&"+
+				encodeParam("password", regNewPassword.getText());
+
+			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+//			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
+//					  URL.encodeComponent("changeUser")+"&"+URL.encodeComponent("name")+"="+
+//				      URL.encodeComponent(regNameTextBox.getText())+"&"+URL.encodeComponent("surname1")+"="+
+//				      URL.encodeComponent(regSurname1TextBox.getText())+"&"+URL.encodeComponent("surname2")+"="+
+//				      URL.encodeComponent(regSurname2TextBox.getText())+"&"+URL.encodeComponent("email_user")+"="+
+//				      URL.encodeComponent(regEmailUserTextBox.getText())+"&"+URL.encodeComponent("city")+"="+
+//				      URL.encodeComponent(regCityTextBox.getText())+"&"+URL.encodeComponent("school")+"="+
+//				      URL.encodeComponent(regSchoolTextBox.getText())+"&"+URL.encodeComponent("email_school")+"="+
+//				      URL.encodeComponent(regEmailSchoolTextBox.getText())+"&"+URL.encodeComponent("oldpassword")+"="+
+//				      URL.encodeComponent(regPassword.getText())+"&"+URL.encodeComponent("password")+"="+
+//				      URL.encodeComponent(regNewPassword.getText()), new RequestCallback() {
 				        public void onError(Request request, Throwable exception) {
 				        	Window.alert("Couldn't retrieve JSON");
 				        }
