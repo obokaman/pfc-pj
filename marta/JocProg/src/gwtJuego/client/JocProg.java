@@ -62,12 +62,12 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 
 public class JocProg implements EntryPoint {
 	
-	private static final String LOCAL_URL = "http://localhost/";
-	private static final String JSON_URL = "http://localhost/php/main.php?";
-	private static final String IMG_URL = "http://localhost/img/";
-	//private static final String LOCAL_URL = "http://gabarro.org/racing/";
-	//private static final String JSON_URL = "http://gabarro.org/racing/php/main.php?";
-	//private static final String IMG_URL = "http://gabarro.org/racing/img/";
+	//private static final String LOCAL_URL = "http://localhost/";
+	//private static final String JSON_URL = "http://localhost/php/main.php?";
+	//private static final String IMG_URL = "http://localhost/img/";
+	private static final String LOCAL_URL = "http://gabarro.org/racing/";
+	private static final String JSON_URL = "http://gabarro.org/racing/php/main.php?";
+	private static final String IMG_URL = "http://gabarro.org/racing/img/";
 	private static final int CODE = 1;
 	private static final int DEBUG = 2;
 	private static final int EXECUTION = 3;
@@ -1235,6 +1235,10 @@ public class JocProg implements EntryPoint {
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
 					  if(addPlayersDropBox.getValue(0).equals("CAMPEONATOS")){
+						  TextBox prueba = new TextBox();
+						  prueba = (TextBox)suggestNickBox.getTextBox();
+						  Window.alert(prueba.getText());
+						  Window.alert(suggestNickBox.getValue());
 						  if (addPlayersDropBox.getSelectedIndex() == 0){
 							  Window.alert("Debes elegir un campeonato");
 						  }
