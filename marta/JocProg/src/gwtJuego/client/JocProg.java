@@ -62,12 +62,12 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 
 public class JocProg implements EntryPoint {
 	
-	//private static final String LOCAL_URL = "http://localhost/";
-	//private static final String JSON_URL = "http://localhost/php/main.php?";
-	//private static final String IMG_URL = "http://localhost/img/";
-	private static final String LOCAL_URL = "http://gabarro.org/racing/";
-	private static final String JSON_URL = "http://gabarro.org/racing/php/main.php?";
-	private static final String IMG_URL = "http://gabarro.org/racing/img/";
+	private static final String LOCAL_URL = "http://localhost/";
+	private static final String JSON_URL = "http://localhost/php/main.php?";
+	private static final String IMG_URL = "http://localhost/img/";
+	//private static final String LOCAL_URL = "http://gabarro.org/racing/";
+	//private static final String JSON_URL = "http://gabarro.org/racing/php/main.php?";
+	//private static final String IMG_URL = "http://gabarro.org/racing/img/";
 	private static final int CODE = 1;
 	private static final int DEBUG = 2;
 	private static final int EXECUTION = 3;
@@ -898,16 +898,25 @@ public class JocProg implements EntryPoint {
 	  rankPagesDropBox.addItem("Página");
 	  rankPagesDropBox.setEnabled(false);
 	  
-	  Grid dropBoxes = new Grid (2,1);
+	  /*Grid dropBoxes = new Grid (2,1);
 	  dropBoxes.setCellSpacing(5);
 	  dropBoxes.setWidget(0,0,sizePagesDropBox);
-	  dropBoxes.setWidget(1,0,rankPagesDropBox);
+	  dropBoxes.setWidget(1,0,rankPagesDropBox);*/
 	  
-	  HorizontalPanel rankingHPanel = new HorizontalPanel();
+	  HorizontalPanel dropBoxes2 = new HorizontalPanel();
+	  dropBoxes2.setWidth("100%");
+	  dropBoxes2.add(new Label("Ir a página: "));
+	  dropBoxes2.add(rankPagesDropBox);
+	  dropBoxes2.add(new Label("Tiempos mostrados por página: "));
+	  dropBoxes2.add(sizePagesDropBox);
+	  //dropBoxes2.addStyleName("inputForm");
+	  
+	 // HorizontalPanel rankingHPanel = new HorizontalPanel();
+	  VerticalPanel rankingHPanel = new VerticalPanel();
 	  //rankingHPanel.setWidth("100%");
 	  rankingHPanel.setSpacing(10);
 	  rankingHPanel.add(rankingFlexTable);
-	  rankingHPanel.add(dropBoxes);
+	  rankingHPanel.add(dropBoxes2);
 	  //rankingHPanel.setCellHorizontalAlignment(rankingFlexTable,HasHorizontalAlignment.ALIGN_CENTER);
 	  //rankingHPanel.setCellVerticalAlignment(rankingFlexTable,HasVerticalAlignment.ALIGN_TOP);
 	    
@@ -1024,7 +1033,7 @@ public class JocProg implements EntryPoint {
 				  addPlayersLabel.setText("¡ Invita a tus amigos a participar en tus campeonatos !");
 				  refreshAddPlayersDropBox(1);
 				  requestAllNicks();
-				  suggestNickBox = new SuggestBox(oracle);
+				  //suggestNickBox = new SuggestBox(oracle);
 				  adminVPanel.add(addPlayersVPanel);
 			  }
 		  }
@@ -1047,7 +1056,7 @@ public class JocProg implements EntryPoint {
 				  addPlayersLabel.setText("¡ Invita a tus amigos a unirse a tus equipos !");
 				  refreshAddPlayersDropBox(2);
 				  requestAllNicks();
-				  suggestNickBox = new SuggestBox(oracle);
+				  //suggestNickBox = new SuggestBox(oracle);
 				  adminVPanel.add(addPlayersVPanel);
 			  }
 		  }
@@ -1235,10 +1244,6 @@ public class JocProg implements EntryPoint {
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
 					  if(addPlayersDropBox.getValue(0).equals("CAMPEONATOS")){
-						  TextBox prueba = new TextBox();
-						  prueba = (TextBox)suggestNickBox.getTextBox();
-						  Window.alert(prueba.getText());
-						  Window.alert(suggestNickBox.getValue());
 						  if (addPlayersDropBox.getSelectedIndex() == 0){
 							  Window.alert("Debes elegir un campeonato");
 						  }
