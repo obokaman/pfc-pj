@@ -3,6 +3,8 @@ package gwtJuego.client;
 import java.util.ArrayList;
 
 import com.google.gwt.core.client.Duration;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -34,8 +36,8 @@ public class CarAnimation implements Animation {
     /**
      * The URL where images are.
      */
-    private final static String IMG_URL = "http://localhost/img/";
-    //private final static String IMG_URL = "http://gabarro.org/racing/img/";
+    //private final static String IMG_URL = "http://localhost/img/";
+    private final static String IMG_URL = "http://gabarro.org/racing/img/";
     /**
      * The next field to read from trace
      */
@@ -56,6 +58,7 @@ public class CarAnimation implements Animation {
      * The trace the widget should follow.
      */
     protected final ArrayList<String> trace = new ArrayList<String>();
+    protected JsArrayNumber trace2; //
     /**
      * The circuit image width.
      */
@@ -131,9 +134,10 @@ public class CarAnimation implements Animation {
     	this.progressPanel = progressAbsPanel;
     	this.circuitWidth = circWidth;
     	this.circuitHeight = circHeight;
-    	int x = (int)Float.parseFloat(getNextTraceField());
-    	int y = (int)Float.parseFloat(getNextTraceField());
-    	this.targetAngle = Float.parseFloat(getNextTraceField());
+    	
+    	int x = (int)(getNextTraceField());
+    	int y = (int)(getNextTraceField());
+    	this.targetAngle = (float)(getNextTraceField());
     	
     	int which = (int)((carImages.size()*((targetAngle + Math.PI)/(2*Math.PI)))+0.5);
     	indexWidget = which%carImages.size();
@@ -157,20 +161,28 @@ public class CarAnimation implements Animation {
     					pointerIniX = event.getClientX() - progressPanel.getAbsoluteLeft();
     		    		pointerIniX = Math.max(0, pointerIniX);
     		    		pointerIniX = Math.min(pointerIniX, progressPanel.getOffsetWidth()-pointer.getOffsetWidth());
-    					double wBar = (progressPanel.getOffsetWidth()/(double)trace.size());
+    					double wBar = (progressPanel.getOffsetWidth()/(double)trace2.length());
     					nextField = (int)(pointerIniX/wBar);
     					nextField = (nextField/3)*3+2;
     					nextField = Math.max(nextField, 5);  //primera posicion de trace donde hay coordenada x
-    					nextField = Math.min(nextField, trace.size()-6);
+    					nextField = Math.min(nextField, trace2.length()-6);
     			    	
-    			    	int x = (int)Float.parseFloat(getNextTraceField());
-    			    	int y = (int)Float.parseFloat(getNextTraceField());
-    			    	targetAngle = Float.parseFloat(getNextTraceField());
+//    			    	int x = (int)Float.parseFloat(getNextTraceField());
+//    			    	int y = (int)Float.parseFloat(getNextTraceField());
+//    			    	targetAngle = Float.parseFloat(getNextTraceField());
+    			    	int x = (int)(getNextTraceField());
+    			    	int y = (int)(getNextTraceField());
+    			    	targetAngle = (float)(getNextTraceField());
+
     			    	convertMeasures(x,y,"initial");
     			    	
-    			    	x = (int)Float.parseFloat(getNextTraceField());
-    			    	y = (int)Float.parseFloat(getNextTraceField());
-    			        targetAngle = Float.parseFloat(getNextTraceField());
+    			    	x = (int)(getNextTraceField());
+    			    	y = (int)(getNextTraceField());
+    			        targetAngle = (float)(getNextTraceField());
+//    			    	x = (int)Float.parseFloat(getNextTraceField());
+//    			    	y = (int)Float.parseFloat(getNextTraceField());
+//    			        targetAngle = Float.parseFloat(getNextTraceField());
+
     			    	convertMeasures(x,y,"target");
     			    	
     					dragging = false;
@@ -196,20 +208,28 @@ public class CarAnimation implements Animation {
     					pointerIniX = event.getClientX() - progressPanel.getAbsoluteLeft();
     		    		pointerIniX = Math.max(0, pointerIniX);
     		    		pointerIniX = Math.min(pointerIniX, progressPanel.getOffsetWidth()-pointer.getOffsetWidth());
-    					double wBar = (progressPanel.getOffsetWidth()/(double)trace.size());
+    					double wBar = (progressPanel.getOffsetWidth()/(double)trace2.length());
     					nextField = (int)(pointerIniX/wBar);
     					nextField = (nextField/3)*3+2;
     					nextField = Math.max(nextField, 5);  //primera posicion de trace donde hay coordenada x
-    					nextField = Math.min(nextField, trace.size()-6);
+    					nextField = Math.min(nextField, trace2.length()-6);
     			    	
-    			    	int x = (int)Float.parseFloat(getNextTraceField());
-    			    	int y = (int)Float.parseFloat(getNextTraceField());
-    			    	targetAngle = Float.parseFloat(getNextTraceField());
+//    			    	int x = (int)Float.parseFloat(getNextTraceField());
+ //   			    	int y = (int)Float.parseFloat(getNextTraceField());
+//    			    	targetAngle = Float.parseFloat(getNextTraceField());
+    			    	int x = (int)(getNextTraceField());
+    			    	int y = (int)(getNextTraceField());
+    			    	targetAngle = (float)(getNextTraceField());
+
     			    	convertMeasures(x,y,"initial");
     			    	
-    			    	x = (int)Float.parseFloat(getNextTraceField());
-    			    	y = (int)Float.parseFloat(getNextTraceField());
-    			        targetAngle = Float.parseFloat(getNextTraceField());
+//    			    	x = (int)Float.parseFloat(getNextTraceField());
+//    			    	y = (int)Float.parseFloat(getNextTraceField());
+//    			        targetAngle = Float.parseFloat(getNextTraceField());
+    			    	x = (int)(getNextTraceField());
+    			    	y = (int)(getNextTraceField());
+    			        targetAngle = (float)(getNextTraceField());
+
     			    	convertMeasures(x,y,"target");
     				}
     			});
@@ -231,10 +251,14 @@ public class CarAnimation implements Animation {
      * @return true if the animation is finished already, false if animateOneFrame should be called at least once.
      */
     public boolean beforeFirstFrame() {
-    	int x = (int)Float.parseFloat(getNextTraceField());
-    	int y = (int)Float.parseFloat(getNextTraceField());
+//    	int x = (int)Float.parseFloat(getNextTraceField());
+//    	int y = (int)Float.parseFloat(getNextTraceField());
+    	int x = (int)(getNextTraceField());
+    	int y = (int)(getNextTraceField());
+
     	convertMeasures(x,y,"target");
-        targetAngle = Float.parseFloat(getNextTraceField());
+//        targetAngle = Float.parseFloat(getNextTraceField());
+        targetAngle = (float)(getNextTraceField());
 
         panel.add(this.widget, this.initialX, this.initialY);
         
@@ -285,15 +309,18 @@ public class CarAnimation implements Animation {
             	else panel.setWidgetPosition(widget, targetX, targetY);
             	progressPanel.setWidgetPosition(pointer, pointerX,0);
             	
-                if (nextField < trace.size()){
+                if (nextField < trace2.length()){
                 	initialX = targetX;
                 	initialY = targetY;
                 	pointerIniX = pointerX;
-                	int x = (int)Float.parseFloat(getNextTraceField());
-                	int y = (int)Float.parseFloat(getNextTraceField());
+//                	int x = (int)Float.parseFloat(getNextTraceField());
+//                	int y = (int)Float.parseFloat(getNextTraceField());
+                	int x = (int)(getNextTraceField());
+                	int y = (int)(getNextTraceField());
                 	convertMeasures(x,y,"target");
-                	targetAngle = Float.parseFloat(getNextTraceField());
-                    startTime = new Duration();
+//                	targetAngle = Float.parseFloat(getNextTraceField());
+                	targetAngle = (float)(getNextTraceField());
+                	startTime = new Duration();
                 	return false;
                 }
                 else return true;
@@ -307,14 +334,18 @@ public class CarAnimation implements Animation {
                 return false;
             }
         }
-        else if (trace.size()>0) {
+        else if (trace2.length()>0) {
         	initialX = targetX;
         	initialY = targetY;
         	pointerIniX = pointerX;
-        	int x = (int)Float.parseFloat(getNextTraceField());
-        	int y = (int)Float.parseFloat(getNextTraceField());
+//        	int x = (int)Float.parseFloat(getNextTraceField());
+//        	int y = (int)Float.parseFloat(getNextTraceField());
+        	int x = (int)getNextTraceField();
+        	int y = (int)getNextTraceField();
+
         	convertMeasures(x,y,"target");
-        	targetAngle = Float.parseFloat(getNextTraceField());
+//        	targetAngle = Float.parseFloat(getNextTraceField());
+        	targetAngle = (float)getNextTraceField();
             startTime = new Duration();
             return false;
         }
@@ -332,18 +363,32 @@ public class CarAnimation implements Animation {
     }
     
     private void getTrace(String t) {
-    	String[] vs = t.split("[ \n]");
-    	trace.clear();
-    	for(int i=0; i<vs.length;++i) {
-    		this.trace.add(vs[i]);
-    	}
+//    	String[] vs = t.split("[ \n]");
+//    	trace.clear();
+//    	for(int i=0; i<vs.length;++i) {
+//    		this.trace.add(vs[i]);
+//    	}
     	nextField = 5;
+    	
+    	trace2 = JavaScriptObject.createArray().cast();
+    	int len = t.length();
+    	int lasti = 0, val = 0;
+    	for (int i=0;i<len;++i) {
+    		char c = t.charAt(i);
+    		if (c==' ' || c=='\n') {
+    			trace2.set(val, Double.parseDouble(t.substring(lasti, i)));
+    			lasti = i+1;
+    			++val;
+    		}
+    	}
     }
     
-    private String getNextTraceField() {
-    	String s = this.trace.get(nextField);
-    	nextField++;
-    	return s;
+//    private String getNextTraceField() {
+    private double getNextTraceField() {
+//    	String s = this.trace.get(nextField);
+//    	nextField++;
+//    	return s;
+    	return this.trace2.get(nextField++);
     }
     
     private void convertMeasures(int x, int y, String what) {
@@ -368,7 +413,7 @@ public class CarAnimation implements Animation {
     	else if(what.equals("target")){
     		this.targetX = (int)newX;
     		this.targetY = (int)newY;
-    		double wBar = (this.progressPanel.getOffsetWidth()/(double)trace.size());
+    		double wBar = (this.progressPanel.getOffsetWidth()/(double)trace2.length());
     		pointerX = (int)(wBar*nextField);
     		pointerX = Math.max(0, pointerX);
     		pointerX = Math.min(pointerX, progressPanel.getOffsetWidth()-pointer.getOffsetWidth());
