@@ -579,7 +579,10 @@ public class JocProg implements EntryPoint {
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
 					  if(codeNameTextBox.getText().equals("")) Window.alert("Debes introducir un nombre para el archivo de guardado");
-					  else codeNameTextBox.setText("");
+					  else {
+						  requestSaveCode(inputTextArea.getText(), codeNameTextBox.getText());
+						  codeNameTextBox.setText("");
+					  }
 				  }
 			  });
 	  loadCodeButton.addClickHandler( 
