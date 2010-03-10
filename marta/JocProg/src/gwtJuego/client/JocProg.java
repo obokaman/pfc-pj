@@ -10,6 +10,10 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyCodes.*; 
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.URL;
@@ -49,6 +53,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
 import com.google.gwt.user.datepicker.client.DateBox;
+
 
 import gwtJuego.client.RankingData;
 
@@ -346,6 +351,13 @@ public class JocProg implements EntryPoint {
 	  loginVPanel.setCellVerticalAlignment(loginFormPanel,HasVerticalAlignment.ALIGN_TOP);
 	  loginVPanel.setCellVerticalAlignment(registerDisclosure,HasVerticalAlignment.ALIGN_TOP);
 	  loginVPanel.setCellHorizontalAlignment(loginFormPanel,HasHorizontalAlignment.ALIGN_CENTER);
+	  
+	  loginPassword.addKeyUpHandler(
+			  new KeyUpHandler(){
+				  public void onKeyUp(KeyUpEvent event){
+					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER) requestLogin();
+				  }
+			  });
   }
   
   private void createPerfilPanel(){
@@ -578,7 +590,8 @@ public class JocProg implements EntryPoint {
 	  saveCodeButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  if(codeNameTextBox.getText().equals("")) Window.alert("Debes introducir un nombre para el archivo de guardado");
+					  if (USER.equals("")) Window.alert("Para guardar tu código debes ser un usuario registrado");
+					  else if(codeNameTextBox.getText().equals("")) Window.alert("Debes introducir un nombre para el archivo de guardado");
 					  else {
 						  requestSaveCode(inputTextArea.getText(), codeNameTextBox.getText());
 						  codeNameTextBox.setText("");
@@ -588,7 +601,8 @@ public class JocProg implements EntryPoint {
 	  loadCodeButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  requestGetSavedCodes();
+					  if (USER.equals("")) Window.alert("Para cargar tus archivos guardados debes ser un usuario registrado");
+					  else requestGetSavedCodes();
 				  }
 			  });
 	  changePlayModeButton.addClickHandler( 
@@ -1253,6 +1267,9 @@ public class JocProg implements EntryPoint {
 						  else if (suggestNickBox.getText().equals("")){
 							  Window.alert("Debes introducir el nombre del usuario al que quieres invitar");
 						  }
+						  else if (suggestNickBox.getText().equals(USER)){
+							  Window.alert("Debes invitar a un usuario válido");
+						  }
 						  else requestAddPlayerToChamp();
 					  }
 					  else if(addPlayersDropBox.getValue(0).equals("EQUIPOS")){
@@ -1261,6 +1278,9 @@ public class JocProg implements EntryPoint {
 						  }
 						  else if (suggestNickBox.getText().equals("")){
 							  Window.alert("Debes introducir el nombre del usuario al que quieres invitar");
+						  }
+						  else if (suggestNickBox.getText().equals(USER)){
+							  Window.alert("Debes invitar a un usuario válido");
 						  }
 						  else requestAddPlayerToTeam();
 					  }
