@@ -70,8 +70,10 @@
 	
 	
 	/*Esta funcion realiza la consulta obteniendo los resultados de las partidas realizadas para crear un ranking, este ranking estara divido en paginas. Este ranking tendra un filtraje que depende de varios valores como el circuito donde se realiza las partidas, el equipo que realiza las partidas o el campeonato. Las paginas que obtengamos del ranking es lo que nos devolvera la funcion. Para indicar la pagina que queramos  unicamente devolvemos un listado de elementos donde cada uno contiene el usuario y el tiempo realizado de la partida, la pagina que le corresponde y el numero total de paginas del ranking.
-Si el parametro de entrada page es igual a 0 devolvemos la pagina a la que pertenece el nick logueado, en caso de que no haya un usuario logueado devolvemos la primera pagina. Si page es diferente de 0 se devuelve la pagina que se pide.
+Si el parametro de entrada page es igual a 0 devolvemos la pagina a la que pertenece el nick logueado, en caso de que no haya un usuario logueado devolvemos la primera pagina. Si page es diferente de 0 se devuelve la pagina que se pide, y si la pagina es superior al numero total de paginas, devolvemos la ultima del ranking.
+
 Parametros de entrada:
+
 	- circuit: Nombre del circuito
 	- team: Nombre del equipo 
 	- championship: Nombre del campeonato
@@ -139,6 +141,10 @@ Parametros de entrada:
 							$result->data =  $games;
 							$result->page = intval($page);
 					}
+			//En caso de pedir un pagina superior al numero maximo de paginas, retornamos la ultima pagina del ranking
+			}else if ($page > $result->numpages){
+					$result->page = $result->numpages;
+					$result->data =  extract_interval_rows($result_query, (($result->page-1)*$max), $max);				
 			}else{
 					$result->page = intval($page);
 					$result->data = Array();					

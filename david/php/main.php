@@ -106,8 +106,8 @@ else if ($f == "getMyTeams") {
 /*Pre: Los nombres han de existir y no ser nulos */
 		send(
 			get_my_teams(
-				clean("circuit", "sql"),
-				clean("championship", "sql")			
+				clean("circuit", "string"),
+				clean("championship", "string")			
 			)
 		);
 }
@@ -119,7 +119,7 @@ else if ($f == "getMyChampionships") {
 /*Pre: Los nombres han de existir y no ser nulos */
 		send(
 			get_my_championships(
-				clean("circuit", "sql")			
+				clean("circuit", "string")			
 			)
 		);
 }
@@ -381,7 +381,7 @@ else if ($f == "getCircuitInfo") {
 /*Post: La función nos devuelve una array de strings donde los elementos estan indexados con 'url', 'width', 'height', 'level' y 'n_laps'*/
 
 
-/*La función devuelve información sobre un campeonato*/
+/*La función devuelve los circuitos que pertenecen a un campeonato*/
 else if ($f == "getChampionshipCircuits") {	
 /*Pre: - */
 		send(
@@ -396,7 +396,7 @@ else if( $f == "saveCode" ) {
 /*Pre: - */
 	$code = clean ( "code", "json" );
 	$file_name = clean ( "name", "string" );
-	$date = date("l,M d, Y g:i:s");
+	$date = date("j-m-y g:i:s");
 	
 	if ( ! isset($_SESSION['user']) ) $result = 3;
 	else {
