@@ -42,7 +42,8 @@
 			
 			$id_user_founded = get_id_user($_SESSION['user']);
 			
-			$query =  "SELECT c.name FROM championship c WHERE c.id_founded = '$id_user_founded'";		
+			$query =  "SELECT c.name FROM championship c WHERE c.id_founded = '$id_user_founded' AND c.data_limit >= now()";		
+			
 			$result_query = mysql_query($query, $connection) or my_error('GET_CHAMPIONSHIPS_BY_FOUNDED-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 
 			$arr = extract_rows($result_query);
