@@ -18,6 +18,7 @@ Si queremos saber mas sobre las funciones que son llamadas, podemos ver una expl
 /*Funcion que realiza el logueo de los usuarios*/
 if ($f == "login") {
 /*Pre: - */
+	session_unset();
 	send( login( clean("nick", "string"),	clean("password", "string") ) );
 }
 /*Post: La función puede devolver varios valores:

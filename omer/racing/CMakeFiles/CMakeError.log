@@ -1,0 +1,54 @@
+Determining if the Q_WS_MAC exist failed with the following output:
+/usr/bin/make -f CMakeFiles/cmTryCompileExec.dir/build.make CMakeFiles/cmTryCompileExec.dir/build
+make[1]: se ingresa al directorio `/home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec.dir/CheckSymbolExists.o
+/usr/bin/gcc  -I/usr/include/qt4   -o CMakeFiles/cmTryCompileExec.dir/CheckSymbolExists.o   -c /home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CheckSymbolExists.c: En la función ‘main’:
+/home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8: error: ‘Q_WS_MAC’ no se declaró aquí (primer uso en esta función)
+/home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8: error: (Cada identificador no declarado solamente se reporta una vez
+/home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8: error: para cada funcion en la que aparece.)
+make[1]: *** [CMakeFiles/cmTryCompileExec.dir/CheckSymbolExists.o] Error 1
+make[1]: se sale del directorio `/home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec/fast] Error 2
+
+File /home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <QtCore/qglobal.h>
+
+void cmakeRequireSymbol(int dummy,...){(void)dummy;}
+int main()
+{
+#ifndef Q_WS_MAC
+  cmakeRequireSymbol(0,&Q_WS_MAC);
+#endif
+  return 0;
+}
+
+Determining if the Q_WS_WIN exist failed with the following output:
+/usr/bin/make -f CMakeFiles/cmTryCompileExec.dir/build.make CMakeFiles/cmTryCompileExec.dir/build
+make[1]: se ingresa al directorio `/home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec.dir/CheckSymbolExists.o
+/usr/bin/gcc  -I/usr/include/qt4   -o CMakeFiles/cmTryCompileExec.dir/CheckSymbolExists.o   -c /home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CheckSymbolExists.c: En la función ‘main’:
+/home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8: error: ‘Q_WS_WIN’ no se declaró aquí (primer uso en esta función)
+/home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8: error: (Cada identificador no declarado solamente se reporta una vez
+/home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8: error: para cada funcion en la que aparece.)
+make[1]: *** [CMakeFiles/cmTryCompileExec.dir/CheckSymbolExists.o] Error 1
+make[1]: se sale del directorio `/home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec/fast] Error 2
+
+File /home/dvd/Escritorio/pfc-pj/omer/racing/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <QtCore/qglobal.h>
+
+void cmakeRequireSymbol(int dummy,...){(void)dummy;}
+int main()
+{
+#ifndef Q_WS_WIN
+  cmakeRequireSymbol(0,&Q_WS_WIN);
+#endif
+  return 0;
+}
+
