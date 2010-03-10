@@ -11,6 +11,8 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyCodes.*; 
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
@@ -352,9 +354,9 @@ public class JocProg implements EntryPoint {
 	  loginVPanel.setCellVerticalAlignment(registerDisclosure,HasVerticalAlignment.ALIGN_TOP);
 	  loginVPanel.setCellHorizontalAlignment(loginFormPanel,HasHorizontalAlignment.ALIGN_CENTER);
 	  
-	  loginPassword.addKeyUpHandler(
-			  new KeyUpHandler(){
-				  public void onKeyUp(KeyUpEvent event){
+	  loginPassword.addKeyDownHandler(
+			  new KeyDownHandler(){
+				  public void onKeyDown(KeyDownEvent event){
 					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER) requestLogin();
 				  }
 			  });
@@ -1590,6 +1592,7 @@ public class JocProg implements EntryPoint {
 	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
+		  Window.alert(code);
 		  String requestStr = encodeParam("function", "saveCode")+"&"+
 			encodeParam("code", code)+"&"+
 			encodeParam("name", name);
@@ -2492,6 +2495,8 @@ private void requestLogout() {
 	  multiPanel.add(loginVPanel);
 	  mainPanel.insert(multiPanel,"Inicio", 0);
 	  mainPanel.selectTab(0);
+	  
+	  inputTextArea.setText("entrada de código");
 	  
 	  circuitsDropBox.setSelectedIndex(0);
 	  champsDropBox.clear();
