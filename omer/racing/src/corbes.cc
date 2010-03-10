@@ -4,6 +4,9 @@
 #include "common.h"
 #include <cmath>
 #include <cassert>
+#include <iostream>
+
+using namespace std;
 
 Punt Punt::unitari() const {
   return (1/mida())*(*this);
@@ -210,6 +213,10 @@ double Circuit::getCurv(double d) const {
 }
 
 istream &operator>>(istream &is, Circuit &c) {
+  string name;
+  getline(is, name);
+  assert(name.size()>0 and name[0]=='#');
+
   if (not (is >> c.width >> c.height)) return is;
 
   if (not (is >> c.n)) return is;

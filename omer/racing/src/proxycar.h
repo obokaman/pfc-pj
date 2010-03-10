@@ -13,7 +13,9 @@ class ProxyCar {
 
  public:
  ProxyCar(MonoCar *_r): _realcar(_r) {}
-  
+
+  virtual void corre() = 0; 
+
   //interface del proxy
  protected:
   double getLongCircuito(); ///<longitud circuito (en metros)

@@ -22,7 +22,8 @@ public:
 private:
   static double curv2maxvel(double curv) {
     double radi = 1/(curv+0.00001); // en metres
-    return sqrt(1.1*10*radi);  //sqrt(mu * G * r); mu=1.1
+    return sqrt(1.8*10*radi);  //sqrt(mu * G * r); mu=1.8
+    //(mu=1.8 es forca irrealista; 1.1 es mes realista)
   }
 
   //velocidad actual: vel (m/s)
@@ -31,19 +32,26 @@ private:
   //retorna: la nueva velocidad
   //por ahora, a lo cutre:
   // * frenar: 1.2 G
-  // * acelerar: 0.5 G maximo, pero a velocidades altas (>20 m/s)
-  // se resta un termino ~(vel-20)^2. Velmaxima: 60 m/s
+  // * acelerar: 1 G maximo, pero a velocidades altas (>30 m/s)
+  // se resta un termino ~(vel-30)^2. Velmaxima: 110 m/s
   static double acelera(double vel, double vo, double time) {
+    const double G = 9.8;
+    const double frenoG = 1.2; //G
+    const double aceleG = 1; //G
+    const double espvel = 30; //m/s
+    const double topvel = 110; //m/s
     double newvel;
     if (vo<vel) {
-      newvel = vel - time*10*1.2;
+      newvel = vel - time*G*frenoG;
       if (newvel<vo) return vo;
       return newvel;
     }
     else {
-      if (vel < 20) newvel = vel + time*10*0.5;
-      else newvel = vel + time*10*max(0.0, 0.5 - 0.5*(vel-20)
-				      *(vel-20)/1600.0);
+      if (vel < 30) newvel = vel + time*G*aceleG;
+      else newvel = vel + time*G*max(0.0,
+				     aceleG *
+				     (1-(vel-espvel)*(vel-espvel)/
+				      (topvel-espvel)*(topvel-espvel)));
       if (newvel>vo) return vo;
       return newvel;
     }
@@ -152,7 +160,6 @@ public:
       
       //calculamos la G de los neumaticos
       double curv = c->getCurv(p);
-      //      double G = vel*vel/radi;
       alpha = c->getDir(p);
       
       if (vel > curv2maxvel(curv)) {  //malaSuerte(G)
