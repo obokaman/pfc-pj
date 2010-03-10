@@ -56,6 +56,7 @@ void MainView::saveImage(const string &name, int width, int height) {
   qp.fill( qRgb(128, 255, 128) );
 
   QPainter p(&qp);
+  
   qcv->showControlPoints = false;
   qcv->drawCircuit(&p);
 
