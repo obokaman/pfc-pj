@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MouseListener;
@@ -357,7 +358,10 @@ public class JocProg implements EntryPoint {
 	  loginPassword.addKeyDownHandler(
 			  new KeyDownHandler(){
 				  public void onKeyDown(KeyDownEvent event){
-					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER) requestLogin();
+					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER){
+						  Window.alert("enter key pressed. user value: "+USER);
+						  requestLogin();
+					  }
 				  }
 			  });
   }
@@ -1337,8 +1341,14 @@ public class JocProg implements EntryPoint {
 			        	public void onResponseReceived(Request request, Response response) {
 			        		if (200 == response.getStatusCode()) {
 			        			int res = asInt(response.getText());
-			        			if(res==1) Window.alert("Usuario o contraseña incorrectos");
-			        			else if(res==2) Window.alert("Usuario pendiente de activación");
+			        			if(res==1){
+			        				Window.alert("Usuario o contraseña incorrectos");
+			        				loginPassword.setText("");
+			        			}
+			        			else if(res==2){
+			        				Window.alert("Usuario pendiente de activación");
+			        				loginPassword.setText("");
+			        			}
 			        			else if (res==0){
 			        				USER = loginUserTextBox.getText();
 			        				createPerfilPanel();
