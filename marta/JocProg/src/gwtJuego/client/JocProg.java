@@ -1315,6 +1315,7 @@ public class JocProg implements EntryPoint {
   
   
   private void requestLogin() {
+	  Window.alert("entramos en requestlogin-user value: "+USER);
 	  if (loginUserTextBox.getText().equals("") || loginPassword.getText().equals("")){
 		  Window.alert("Debes indicar tu nombre de usuario y contraseña");
 	  }
@@ -1359,6 +1360,7 @@ public class JocProg implements EntryPoint {
 			        				mainPanel.selectTab(0);
 			        				loginUserTextBox.setText("");
 			        				loginPassword.setText("");
+			        				Window.alert("login ok-user value: "+USER);
 			        			}		        	  
 			        		} else {
 			        			Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
