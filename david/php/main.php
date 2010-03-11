@@ -397,7 +397,7 @@ else if( $f == "saveCode" ) {
 /*Pre: - */
 	$code = clean ( "code", "json" );
 	$file_name = clean ( "name", "string" );
-	$date = date("j-m-y g:i:s");
+	$date = date("y-m-d g:i:s");
 	
 	if ( ! isset($_SESSION['user']) ) $result = 3;
 	else {
@@ -415,6 +415,22 @@ else if( $f == "saveCode" ) {
 	- 2 otros errores
 	- 3 si el usuario no esta logueado*/
 
+else if( $f == "saveCode2" ) {	
+/*Pre: - */
+	$code = clean ( "code", "string" );
+	$file_name = clean ( "name", "string" );
+	$date = date("y-m-d g:i:s");
+	
+	if ( ! isset($_SESSION['user']) ) $result = 3;
+	else {
+		$id_user = get_id_user( $_SESSION[ 'user' ] );
+		
+		if ( exist_file_name( $file_name, $id_user ) ) $result = 1;
+		else if ( new_code( $file_name, $code, $date, $id_user) ) $result = 0;
+		else $result = 2;
+	}
+	send($result);
+}
 
 
 /*La función retorna el codigo guardado por el usuario logueado con el mismo nombre que nombre de fichero de la entrada*/
