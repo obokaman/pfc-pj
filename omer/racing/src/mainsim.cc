@@ -28,10 +28,10 @@ int main(int argc, char **argv) {
 
   ostringstream oss;
   MonoCar car(&c, 3, &oss);
-  ProxyCarInherited proxycar(&car);
+  ProxyCar *proxycar = ProxyCar::get(&car);
   try{
     while (1) {
-      proxycar.corre();
+      proxycar->corre();
       car.avanza();
     }
   }

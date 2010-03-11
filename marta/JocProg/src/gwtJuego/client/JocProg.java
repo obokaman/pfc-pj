@@ -11,6 +11,8 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyCodes.*; 
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
@@ -29,6 +31,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MouseListener;
@@ -352,10 +355,13 @@ public class JocProg implements EntryPoint {
 	  loginVPanel.setCellVerticalAlignment(registerDisclosure,HasVerticalAlignment.ALIGN_TOP);
 	  loginVPanel.setCellHorizontalAlignment(loginFormPanel,HasHorizontalAlignment.ALIGN_CENTER);
 	  
-	  loginPassword.addKeyUpHandler(
-			  new KeyUpHandler(){
-				  public void onKeyUp(KeyUpEvent event){
-					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER) requestLogin();
+	  loginPassword.addKeyDownHandler(
+			  new KeyDownHandler(){
+				  public void onKeyDown(KeyDownEvent event){
+					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER){
+						  Window.alert("enter key pressed. user value: "+USER);
+						  requestLogin();
+					  }
 				  }
 			  });
   }
@@ -1309,6 +1315,7 @@ public class JocProg implements EntryPoint {
   
   
   private void requestLogin() {
+	  Window.alert("entramos en requestlogin-user value: "+USER);
 	  if (loginUserTextBox.getText().equals("") || loginPassword.getText().equals("")){
 		  Window.alert("Debes indicar tu nombre de usuario y contraseña");
 	  }
@@ -1335,8 +1342,14 @@ public class JocProg implements EntryPoint {
 			        	public void onResponseReceived(Request request, Response response) {
 			        		if (200 == response.getStatusCode()) {
 			        			int res = asInt(response.getText());
-			        			if(res==1) Window.alert("Usuario o contraseña incorrectos");
-			        			else if(res==2) Window.alert("Usuario pendiente de activación");
+			        			if(res==1){
+			        				Window.alert("Usuario o contraseña incorrectos");
+			        				loginPassword.setText("");
+			        			}
+			        			else if(res==2){
+			        				Window.alert("Usuario pendiente de activación");
+			        				loginPassword.setText("");
+			        			}
 			        			else if (res==0){
 			        				USER = loginUserTextBox.getText();
 			        				createPerfilPanel();
@@ -1347,6 +1360,7 @@ public class JocProg implements EntryPoint {
 			        				mainPanel.selectTab(0);
 			        				loginUserTextBox.setText("");
 			        				loginPassword.setText("");
+			        				Window.alert("login ok-user value: "+USER);
 			        			}		        	  
 			        		} else {
 			        			Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
@@ -1590,6 +1604,7 @@ public class JocProg implements EntryPoint {
 	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
+		  Window.alert(code);
 		  String requestStr = encodeParam("function", "saveCode")+"&"+
 			encodeParam("code", code)+"&"+
 			encodeParam("name", name);
@@ -2492,6 +2507,8 @@ private void requestLogout() {
 	  multiPanel.add(loginVPanel);
 	  mainPanel.insert(multiPanel,"Inicio", 0);
 	  mainPanel.selectTab(0);
+	  
+	  inputTextArea.setText("entrada de código");
 	  
 	  circuitsDropBox.setSelectedIndex(0);
 	  champsDropBox.clear();

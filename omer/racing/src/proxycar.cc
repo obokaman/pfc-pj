@@ -1,6 +1,15 @@
 #include "proxycar.h"
 #include "monocar.h"
 
+class ProxyCarInherited : public ProxyCar {
+ public:
+ ProxyCarInherited(MonoCar *_r): ProxyCar(_r) {}
+
+ #include "studentcode.h"
+};
+
+
+
 double ProxyCar::getLongCircuito() {
   _realcar->avanza();
   return _realcar->getLongCircuito();
@@ -53,4 +62,8 @@ void ProxyCar::setVel(double v) {
 
 void ProxyCar::espera(double s) {
   _realcar->espera(s);
+}
+
+ProxyCar *ProxyCar::get(MonoCar *_r) {
+  return new ProxyCarInherited(_r);
 }

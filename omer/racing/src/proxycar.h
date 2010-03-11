@@ -12,8 +12,9 @@ class ProxyCar {
   MonoCar *_realcar; 
 
  public:
- ProxyCar(MonoCar *_r): _realcar(_r) {}
+  ProxyCar(MonoCar *_r): _realcar(_r) {}
 
+  static ProxyCar *get(MonoCar *_r);
   virtual void corre() = 0; 
 
   //interface del proxy
@@ -38,11 +39,4 @@ class ProxyCar {
   
   void setVel(double v);    ///<velocidad objetivo (en km/h)
   void espera(double s);    ///<espera s segundos
-};
-
-class ProxyCarInherited : public ProxyCar {
- public:
- ProxyCarInherited(MonoCar *_r): ProxyCar(_r) {}
-
-#include "studentcode.h"
 };
