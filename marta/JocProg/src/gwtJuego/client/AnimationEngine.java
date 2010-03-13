@@ -64,6 +64,13 @@ public class AnimationEngine {
      */
     private boolean executingAnimations = false;
 
+    private PushButton oldStopButton;
+    private TextArea codeTextArea;
+    private TextBox name;
+    private Button load;
+    private Button save;
+    private Button change;
+    
     /**
      * Add a new animation. Only one animation per widget is supported so this will replace any existing animation for
      * the same widget. Animations are executed in the order in which they are added but a later animation for the
@@ -71,17 +78,22 @@ public class AnimationEngine {
      *
      * @param animation The animation to add.
      */
-    public void addAnimation(Animation animation, HorizontalPanel controllersHPanel, HorizontalPanel buttonsHPanel, AbsolutePanel imgPanel, final TextArea inputTextArea ) {
+    public void addAnimation(Animation animation, HorizontalPanel controllersHPanel, HorizontalPanel buttonsHPanel, AbsolutePanel imgPanel, TextArea inputTextArea ) {
     	
     	controllersPanel = controllersHPanel;
     	animationPanel = imgPanel;
-    	final TextBox name = (TextBox)buttonsHPanel.getWidget(0);
+    	codeTextArea = inputTextArea;
+    	//final TextBox name = (TextBox)buttonsHPanel.getWidget(0);
+    	name = (TextBox)buttonsHPanel.getWidget(0);
     	name.setEnabled(false);
-    	final Button load = (Button)buttonsHPanel.getWidget(1);
+    	//final Button load = (Button)buttonsHPanel.getWidget(1);
+    	load = (Button)buttonsHPanel.getWidget(1);
     	load.setEnabled(false);
-    	final Button save = (Button)buttonsHPanel.getWidget(2);
+    	//final Button save = (Button)buttonsHPanel.getWidget(2);
+    	save = (Button)buttonsHPanel.getWidget(2);
     	save.setEnabled(false);
-    	final Button change = (Button)buttonsHPanel.getWidget(3);
+    	//final Button change = (Button)buttonsHPanel.getWidget(3);
+    	change = (Button)buttonsHPanel.getWidget(3);
     	change.setEnabled(false);
     	
     	paused = false;
@@ -91,7 +103,8 @@ public class AnimationEngine {
         PushButton controlPauseButton = (PushButton)controllersPanel.getWidget(1);
         PushButton controlPlayButton = (PushButton)controllersPanel.getWidget(2);
         
-        final PushButton oldStopButton = (PushButton)controllersPanel.getWidget(3);
+        //final PushButton oldStopButton = (PushButton)controllersPanel.getWidget(3);
+        oldStopButton = (PushButton)controllersPanel.getWidget(3);
         oldStopButton.setEnabled(true);  
         
         controlPauseButton.addClickHandler( 
@@ -118,18 +131,20 @@ public class AnimationEngine {
     			  new ClickHandler() {
    				  public void onClick(ClickEvent event) {
     					  stop = true;
-    					  oldStopButton.setEnabled(false);
+    					  /*oldStopButton.setEnabled(false);
     					  controllersPanel.getWidget(1).setVisible(false);
     					  controllersPanel.getWidget(2).setVisible(false);
     	                  controllersPanel.getWidget(0).setVisible(true);
     	                  PushButton oldPlayButton = (PushButton)controllersPanel.getWidget(0);
     	                  oldPlayButton.setEnabled(true);
-    	                  inputTextArea.setEnabled(true);
+    	                  //inputTextArea.setEnabled(true);
+    	                  codeTextArea.setEnabled(true);
     	                  name.setEnabled(true);
     	                  load.setEnabled(true);
     	                  save.setEnabled(true);
     	                  change.setEnabled(true);
     	                  if (animationPanel.getWidgetCount() == 2) animationPanel.remove(1);  //borrar widget coche
+    				  	*/
     				  }
     			  });
     	
@@ -156,7 +171,7 @@ public class AnimationEngine {
             executingAnimations = true;
             for (Iterator<Map.Entry<Widget, Animation>> entries = animations.entrySet().iterator(); entries.hasNext();) {
                 Animation animation = entries.next().getValue();
-                if (!paused && !stop && animation.animateOneFrame()) {
+                /*if (!paused && !stop && animation.animateOneFrame()) {
                     // This animation is completed so remove it.
                 	animation.afterLastFrame();
                 	entries.remove();
@@ -164,11 +179,36 @@ public class AnimationEngine {
                 else if(stop) {
             		animation.afterLastFrame();
             		entries.remove();
-            	}
+            	}*/
+                if (stop || (!paused && !stop && animation.animateOneFrame())) {
+                    // This animation is completed so remove it.
+                	afterAnimation();
+                	animation.afterLastFrame();
+                	entries.remove();
+                }
             }
         } finally {
             executingAnimations = false;
         }
+    }
+    
+    /**
+     * Recover status after finishing the execution of one animation
+     */
+    private void afterAnimation() {
+    	oldStopButton.setEnabled(false);
+		controllersPanel.getWidget(1).setVisible(false);
+		controllersPanel.getWidget(2).setVisible(false);
+        controllersPanel.getWidget(0).setVisible(true);
+        PushButton oldPlayButton = (PushButton)controllersPanel.getWidget(0);
+        oldPlayButton.setEnabled(true);
+        //inputTextArea.setEnabled(true);
+        codeTextArea.setEnabled(true);
+        name.setEnabled(true);
+        load.setEnabled(true);
+        save.setEnabled(true);
+        change.setEnabled(true);
+        if (animationPanel.getWidgetCount() == 2) animationPanel.remove(1);  //borrar widget coche
     }
 
     /**

@@ -155,18 +155,19 @@ public class JocProg implements EntryPoint {
    	//private String[] pageSizes = {"Tamaño","10","25","50","75","100"};
    	private String[] pageSizes = {"Tamaño","1","2","3","4","5","6","7","8","9","10"};
    	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
+   	private static boolean whileLogin = false;
 	
 	private static String USER = "";
 	private static int modeOn = CODE;
-	private static int hPositionExec = 75;
-	private static int vPositionExec = 75;
-	private static int hPositionCode = 30;
-	private static int vPositionCode = 95;
-	private static int hPositionComp = 40;
-	private static int vPositionComp = 25;
+	private static final int hPositionExec = 75;
+	private static final int vPositionExec = 75;
+	private static final int hPositionCode = 30;
+	private static final int vPositionCode = 95;
+	private static final int hPositionComp = 40;
+	private static final int vPositionComp = 25;
    
 	
-	private int playMode = NONE;
+	private int playMode = TRAIN;
 	private String champOn = "";
 	private String circuitOn = "Montmelo";   //que poner en default??
 	private String circuitURL = IMG_URL+"basic.png";
@@ -212,7 +213,10 @@ public class JocProg implements EntryPoint {
 	  loginButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  requestLogin();
+					  if (!whileLogin){
+						  whileLogin = true;
+						  requestLogin();
+					  }
 				  }
 			  });
 	 logoutButton.addClickHandler( 
@@ -358,8 +362,9 @@ public class JocProg implements EntryPoint {
 	  loginPassword.addKeyDownHandler(
 			  new KeyDownHandler(){
 				  public void onKeyDown(KeyDownEvent event){
-					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER){
-						  Window.alert("enter key pressed. user value: "+USER);
+					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER && !whileLogin){
+						  whileLogin = true;
+						  Window.alert("enter key pressed. user value: "+USER);	  
 						  requestLogin();
 					  }
 				  }
@@ -1318,6 +1323,7 @@ public class JocProg implements EntryPoint {
 	  Window.alert("entramos en requestlogin-user value: "+USER);
 	  if (loginUserTextBox.getText().equals("") || loginPassword.getText().equals("")){
 		  Window.alert("Debes indicar tu nombre de usuario y contraseña");
+		  whileLogin = false;
 	  }
 	  else {
 		  /*String url = JSON_URL;
@@ -1338,6 +1344,7 @@ public class JocProg implements EntryPoint {
 //					  URL.encodeComponent(loginPassword.getText()), new RequestCallback() {
 			        	public void onError(Request request, Throwable exception) {
 			        		Window.alert("Couldn't retrieve JSON");
+			        		whileLogin = false;
 			        	}
 			        	public void onResponseReceived(Request request, Response response) {
 			        		if (200 == response.getStatusCode()) {
@@ -1365,10 +1372,12 @@ public class JocProg implements EntryPoint {
 			        		} else {
 			        			Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 			        		}
+			        		whileLogin = false;
 			        	}
 			  });
 		  } catch (RequestException e) {
 			  Window.alert("Couldn't retrieve JSON");
+			  whileLogin = false;
 		  }
 	  }
   }
@@ -1671,7 +1680,7 @@ public class JocProg implements EntryPoint {
 					  dialogContents.add(new HTML("Elige el archivo que quieres cargar: "));
 					  
 					  final ListBox savedCodesMultiBox = new ListBox(true);
-					  savedCodesMultiBox.setSize("170px","200px");
+					  savedCodesMultiBox.setSize("200px","230px");
 					  
 					  for (int i=0; i<res.length(); i++){
 						  JSonData info = res.get(i);
