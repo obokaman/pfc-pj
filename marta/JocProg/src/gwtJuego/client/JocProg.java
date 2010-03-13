@@ -1605,7 +1605,7 @@ public class JocProg implements EntryPoint {
 
 	  try {
 		  Window.alert(code);
-		  String requestStr = encodeParam("function", "saveCode")+"&"+
+		  String requestStr = encodeParam("function", "saveCode2")+"&"+
 			encodeParam("code", code)+"&"+
 			encodeParam("name", name);
 
