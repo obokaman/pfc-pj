@@ -781,7 +781,7 @@ public class JocProg implements EntryPoint {
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
 					  if(modeListBox.getSelectedIndex()==0) Window.alert("Debes elegir un modo de juego");
-					  else if (modeChampListBox.isEnabled() && modeChampListBox.getSelectedIndex() == 0) Window.alert("En modo 'Campeonato' debes elegir un campeonato en el que competir");
+					  else if (modeChampListBox.isEnabled() && modeChampListBox.getSelectedIndex() == 0) Window.alert("Para jugar en modo 'Campeonato' debes elegir un campeonato en el que competir");
 					  else if (!firstRadioButton.getValue() && !secondRadioButton.getValue() && !thirdRadioButton.getValue()) Window.alert("Debes elegir un circuito");
 					  else {
 						  playMode = modeListBox.getSelectedIndex();
@@ -825,7 +825,20 @@ public class JocProg implements EntryPoint {
 	  cancelModeButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  if(playMode == NONE) playMode = TRAIN;//Window.alert("Debes elegir un modo de juego");
+					  if(playMode == NONE){
+						  //Window.alert("Debes elegir un modo de juego");
+						  playMode = TRAIN;
+						  champOn = "";
+						  boolean b = false;
+						  for(int i=0;i<circuitsList.size() && !b;i++){
+							  if(circuitsList.get(i).name.equals(circuitOn)){
+								  b=true;
+								  circuitURL = circuitsList.get(i).url;
+								  circuitWidth = circuitsList.get(i).width;
+								  circuitHeight = circuitsList.get(i).height;
+							  }
+						  }
+					  }
 					  //else {
 						  modeDialogBox.hide();
 						  modeListBox.setSelectedIndex(0);

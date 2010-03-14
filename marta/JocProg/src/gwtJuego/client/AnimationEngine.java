@@ -131,7 +131,7 @@ public class AnimationEngine {
     			  new ClickHandler() {
    				  public void onClick(ClickEvent event) {
     					  stop = true;
-    					  oldStopButton.setEnabled(false);
+    			/*		  oldStopButton.setEnabled(false);
     					  controllersPanel.getWidget(1).setVisible(false);
     					  controllersPanel.getWidget(2).setVisible(false);
     	                  controllersPanel.getWidget(0).setVisible(true);
@@ -144,7 +144,7 @@ public class AnimationEngine {
     	                  save.setEnabled(true);
     	                  change.setEnabled(true);
     	                  if (animationPanel.getWidgetCount() == 2) animationPanel.remove(1);  //borrar widget coche
-    				  	
+    				*/  	
     				  }
     			  });
     	
@@ -171,7 +171,7 @@ public class AnimationEngine {
             executingAnimations = true;
             for (Iterator<Map.Entry<Widget, Animation>> entries = animations.entrySet().iterator(); entries.hasNext();) {
                 Animation animation = entries.next().getValue();
-                if (!paused && !stop && animation.animateOneFrame()) {
+                /*if (!paused && !stop && animation.animateOneFrame()) {
                     // This animation is completed so remove it.
                 	//afterAnimation();
                 	animation.afterLastFrame();
@@ -181,13 +181,13 @@ public class AnimationEngine {
                 	//afterAnimation();
             		animation.afterLastFrame();
             		entries.remove();
-            	}
-                /*if (stop || (!paused && !stop && animation.animateOneFrame())) {
+            	}*/
+                if (stop || (!paused && !stop && animation.animateOneFrame())) {
                     // This animation is completed so remove it.
                 	afterAnimation();
                 	animation.afterLastFrame();
                 	entries.remove();
-                }*/
+                }
             }
         } finally {
             executingAnimations = false;
@@ -197,7 +197,7 @@ public class AnimationEngine {
     /**
      * Recover status after finishing the execution of one animation
      */
-   /* private void afterAnimation() {
+    private void afterAnimation() {
     	oldStopButton.setEnabled(false);
 		controllersPanel.getWidget(1).setVisible(false);
 		controllersPanel.getWidget(2).setVisible(false);
@@ -211,7 +211,7 @@ public class AnimationEngine {
         save.setEnabled(true);
         change.setEnabled(true);
         if (animationPanel.getWidgetCount() == 2) animationPanel.remove(1);  //borrar widget coche
-    }*/
+    }
     
     /**
      * Forces the animation which is being executed to finish.
