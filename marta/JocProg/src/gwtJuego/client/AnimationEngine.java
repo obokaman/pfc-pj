@@ -171,21 +171,23 @@ public class AnimationEngine {
             executingAnimations = true;
             for (Iterator<Map.Entry<Widget, Animation>> entries = animations.entrySet().iterator(); entries.hasNext();) {
                 Animation animation = entries.next().getValue();
-                /*if (!paused && !stop && animation.animateOneFrame()) {
-                    // This animation is completed so remove it.
-                	animation.afterLastFrame();
-                	entries.remove();
-                }
-                else if(stop) {
-            		animation.afterLastFrame();
-            		entries.remove();
-            	}*/
-                if (stop || (!paused && !stop && animation.animateOneFrame())) {
+                if (!paused && !stop && animation.animateOneFrame()) {
                     // This animation is completed so remove it.
                 	afterAnimation();
                 	animation.afterLastFrame();
                 	entries.remove();
                 }
+                else if(stop) {
+                	afterAnimation();
+            		animation.afterLastFrame();
+            		entries.remove();
+            	}
+                /*if (stop || (!paused && !stop && animation.animateOneFrame())) {
+                    // This animation is completed so remove it.
+                	afterAnimation();
+                	animation.afterLastFrame();
+                	entries.remove();
+                }*/
             }
         } finally {
             executingAnimations = false;
