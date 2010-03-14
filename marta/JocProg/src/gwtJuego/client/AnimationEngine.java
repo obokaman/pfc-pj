@@ -210,6 +210,13 @@ public class AnimationEngine {
         change.setEnabled(true);
         if (animationPanel.getWidgetCount() == 2) animationPanel.remove(1);  //borrar widget coche
     }
+    
+    /**
+     * Forces the animation which is being executed to finish.
+     */
+    public void finishAnimation() {
+    	stop = true;
+    }
 
     /**
      * The timer that calls executeAnimations on a regular basis.

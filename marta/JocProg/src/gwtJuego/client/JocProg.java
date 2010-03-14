@@ -167,7 +167,7 @@ public class JocProg implements EntryPoint {
 	private static final int vPositionComp = 25;
    
 	
-	private int playMode = TRAIN;
+	private int playMode = NONE;
 	private String champOn = "";
 	private String circuitOn = "Montmelo";   //que poner en default??
 	private String circuitURL = IMG_URL+"basic.png";
@@ -825,8 +825,8 @@ public class JocProg implements EntryPoint {
 	  cancelModeButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  if(playMode == NONE) Window.alert("Debes elegir un modo de juego");
-					  else {
+					  if(playMode == NONE) playMode = TRAIN;//Window.alert("Debes elegir un modo de juego");
+					  //else {
 						  modeDialogBox.hide();
 						  modeListBox.setSelectedIndex(0);
 						  modeChampListBox.setEnabled(false);
@@ -841,7 +841,7 @@ public class JocProg implements EntryPoint {
 						  thirdRadioButton.setValue(false);
 						  indexToShow = 0;
 						  displayCircuitsImages(circuitsList);
-					  }
+					 // }
 				  }
 			  });
   }
@@ -2496,6 +2496,10 @@ private void requestLogout() {
   private void logout(){
 	  
 	  requestLogout();
+	  if(modeOn == EXECUTION) engine.finishAnimation();
+	  modeOn = CODE;
+	  changeMode();
+	  
 	  USER = ""; 
 	  playMode = NONE;
 	  multiPanel.remove(adminHPanel);
