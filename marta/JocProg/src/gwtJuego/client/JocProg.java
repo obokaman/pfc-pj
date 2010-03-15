@@ -516,9 +516,9 @@ public class JocProg implements EntryPoint {
 	  playButton = new PushButton(playButtonImg);
 	  stopButton = new PushButton(stopButtonImg);     
 	  stopButton.setEnabled(false);
-	  PushButton controlPauseButton = new PushButton(pauseButtonImg);
+	  final PushButton controlPauseButton = new PushButton(pauseButtonImg);
 	  controlPauseButton.setVisible(false);
-	  PushButton controlPlayButton = new PushButton(play2ButtonImg);
+	  final PushButton controlPlayButton = new PushButton(play2ButtonImg);
 	  controlPlayButton.setVisible(false);
 	  
 	  Image progressImg = new Image();
@@ -589,6 +589,45 @@ public class JocProg implements EntryPoint {
 					  }
 				  }
 			  });
+	  /*controlPauseButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  engine.pauseAnimation();
+					  controlPauseButton.setVisible(false);
+					  controlPlayButton.setVisible(true);
+				  }
+			  });
+	  controlPlayButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  engine.playAnimation();
+					  controlPlayButton.setVisible(false);
+					  controlPauseButton.setVisible(true);
+				  }
+			  });
+	  stopButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  if(modeOn == EXECUTION){
+						  engine.finishAnimation();*/
+			    /*		  stopButton.setEnabled(false);
+    					  controlPauseButton.setVisible(false);
+    					  controlPlayButton.setVisible(false);
+    	                  playButton.setVisible(true);
+    	                  playButton.setEnabled(true);
+    	                  inputTextArea.setEnabled(true);
+    	                  codeNameTextBox.setEnabled(true);
+    	                  saveCodeButton.setEnabled(true);
+    	                  loadCodeButton.setEnabled(true);
+    	                  changePlayModeButton.setEnabled(true);
+    	                  if (imagePanel.getWidgetCount() == 2) imagePanel.remove(1);  //borrar widget coche
+    			*/  
+			//			  modeOn = CODE;
+			//			  changeMode();
+			//		  } 
+			//	  }
+			//  });
+	  
 	  inputTextArea.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {

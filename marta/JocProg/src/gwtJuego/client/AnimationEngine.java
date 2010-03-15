@@ -214,7 +214,19 @@ public class AnimationEngine {
     }
     
     /**
-     * Forces the animation which is being executed to finish.
+     * Pause the animation which is being executed and is playing.
+     */
+    //public void pauseAnimation() {
+    //	paused = true;
+    //}
+    /**
+     * Play the animation which is being executed and is paused.
+     */
+    //public void playAnimation() {
+    //	paused = false;
+    //}
+    /**
+     * Force the animation which is being executed to finish.
      */
     public void finishAnimation() {
     	stop = true;
