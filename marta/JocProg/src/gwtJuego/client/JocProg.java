@@ -2061,7 +2061,7 @@ public class JocProg implements EntryPoint {
   }
   
   private void requestRanking(){
-
+	  Window.alert("entra en requestRanking");
 	  if(circuitsDropBox.getSelectedIndex()==0){
 		  Window.alert("Debes elegir un circuito válido");
 	  }
@@ -2089,6 +2089,7 @@ public class JocProg implements EntryPoint {
 				encodeParam("championship", champ)+"&"+
 				encodeParam("page", String.valueOf(page))+"&"+
 				encodeParam("sizepage", String.valueOf(sizepage));
+			  Window.alert(requestStr);
 
 			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
 //			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
@@ -2104,6 +2105,7 @@ public class JocProg implements EntryPoint {
 
 				  public void onResponseReceived(Request request, Response response) {
 					  if (200 == response.getStatusCode()) {
+						  Window.alert("entra en response");
 						  RankingData res = asRankingData(response.getText());
 						  Window.alert(response.getText());
 						  updateTable(res.getData());
