@@ -2106,8 +2106,9 @@ public class JocProg implements EntryPoint {
 				  public void onResponseReceived(Request request, Response response) {
 					  if (200 == response.getStatusCode()) {
 						  Window.alert("entra en response");
-						  RankingData res = asRankingData(response.getText());
 						  Window.alert(response.getText());
+						  RankingData res = asRankingData(response.getText());
+						  Window.alert("llega aqui??");
 						  updateTable(res.getData());
 						  int pag = res.getPage();
 						  int npag = res.getNumPages();
