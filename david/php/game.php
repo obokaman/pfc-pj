@@ -122,7 +122,7 @@ Parametros de entrada:
 			if ($championship!=null) 	$query = $query. " and 	ch.name = '$championship' and 	ch.id_champ = g.id_champ";			
 			$query = $query." order by g.time_result, g.id_user" ;	
 			
-			echo $query;
+			//echo $query;
 			
 			$result_query = mysql_query($query, $connection) or my_error('GET_RANKINGS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			
