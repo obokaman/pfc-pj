@@ -18,6 +18,7 @@ public:
   static const int TIMESTEP = 10; //10 ms
   static const int PRINTSTEP = 10*TIMESTEP; //must be TIMESTEP multiple
   static const int EXTRARACETIME = 5000; //must be TIMESTEP multiple
+  static const int MAXRACETIME = 300000; //5 min
 
 private:
   static double curv2maxvel(double curv) {
@@ -83,7 +84,7 @@ public:
   }
 
 
-public:
+protected:
   double getLongCircuito() { ///<longitud circuito (en metros)
     return c->getDist();
   }
@@ -184,7 +185,8 @@ public:
       double ratio = (dist-p)/advDist;
       vueTimes.push_back(time+int(ratio*TIMESTEP));
     }
-    if (finished() and total_time()+EXTRARACETIME<time) {
+    if ( (finished() and total_time()+EXTRARACETIME<time) or
+         (time>MAXRACETIME) ) {
       ostringstream oss;
       oss << "Race ended: ";
       int t = total_time();

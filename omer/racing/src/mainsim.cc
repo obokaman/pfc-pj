@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
   ProxyCar *proxycar = ProxyCar::get(&car);
   try{
     //  double getCrono() {       ///<tiempo actual (en segundos)
-    while (car.getCrono()<60*5) { //maximo: 5 minutos de tiempo
+    while (1) { //maximo: 5 minutos de tiempo
       proxycar->corre();
       car.avanza();
     }
