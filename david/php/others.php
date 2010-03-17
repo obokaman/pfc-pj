@@ -159,10 +159,11 @@
 		`cp $dir_tmp/* ${path['games']}/$id_game`;   /**/		
 		
 		$obj_result['id_game'] = (int)$id_game;
+		$obj_result['time'] = get_time_result( $obj_result['id_game'] );
 		
 		return $obj_result;
 	}
-	/*Post: Si la simulacion se realiza con exito creamos un directorio donde se guarda todos los archivos necesarios de la simulacion junto con los resultados de esta, añadimos la partida realizada a la base de datos y retornamos el identificador de la partida, el codigo del error que es igual a 0 y el mensaje de exito de la partida. En caso de fallida, retornamos el codigo del error y el mensaje del error*/
+/*Post: Si la simulacion se realiza con exito creamos un directorio donde se guarda todos los archivos necesarios de la simulacion junto con los resultados de esta, añadimos la partida realizada a la base de datos y retornamos el identificador de la partida, el codigo del error que es igual a 0, el mensaje de exito de la partida y el tiempo realizado por la partida. En caso de fallida, retornamos el codigo del error y un mensaje descriptivo del error, el resto de parametros en caso de éxito son nulos*/
 	
 	
 	/*La función envia un correo a la dirección de correo del usuario con el enlace de activacion de la cuenta del usuario*/

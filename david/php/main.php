@@ -395,42 +395,46 @@ else if ($f == "getChampionshipCircuits") {
 /*La función inserta en la base de datos el codigo nuevo con el nombre de fichero indicado en la entrada*/
 else if( $f == "saveCode" ) {	
 /*Pre: - */
-	$code = clean ( "code", "json" );
+	$code = clean ( "code", "string" );
 	$file_name = clean ( "name", "string" );
 	$date = date("y-m-d g:i:s");
 	
-	if ( ! isset($_SESSION['user']) ) $result = 3;
+	if ( ! isset($_SESSION['user']) ) $result = 2;
 	else {
 		$id_user = get_id_user( $_SESSION[ 'user' ] );
 		
-		if ( exist_file_name( $file_name, $id_user ) ) $result = 1;
-		else if ( new_code( $file_name, $code, $date, $id_user) ) $result = 0;
-		else $result = 2;
+		if ( exist_file_name( $file_name, $id_user ) ){
+			if ( set_code($file_name, $code, $date, $id_user) ) $result=0;
+			else $result=1;
+		}else{
+			if ( new_code($file_name, $code, $date, $id_user) ) $result=0;
+			else $result=1;
+		}
+
+		$result = 0;
 	}
 	send($result);
 }
 /*Post: Según el resultado de la operación devuelve un entero con el valor:
 	- 0 se ha guardado correctamente
-	- 1 ya existe el nombre del fichero
-	- 2 otros errores
-	- 3 si el usuario no esta logueado*/
-
-else if( $f == "saveCode2" ) {	
-/*Pre: - */
-	$code = clean ( "code", "string" );
-	$file_name = clean ( "name", "string" );
-	$date = date("y-m-d g:i:s");
+	- 1 otros errores
+	- 2 si el usuario no esta logueado*/
 	
-	if ( ! isset($_SESSION['user']) ) $result = 3;
+else if( $f == "existCode" ) {	
+/*Pre: - */
+	$file_name = clean ( "name", "string" );
+	
+	if ( ! isset($_SESSION['user']) ) $result = 2;
 	else {
 		$id_user = get_id_user( $_SESSION[ 'user' ] );
 		
 		if ( exist_file_name( $file_name, $id_user ) ) $result = 1;
-		else if ( new_code( $file_name, $code, $date, $id_user) ) $result = 0;
-		else $result = 2;
+		else $result = 0;
 	}
 	send($result);
-}
+}	
+	
+	
 
 
 /*La función retorna el codigo guardado por el usuario logueado con el mismo nombre que nombre de fichero de la entrada*/
@@ -499,7 +503,7 @@ else if( $f == "run" ) {
 		)
 	);	
 }
-/*Post: Retorna un mensaje con el código de error, un entero, con el cual identifica el tiepo de error. Y en caso de éxito de la función también retorna el valor del identificador de la partida en la base de datos*/
+/*Post: En caso de éxito, registramos la partida en la base de datos y creamos un directorio en el servidor con los archivos necesarios para simular una partida, finalmente, retornamos el identificador de la partida que acaba de ser ejecutada, el codigo de error (que en caso de éxito es igual a 0), un mensaje descriptivo del error en el caso de que haya y el tiempo realizado en la partida. En caso de fallo, todos los campos estan vacios a excepción del código del error y el mensaje descriptivo del error, y no se realiza ningún tipo de registro en la base de datos ni se crea un directorio para la partida. */
 
 
 close_connection($connection);
