@@ -1608,11 +1608,11 @@ public class JocProg implements EntryPoint {
 		        	  }
 		        	  else if (cod == 0){
 		        		  String t = formatTime(time);
-		        		  Window.alert("Compilación correcta/nTiempo conseguido: "+t);
+		        		  Window.alert("¡Compilación correcta!\nTiempo conseguido: "+t);
 			    		  int id_game = res.getInt("id_game");
 		        		  modeOn = EXECUTION;
 						  changeMode();
-						  consolaTextArea.setText("-- COMPILACIÓN CORRECTA --/nTiempo conseguido: "+t);
+						  consolaTextArea.setText("-- COMPILACIÓN CORRECTA --\nTiempo conseguido: "+t);
 						  requestTrace(id_game, animationControllersPanel, buttonsPanel);
 		        	  }	
 		          } else {
@@ -1677,7 +1677,7 @@ public class JocProg implements EntryPoint {
 		    		  if(res==2) Window.alert("Se ha producido un error. Inténtalo de nuevo más tarde");
 		    		  else if(res==0) requestSaveCode(name,code);
 		        	  else if (res==1){
-		        		  boolean answer = Window.confirm("El nombre de archivo ya existe./n¿Quieres sobreescribirlo?");
+		        		  boolean answer = Window.confirm("El nombre de archivo ya existe.\n¿Quieres sobreescribirlo?");
 		        		  if(answer) requestSaveCode(name,code);
 		        	  }	
 		          } else {
