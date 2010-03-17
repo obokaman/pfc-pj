@@ -120,7 +120,9 @@ Parametros de entrada:
 			$query = $query."user u  where u.id_user = g.id_user	and g.id_user <> 1   and 	c.name = '$circuit' and 	c.id_circuit = g.id_circuit";			
 			if ($team!=null) 	$query = $query." and  t.name = '$team'	and 	t.id_team = ut.id_team and 	ut.id_user = u.id_user";			
 			if ($championship!=null) 	$query = $query. " and 	ch.name = '$championship' and 	ch.id_champ = g.id_champ";			
-			$query = $query." order by g.time_result, g.id_user" ;		
+			$query = $query." order by g.time_result, g.id_user" ;	
+			
+			echo $query;
 			
 			$result_query = mysql_query($query, $connection) or my_error('GET_RANKINGS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			

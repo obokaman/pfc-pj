@@ -51,7 +51,7 @@
 	/*Post:  Devuelve lista con los pares, el nombre de la partida  y la fecha del guardado del código, del usuario de la entrada */
 
 
-		/*La función actualiza una partida guardad en la base de datos con los nuevos parametros de entrada
+	/*La función actualiza una partida guardada en la base de datos con los nuevos parametros de entrada
 			- file_name: Nombre del fichero
 			- code: Codigo
 			- date: Fecha de insercion
