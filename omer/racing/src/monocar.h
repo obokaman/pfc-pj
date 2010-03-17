@@ -83,7 +83,7 @@ public:
   }
 
 
-protected:
+public:
   double getLongCircuito() { ///<longitud circuito (en metros)
     return c->getDist();
   }
@@ -142,6 +142,7 @@ protected:
   }
 
 public:
+
   //hace avanzar la simulacion 1 paso de TIMESTEP ms.
   void avanza() {
     double vo = velObj;
