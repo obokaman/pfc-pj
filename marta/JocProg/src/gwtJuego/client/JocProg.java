@@ -643,7 +643,8 @@ public class JocProg implements EntryPoint {
 					  if (USER.equals("")) Window.alert("Para guardar tu código debes ser un usuario registrado");
 					  else if(codeNameTextBox.getText().equals("")) Window.alert("Debes introducir un nombre para el archivo de guardado");
 					  else {
-						  requestSaveCode(inputTextArea.getText(), codeNameTextBox.getText());
+						  //requestSaveCode(codeNameTextBox.getText(),inputTextArea.getText());
+						  requestExistCode(codeNameTextBox.getText(),inputTextArea.getText());
 						  codeNameTextBox.setText("");
 					  }
 				  }
@@ -1607,11 +1608,11 @@ public class JocProg implements EntryPoint {
 		        	  }
 		        	  else if (cod == 0){
 		        		  String t = formatTime(time);
-		        		  Window.alert("Compilación correcta/nTiempo conseguido: "+t);
+		        		  Window.alert("¡Compilación correcta!\nTiempo conseguido: "+t);
 			    		  int id_game = res.getInt("id_game");
 		        		  modeOn = EXECUTION;
 						  changeMode();
-						  consolaTextArea.setText("-- COMPILACIÓN CORRECTA --/nTiempo conseguido: "+t);
+						  consolaTextArea.setText("-- COMPILACIÓN CORRECTA --\nTiempo conseguido: "+t);
 						  requestTrace(id_game, animationControllersPanel, buttonsPanel);
 		        	  }	
 		          } else {
@@ -1659,7 +1660,37 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
-  private void requestSaveCode(String code, String name) {
+  private void requestExistCode(final String name,final String code) {
+
+	  try {
+		  String requestStr = encodeParam("function", "existCode")+"&"+
+			encodeParam("name", name);
+
+		  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
+			  
+			  public void onError(Request request, Throwable exception) {
+				  Window.alert("Couldn't retrieve JSON");
+			  }
+		      public void onResponseReceived(Request request, Response response) {
+		    	  if (200 == response.getStatusCode()) {
+		    		  int res = asInt(response.getText());
+		    		  if(res==2) Window.alert("Se ha producido un error. Inténtalo de nuevo más tarde");
+		    		  else if(res==0) requestSaveCode(name,code);
+		        	  else if (res==1){
+		        		  boolean answer = Window.confirm("El nombre de archivo ya existe.\n¿Quieres sobreescribirlo?");
+		        		  if(answer) requestSaveCode(name,code);
+		        	  }	
+		          } else {
+		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
+		          }
+		      }
+		  });
+	  } catch (RequestException e) {
+		  Window.alert("Couldn't retrieve JSON");
+	  }
+  }
+  
+  private void requestSaveCode(String name, String code) {
 	  
 	  /*String url = JSON_URL;
 	  url = URL.encode(url);
@@ -1668,7 +1699,7 @@ public class JocProg implements EntryPoint {
 	  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
 
 	  try {
-		  Window.alert(code);
+		  //Window.alert(code);
 		  String requestStr = encodeParam("function", "saveCode")+"&"+
 			encodeParam("code", code)+"&"+
 			encodeParam("name", name);
@@ -1684,13 +1715,10 @@ public class JocProg implements EntryPoint {
 		      public void onResponseReceived(Request request, Response response) {
 		    	  if (200 == response.getStatusCode()) {
 		    		  int res = asInt(response.getText());
-		        	  if(res==1) Window.alert("El nombre de archivo ya existe");
-		        	  else if(res==2) Window.alert("Se ha producido un error. Inténtalo de nuevo más tarde");
+		    		  //0=ok, 1=otros errores
+		        	  if(res==1) Window.alert("Se ha producido un error. Inténtalo de nuevo más tarde");
 		        	  else if (res==0){
 		        		  Window.alert("Archivo guardado con éxito");
-		        		  boolean answer = Window.confirm("Te parece bien??");
-		        		  if(answer) Window.alert("Ha dicho que si");
-		        		  else Window.alert("ha dicho que no");
 		        	  }	
 		          } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
@@ -1722,7 +1750,7 @@ public class JocProg implements EntryPoint {
 		      public void onResponseReceived(Request request, Response response) {
 		    	  if (200 == response.getStatusCode()) {
 					  JsArray<JSonData> res =  asJsArrayJSonData(response.getText());
-					  Window.alert(response.getText());
+					  //Window.alert(response.getText());
 					  
 					  //final DialogBox dialogBox = createDialogBox();
 					  final DialogBox dialogBox = new DialogBox();
@@ -1815,7 +1843,7 @@ public class JocProg implements EntryPoint {
 		      public void onResponseReceived(Request request, Response response) {
 		    	  if (200 == response.getStatusCode()) {
 		    		  String res = asString(response.getText());
-		    		  Window.alert(response.getText());
+		    		  //Window.alert(response.getText());
 		    		  inputTextArea.setText(res);
 		          } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
