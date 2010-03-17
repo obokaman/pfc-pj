@@ -395,9 +395,10 @@ public class CarAnimation implements Animation {
     	int h = this.panel.getOffsetHeight();
     	int w = this.panel.getOffsetWidth();
     	int imgWidth = (h*circuitWidth)/circuitHeight;
-    	int widgtH = h*80/circuitHeight;  //dividido entre circuitHeight o circuitWidth??
+    	int widgtH = h*60/circuitHeight;  //dividido entre circuitHeight o circuitWidth??
     	
     	widget.setHeight(widgtH + "px");
+    	widget.setWidth(widgtH + "px");
 
     	float newY = (y/(float)circuitHeight)*h;
     	float newX = (x/(float)circuitWidth)*imgWidth;

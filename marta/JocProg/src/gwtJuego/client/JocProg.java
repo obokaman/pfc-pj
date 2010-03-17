@@ -155,15 +155,16 @@ public class JocProg implements EntryPoint {
    	//private String[] pageSizes = {"Tamaño","10","25","50","75","100"};
    	private String[] pageSizes = {"Tamaño","1","2","3","4","5","6","7","8","9","10"};
    	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
+   	private static boolean whileLogin = false;
 	
 	private static String USER = "";
 	private static int modeOn = CODE;
-	private static int hPositionExec = 75;
-	private static int vPositionExec = 75;
-	private static int hPositionCode = 30;
-	private static int vPositionCode = 95;
-	private static int hPositionComp = 40;
-	private static int vPositionComp = 25;
+	private static final int hPositionExec = 75;
+	private static final int vPositionExec = 75;
+	private static final int hPositionCode = 30;
+	private static final int vPositionCode = 95;
+	private static final int hPositionComp = 40;
+	private static final int vPositionComp = 25;
    
 	
 	private int playMode = NONE;
@@ -212,7 +213,10 @@ public class JocProg implements EntryPoint {
 	  loginButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  requestLogin();
+					  if (!whileLogin){
+						  whileLogin = true;
+						  requestLogin();
+					  }
 				  }
 			  });
 	 logoutButton.addClickHandler( 
@@ -358,8 +362,9 @@ public class JocProg implements EntryPoint {
 	  loginPassword.addKeyDownHandler(
 			  new KeyDownHandler(){
 				  public void onKeyDown(KeyDownEvent event){
-					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER){
-						  Window.alert("enter key pressed. user value: "+USER);
+					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER && !whileLogin){
+						  whileLogin = true;
+						  Window.alert("enter key pressed. user value: "+USER);	  
 						  requestLogin();
 					  }
 				  }
@@ -511,9 +516,9 @@ public class JocProg implements EntryPoint {
 	  playButton = new PushButton(playButtonImg);
 	  stopButton = new PushButton(stopButtonImg);     
 	  stopButton.setEnabled(false);
-	  PushButton controlPauseButton = new PushButton(pauseButtonImg);
+	  final PushButton controlPauseButton = new PushButton(pauseButtonImg);
 	  controlPauseButton.setVisible(false);
-	  PushButton controlPlayButton = new PushButton(play2ButtonImg);
+	  final PushButton controlPlayButton = new PushButton(play2ButtonImg);
 	  controlPlayButton.setVisible(false);
 	  
 	  Image progressImg = new Image();
@@ -560,7 +565,7 @@ public class JocProg implements EntryPoint {
 	  controlHPanel.setCellWidth(buttonsPanel,"100%");
 	  controlHPanel.setCellHorizontalAlignment(buttonsPanel, HasHorizontalAlignment.ALIGN_RIGHT);
 	  
-	  inputTextArea.setText("entrada de código");
+	  inputTextArea.setText("Escribe aquí tu código");
 	  inputTextArea.setSize("100%","100%");
 	  VerticalPanel inputPanel = new VerticalPanel();
 	  inputPanel.setSize("100%","100%");
@@ -584,6 +589,45 @@ public class JocProg implements EntryPoint {
 					  }
 				  }
 			  });
+	  /*controlPauseButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  engine.pauseAnimation();
+					  controlPauseButton.setVisible(false);
+					  controlPlayButton.setVisible(true);
+				  }
+			  });
+	  controlPlayButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  engine.playAnimation();
+					  controlPlayButton.setVisible(false);
+					  controlPauseButton.setVisible(true);
+				  }
+			  });
+	  stopButton.addClickHandler( 
+			  new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+					  if(modeOn == EXECUTION){
+						  engine.finishAnimation();*/
+			    /*		  stopButton.setEnabled(false);
+    					  controlPauseButton.setVisible(false);
+    					  controlPlayButton.setVisible(false);
+    	                  playButton.setVisible(true);
+    	                  playButton.setEnabled(true);
+    	                  inputTextArea.setEnabled(true);
+    	                  codeNameTextBox.setEnabled(true);
+    	                  saveCodeButton.setEnabled(true);
+    	                  loadCodeButton.setEnabled(true);
+    	                  changePlayModeButton.setEnabled(true);
+    	                  if (imagePanel.getWidgetCount() == 2) imagePanel.remove(1);  //borrar widget coche
+    			*/  
+			//			  modeOn = CODE;
+			//			  changeMode();
+			//		  } 
+			//	  }
+			//  });
+	  
 	  inputTextArea.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
@@ -776,7 +820,7 @@ public class JocProg implements EntryPoint {
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
 					  if(modeListBox.getSelectedIndex()==0) Window.alert("Debes elegir un modo de juego");
-					  else if (modeChampListBox.isEnabled() && modeChampListBox.getSelectedIndex() == 0) Window.alert("En modo 'Campeonato' debes elegir un campeonato en el que competir");
+					  else if (modeChampListBox.isEnabled() && modeChampListBox.getSelectedIndex() == 0) Window.alert("Para jugar en modo 'Campeonato' debes elegir un campeonato en el que competir");
 					  else if (!firstRadioButton.getValue() && !secondRadioButton.getValue() && !thirdRadioButton.getValue()) Window.alert("Debes elegir un circuito");
 					  else {
 						  playMode = modeListBox.getSelectedIndex();
@@ -820,8 +864,21 @@ public class JocProg implements EntryPoint {
 	  cancelModeButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  if(playMode == NONE) Window.alert("Debes elegir un modo de juego");
-					  else {
+					  if(playMode == NONE){
+						  //Window.alert("Debes elegir un modo de juego");
+						  playMode = TRAIN;
+						  champOn = "";
+						  boolean b = false;
+						  for(int i=0;i<circuitsList.size() && !b;i++){
+							  if(circuitsList.get(i).name.equals(circuitOn)){
+								  b=true;
+								  circuitURL = circuitsList.get(i).url;
+								  circuitWidth = circuitsList.get(i).width;
+								  circuitHeight = circuitsList.get(i).height;
+							  }
+						  }
+					  }
+					  //else {
 						  modeDialogBox.hide();
 						  modeListBox.setSelectedIndex(0);
 						  modeChampListBox.setEnabled(false);
@@ -836,7 +893,7 @@ public class JocProg implements EntryPoint {
 						  thirdRadioButton.setValue(false);
 						  indexToShow = 0;
 						  displayCircuitsImages(circuitsList);
-					  }
+					 // }
 				  }
 			  });
   }
@@ -1315,9 +1372,10 @@ public class JocProg implements EntryPoint {
   
   
   private void requestLogin() {
-	  Window.alert("entramos en requestlogin-user value: "+USER);
+	  //Window.alert("entramos en requestlogin-user value: "+USER);
 	  if (loginUserTextBox.getText().equals("") || loginPassword.getText().equals("")){
 		  Window.alert("Debes indicar tu nombre de usuario y contraseña");
+		  whileLogin = false;
 	  }
 	  else {
 		  /*String url = JSON_URL;
@@ -1338,6 +1396,7 @@ public class JocProg implements EntryPoint {
 //					  URL.encodeComponent(loginPassword.getText()), new RequestCallback() {
 			        	public void onError(Request request, Throwable exception) {
 			        		Window.alert("Couldn't retrieve JSON");
+			        		whileLogin = false;
 			        	}
 			        	public void onResponseReceived(Request request, Response response) {
 			        		if (200 == response.getStatusCode()) {
@@ -1360,15 +1419,18 @@ public class JocProg implements EntryPoint {
 			        				mainPanel.selectTab(0);
 			        				loginUserTextBox.setText("");
 			        				loginPassword.setText("");
-			        				Window.alert("login ok-user value: "+USER);
+			        				resetAll();
+			        				//Window.alert("login ok-user value: "+USER);a
 			        			}		        	  
 			        		} else {
 			        			Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 			        		}
+			        		whileLogin = false;
 			        	}
 			  });
 		  } catch (RequestException e) {
 			  Window.alert("Couldn't retrieve JSON");
+			  whileLogin = false;
 		  }
 	  }
   }
@@ -1535,6 +1597,7 @@ public class JocProg implements EntryPoint {
 		    		 
 		    		  int cod = res.getInt("code");
 		    		  String msg = res.get("message");
+		    		  int time = res.getInt("time");   		     
 
 		        	  if(cod < 0) {
 		        		  Window.alert("Error de compilacion");
@@ -1543,11 +1606,12 @@ public class JocProg implements EntryPoint {
 						  changeMode();
 		        	  }
 		        	  else if (cod == 0){
-		        		  Window.alert("Compilación correcta");
+		        		  String t = formatTime(time);
+		        		  Window.alert("Compilación correcta/nTiempo conseguido: "+t);
 			    		  int id_game = res.getInt("id_game");
 		        		  modeOn = EXECUTION;
 						  changeMode();
-						  consolaTextArea.setText("OK");
+						  consolaTextArea.setText("-- COMPILACIÓN CORRECTA --/nTiempo conseguido: "+t);
 						  requestTrace(id_game, animationControllersPanel, buttonsPanel);
 		        	  }	
 		          } else {
@@ -1624,6 +1688,9 @@ public class JocProg implements EntryPoint {
 		        	  else if(res==2) Window.alert("Se ha producido un error. Inténtalo de nuevo más tarde");
 		        	  else if (res==0){
 		        		  Window.alert("Archivo guardado con éxito");
+		        		  boolean answer = Window.confirm("Te parece bien??");
+		        		  if(answer) Window.alert("Ha dicho que si");
+		        		  else Window.alert("ha dicho que no");
 		        	  }	
 		          } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
@@ -1671,7 +1738,7 @@ public class JocProg implements EntryPoint {
 					  dialogContents.add(new HTML("Elige el archivo que quieres cargar: "));
 					  
 					  final ListBox savedCodesMultiBox = new ListBox(true);
-					  savedCodesMultiBox.setSize("170px","200px");
+					  savedCodesMultiBox.setSize("200px","230px");
 					  
 					  for (int i=0; i<res.length(); i++){
 						  JSonData info = res.get(i);
@@ -2487,6 +2554,10 @@ private void requestLogout() {
   private void logout(){
 	  
 	  requestLogout();
+	  if(modeOn == EXECUTION) engine.finishAnimation();
+	  modeOn = CODE;
+	  changeMode();
+	  
 	  USER = ""; 
 	  playMode = NONE;
 	  multiPanel.remove(adminHPanel);
@@ -2508,7 +2579,8 @@ private void requestLogout() {
 	  mainPanel.insert(multiPanel,"Inicio", 0);
 	  mainPanel.selectTab(0);
 	  
-	  inputTextArea.setText("entrada de código");
+	  inputTextArea.setText("Escribe aquí tu código");
+	  consolaTextArea.setText("consola de salida");
 	  
 	  circuitsDropBox.setSelectedIndex(0);
 	  champsDropBox.clear();
@@ -2661,6 +2733,27 @@ private void requestLogout() {
 	  }
   }
   
+  private void resetAll(){
+	  if(modeOn == EXECUTION) engine.finishAnimation();
+	  modeOn = CODE;
+	  changeMode();
+	  
+	  inputTextArea.setText("Escribe aquí tu código");
+	  consolaTextArea.setText("consola de salida");
+	  
+	  circuitsDropBox.setSelectedIndex(0);
+	  champsDropBox.clear();
+	  champsDropBox.addItem("CAMPEONATOS");
+	  champsDropBox.setEnabled(false);
+	  teamsDropBox.clear();
+	  teamsDropBox.addItem("EQUIPOS");
+	  teamsDropBox.setEnabled(false);
+	  rankPagesDropBox.clear();
+	  rankPagesDropBox.addItem("Página");
+	  rankPagesDropBox.setEnabled(false);
+	  sizePagesDropBox.setSelectedIndex(0);
+  }
+  
   /**
    * Update the "Usuario" and "Tiempo" fields for all rows in the ranking table.
    * @param ranking data for all rows.
@@ -2686,12 +2779,13 @@ private void requestLogout() {
      int row = rankingFlexTable.getRowCount();
      // Populate the "Usuario" and "Tiempo" fields with new data.
      rankingFlexTable.setText(row, 0, info.getNick());
-     int tiempo = Integer.parseInt(info.getTiempo());
+     /*int tiempo = Integer.parseInt(info.getTiempo());
      int milesimas = tiempo%1000;
      int segs = tiempo/1000;
      segs = segs%60;
      int mins = segs/60;
-     rankingFlexTable.setText(row, 1, mins+":"+segs+"."+milesimas);
+     rankingFlexTable.setText(row, 1, mins+":"+segs+"."+milesimas);*/
+     rankingFlexTable.setText(row, 1, formatTime(Integer.parseInt(info.getTiempo())));
      rankingFlexTable.getCellFormatter().addStyleName(row, 0, "rankingListColumn");
      rankingFlexTable.getCellFormatter().addStyleName(row, 1, "rankingListColumn");
   }
@@ -2732,6 +2826,14 @@ private void requestLogout() {
 	  buttonsHPanel.add(denyInvitationButton);
 	  invitationsFlexTable.setWidget(row, 1, buttonsHPanel);
 	  invitationsFlexTable.getCellFormatter().setHorizontalAlignment(row,1, HasHorizontalAlignment.ALIGN_CENTER);
+  }
+  
+  private String formatTime (int time){
+	  int milesimas = time%1000;
+	  int segs = time/1000;
+	  segs = segs%60;
+	  int mins = segs/60;
+	  return mins+":"+segs+"."+milesimas; 
   }
   
   
