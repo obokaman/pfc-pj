@@ -53,7 +53,7 @@ def compila():
 def corre(circuit_filename):
     f = "trace.out"
     if os.path.exists(f): os.unlink(f)
-    execute("./a.out %s >%s" % (circuit_filename, f))
+    execute("./a.out %s >%s 2>cerr.txt" % (circuit_filename, f))
     return (NoError, "")    
  
 
