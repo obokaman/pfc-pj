@@ -51,6 +51,26 @@
 	/*Post:  Devuelve lista con los pares, el nombre de la partida  y la fecha del guardado del código, del usuario de la entrada */
 
 
+		/*La función actualiza una partida guardad en la base de datos con los nuevos parametros de entrada
+			- file_name: Nombre del fichero
+			- code: Codigo
+			- date: Fecha de insercion
+			- id_user: Identificador de usuario
+	*/
+	function set_code ( $file_name, $code, $date, $id_user ){
+	/*Pre: En nombre del fichero y el identifcador de usuario no pueden ser nulos*/
+		global $connection;		
+		
+		$query = "UPDATE code SET code='$code', file_date='$date' WHERE file_name='$file_name' AND id_user='$id_user' ";
+		
+		if (!mysql_query($query, $connection)) {
+			my_error('SET_CODE -> '.mysql_errno($connection).": ".mysql_error($connection), 1);				
+			return false;
+		}else			return true;
+	}
+	/*Post: La función devuelve cierto si ha modificado correctamente la fila junto con todos sus parametros, en caso con contrario devuelve falso y no inserta la nueva fila*/
+
+
 	/*La funcion comprueba que existe el codigo con el mismo nombre de fichero y de identificador de usuario que la entrada
 			- name: Nombre del fichero
 			- id_user: Identificador de usuario

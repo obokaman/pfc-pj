@@ -39,6 +39,22 @@
 	/*Post: Retorna un entero que es el identificador de la partida a partir de los parametros de la entrada de la funcion*/
 	
 	
+	/*Función que retorna el tiempo realizado en una partida concreta
+			- id_game: identificador de la partida
+    */	
+	function get_time_result($id_game){
+	/*Pre: - */
+		global $connection;
+		
+		$query =  "SELECT g.time_result AS time FROM game g WHERE g.id_game = '$id_game'";
+		$result_query = mysql_query($query, $connection) or my_error('GET_ID_BY_DATE_USER-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+		
+		return( (int)extract_row($result_query)->time );		
+	}
+	/*Post: Retorna un entero que representa los milisegundos que ha tardado la partida en ser realizada*/
+	
+	
+	
 	/*Esta función elimina la partida a partir del identificador de la partida de la entrada
 			-  id_game: Identificador de la partida
 	*/
