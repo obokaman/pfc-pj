@@ -23,11 +23,4 @@ install(TARGETS racing-view RUNTIME DESTINATION bin)
 install(TARGETS monosim RUNTIME DESTINATION bin)
 
 
-#racing-sim
-#
-#set(SIM_FILES sim.cc
-#  car.cc car.h
-#  bezier.cc bezier.h common.h)
-#add_executable(racing-sim ${SIM_FILES})
-#
-#install(TARGETS racing-sim RUNTIME DESTINATION bin)
+

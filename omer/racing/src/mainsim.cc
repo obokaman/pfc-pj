@@ -30,7 +30,8 @@ int main(int argc, char **argv) {
   MonoCar car(&c, 3, &oss);
   ProxyCar *proxycar = ProxyCar::get(&car);
   try{
-    while (1) {
+    //  double getCrono() {       ///<tiempo actual (en segundos)
+    while (1) { //maximo: 5 minutos de tiempo
       proxycar->corre();
       car.avanza();
     }
