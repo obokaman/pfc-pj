@@ -5,28 +5,32 @@
 session_name("PFC");
 session_start();
 
+
 /*Abrimos una conneccion hacia la base de datos para poder realizar las siguientes operaciones */
 $connection = open_connection();
 
 /*Comprobamos la funcion que nos pide el cliente*/
 $f = clean("function", "string");
 
-/*Según la función que nos haya pedido el cliente, seleccionamos el codigo que hace referencia a dicha función. En este archivo podremos ver las principales funciones que puede realizar el cliente. Cada función o seccion de codigo para una operacion tiene un filtrado de parametros, para mantener la cohesion del codigo y evitar inyeccion de codigo SQL que podria provocar el mal funcionamiento de la base de datos. 
+
+my_error( $_REQUEST, 2);
+
+/*Según la petición que nos haya pedido el cliente, seleccionamos un código o otro en el cual se realizaran llamadas a funciones. En este archivo podremos ver las principales peticiones que puede realizar el cliente. Cada petición tiene un filtrado de parametros para mantener la cohesion del código, de esta manera evitamos inyeccion de codigo SQL que podria provocar el mal funcionamiento de la base de datos. 
 Si queremos saber mas sobre las funciones que son llamadas, podemos ver una explicación mas detallada sobre cada una de ellas en los archivos que aparecen listados en el include.php*/
 
 
-/*Funcion que realiza el logueo de los usuarios*/
+/*Petición que realiza el logueo de los usuarios*/
 if ($f == "login") {
 /*Pre: - */
 	session_unset();
 	send( login( clean("nick", "string"),	clean("password", "string") ) );
 }
-/*Post: La función puede devolver varios valores:
+/*Post: La petición puede devolver varios valores:
 				- 0 si nick y password son correctos, ademas creada una variable session con el nick del usuario logueado
 				- 1 si nick no existe, o password es incorrecto
 				- 2 si nick y password son correctos, pero no esta activado*/
 
-
+/*La petición cierra la sesión de un usuario logueado*/
 else if ($f=="logout"){
 /*Pre: - */
 	session_unset();
@@ -34,7 +38,7 @@ else if ($f=="logout"){
 /*Post: Cierra la variables de la sesión activadas por el usuario*/
 
 
-/*Función que nos inserta los nuevos usuarios en la base de datos*/
+/*Petición que nos inserta los nuevos usuarios en la base de datos*/
 else if ($f == "newUser") {
 /*Pre: Ningún parámetro de la entrada puede ser nulo a excepción de 'surname2' y  'email_school' */
 	$email_user = clean("email_user", "string");
@@ -57,13 +61,13 @@ else if ($f == "newUser") {
 	
 	send($result);
 }
-/* Post: La función devolverá según el comportamiento de la inserción del nuevo usuario:
+/* Post: La petición devolverá según el comportamiento de la inserción del nuevo usuario:
 				- Un 0, si el usuario se ha insertado correctamente y envia un correo a la dirección del usuario
 				- Un 1, en caso de que el nick del nuevo usuario ya exista
 				- Un 2 si se ha producido algún error en el momento de insertar en nuevo usuario */
 
 
-/*Función para cambiar los parametros de los usuarios registrados*/
+/*Petición para cambiar los parametros de los usuarios registrados*/
 else if ($f == "changeUser") {	
 /*Pre: Ningún parámetro de la entrada puede ser nulo a excepción de 'surname2' y  'email_school' */
 		send(
@@ -81,13 +85,13 @@ else if ($f == "changeUser") {
 			)
 		);
 }
-/*Post: La función retorna enteros distintos dependiendo del comportamiento que siga:
+/*Post: La petición retorna enteros distintos dependiendo del comportamiento que siga:
 				- 1 si el usuario de la sesion no esta logueado
 				- 0 se realiza el cambio correctamente ya que el 'old_pass' es correcto para el usuario logueado
 				- 2 el 'old_pass' no corresponde al usuario logueado*/
 
 
-/*La función nos devuelve información de los usuarios*/
+/*La petición nos devuelve información de los usuarios*/
 else if ($f == "getUser") {	
 /*Pre: - */
 		send(
@@ -96,13 +100,13 @@ else if ($f == "getUser") {
 			)
 		);
 }
-/*Post: La función devolvera información distinta en diferentes casos:
+/*Post: La petición devolvera información distinta en diferentes casos:
 				- Devuelve toda la información del usuario, si el nick de la entrada es el mismo que el nick del usuario logueado de la session.
 				- Devuelve el nick, en nombre, población y colegio si el nick de la entrada es distinto que el nick del usuario logueado de la session.
 				- No devuelve nada en caso de que el usuario de la session no este logueado. */
 
 
-/*Función que devuelve los equipos a los que esta inscrito el usuario logueado*/
+/*Petición que devuelve los equipos a los que esta inscrito el usuario logueado*/
 else if ($f == "getMyTeams") {	
 /*Pre: Los nombres han de existir y no ser nulos */
 		send(
@@ -115,7 +119,7 @@ else if ($f == "getMyTeams") {
 /*Post:  Devuelve una array de nombres de equipos a los que pertenece el usuario logueado*/
 
 
-/*Función que devuelve los campeonatos a los que esta inscritos el usuario logueado*/
+/*Petición que devuelve los campeonatos a los que esta inscritos el usuario logueado*/
 else if ($f == "getMyChampionships") {	
 /*Pre: Los nombres han de existir y no ser nulos */
 		send(
@@ -127,17 +131,17 @@ else if ($f == "getMyChampionships") {
 /*Post:  Devuelve una array de strings con los nombres de los campeonatos a los que esta inscrito el usuario logueado y que ademas contienen el circuito de la entrada. En caso de que el usuario no este logueado o no exista el circuito de la entrada dentro del campeonato, retorna una array vacia*/
 
 
-/*Función que devuelve los circuitos que hay en la base de datos*/
+/*Petición que devuelve los circuitos que hay en la base de datos*/
 else if ($f == "getCircuits") {	
 /*Pre: - */
 		send(
 			get_circuits()
 		);
 }
-/*Post: La función nos devuelve una array de strings con los nombres de todos los circuitos que estan almacenados en la base de datos*/
+/*Post: La petición nos devuelve una array de strings con los nombres de todos los circuitos que estan almacenados en la base de datos*/
 
 
-/*Función que comprueba la clave de activacion de una cuenta de usuario, y devuelve un codigo HTML con un mensaje en caso de exito o de fallida. Esta funcion no devuelve el resultado en formato JSON*/
+/*Petición que comprueba la clave de activacion de una cuenta de usuario, y devuelve un codigo HTML con un mensaje en caso de exito o de fallida. Esta funcion no devuelve el resultado en formato JSON*/
 else if ($f == "activated") {	
 /*Pre: - */
 		activated(
@@ -148,7 +152,7 @@ else if ($f == "activated") {
 /*Post: Devuelve código HTML con el mensaje de la operación si se ha realizado con exito o no*/
 
 
-/*Esta función devuelve un fragmento del ranking realizado a partir de los parametros circuit, team y championship (nombre del circuito, nombre del equipo y nombre del campeonato, respectivamente). Este fragmento, lo llamaremos pagina, y es lo que devolveremos.*/
+/*Esta petición devuelve un fragmento del ranking realizado a partir de los parametros circuit, team y championship (nombre del circuito, nombre del equipo y nombre del campeonato, respectivamente). Este fragmento, lo llamaremos pagina, y es lo que devolveremos.*/
 else if ($f == "getRankings") {	
 /*Pre: El circuito no puede ser nulo */
 		send(
@@ -161,13 +165,13 @@ else if ($f == "getRankings") {
 			)
 		);
 }
-/*Post: La funcion nos devolvera 3 valores:
+/*Post: La petición nos devolvera 3 valores:
 			- page: Un entero que corresponde a el numero de la pagina del ranking
 			- numpages: Numero total de paginas que hay en el ranking realizado
-			- data: Un array con los pares nick de usuario y tiempo realizado en una partida. Esta array como maximo puede contener sizepage elementos*/
+			- data: Un array con los pares nick de usuario y tiempo realizado en una partida. Esta array como maximo puede contener sizepage 		 elementos*/
 
 
-/*Función que nos crea un nuevo campeonato en la base de datos, y nos incluye los circuitos en los que se realiza el campenato*/
+/*Petición que nos crea un nuevo campeonato en la base de datos, y nos incluye los circuitos en los que se realiza el campenato*/
 else if ($f == "newChampionship") {	
 /*Pre: Los parámetros que se reciben no puede ser nulos */
 		$name = clean("name", "string");
@@ -198,14 +202,14 @@ else if ($f == "newChampionship") {
 		}		
 		send($result);
 }
-/* Post: La funcion según el resultado de la operacion retorna:
+/* Post: La petición según el resultado de la operacion retorna:
 	- 0 si el campeonato es creado con exito junto con los circuitos que iban asociados a este
 	- 1 si el nombre del campeonato ya existe
 	- 2 otros errores */
 
 
 
-/*La funcion crea un nuevo equipo en la base de datos*/
+/*La petición crea un nuevo equipo en la base de datos*/
 else if ($f == "newTeam") {
 /*Pre: - */
 		$name = clean("name", "string");
@@ -224,14 +228,14 @@ else if ($f == "newTeam") {
 		}; 
 		send($result);
 }
-/*Post: La función retorna un entero dependiendo la ejecución de la operacion:
+/*Post: La petición retorna un entero dependiendo la ejecución de la operacion:
 	- 0 el equipo nuevo ha sido creado con exito
 	- 1 el nombre del equipo ya existe
 	- 2 otros errores*/
 
 
 
-/*La función nos dice los campeonatos a los que pertence el usuario logueado*/
+/*La petición nos dice los campeonatos a los que pertence el usuario logueado*/
 else if ($f == "getMyOwnChampionships") {
 /*Pre: - */
 		send(
@@ -241,7 +245,7 @@ else if ($f == "getMyOwnChampionships") {
 /*Post: Devuelve una array de string con los nombres de los campeonatos que ha fundado el usuario que esta logueado*/
 
 
-/*La función nos dice los equipos a los que pertence el usuario logueado*/
+/*La petición nos dice los equipos a los que pertence el usuario logueado*/
 else if ($f == "getMyOwnTeams") {
 /*Pre: - */
 		send(
@@ -251,17 +255,17 @@ else if ($f == "getMyOwnTeams") {
 /*Post: Retorna una array de cadenas de carácteres con los nombres de los equipos que ha fundado el usuario que esta logueado*/
 
 
-/*La función retorna todos los nicks de los usuarios registrados en la base de datos*/
+/*La petición retorna todos los nicks de los usuarios registrados en la base de datos*/
 else if ($f == "getAllNicks") {	
 /*Pre: - */
 		send(
 			get_users()
 		);
 }
-/*Post: La función nos devuelve una array de strings de todos los nicks de los  usuarios que estan almacenados en la base de datos*/
+/*Post: La petición nos devuelve una array de strings de todos los nicks de los  usuarios que estan almacenados en la base de datos*/
 
 
-/*La funcion crea una invitación pendiente de confirmar del usuario con el nick y el nombre del campeonato de entrada*/
+/*La petición crea una invitación pendiente de confirmar del usuario con el nick y el nombre del campeonato de entrada*/
 else if ($f == "addPlayerToChampionship") {
 /*Pre: - */
 		$name_champ = clean("name", "string");
@@ -283,7 +287,7 @@ else if ($f == "addPlayerToChampionship") {
 
 
 
-/*La función crea una invitacion pendiente de confirmar del usuario con el nick de la entrada en el equipo con el mismo nombre de la entrada*/
+/*La petición crea una invitacion pendiente de confirmar del usuario con el nick de la entrada en el equipo con el mismo nombre de la entrada*/
 else if ($f == "addPlayerToTeam") {
 /*Pre: - */
 		$name_team = clean("name", "string");
@@ -305,7 +309,7 @@ else if ($f == "addPlayerToTeam") {
 
 
 
-/*La función retorna el número de peticiones pendientes de los campeonatos y el número de peticiones pendientes de los equipos*/
+/*La petición retorna el número de peticiones pendientes de los campeonatos y el número de peticiones pendientes de los equipos*/
 else if ($f == "getNInvitations") {		
 /*Pre: Debe haber un usuario logueado */
 		class obj{
@@ -318,13 +322,13 @@ else if ($f == "getNInvitations") {
 		
 		send($obj);
 }
-/*Post: La funcion retorna los valores:
+/*Post: La petición retorna los valores:
 	- nChamps: Número de peticiones pendientes para entrar en algún campeonato
 	- nTeams: Número de peticiones pendientes para entrar en algún equipo */
 
 
 
-/*La función devuelve información sobre todas las invitaciones a campeonatos hechas al usuario logueado que estan pendientes de confirmar/rechazar */
+/*La petición devuelve información sobre todas las invitaciones a campeonatos hechas al usuario logueado que estan pendientes de confirmar/rechazar */
 else if ($f == "getChampionshipsInvited") {
 /*Pre: - */
 			send( get_championships_invited() );		
@@ -332,7 +336,7 @@ else if ($f == "getChampionshipsInvited") {
 /*Post: Devuelve una array de objetos con el par nick y name donde el primero es el nick del fundador del campeonto al que el usuario logueado esta pendiente y el nombre de dicho campeonato*/
 
 
-/*La función devuelve información sobre todas las invitaciones a equipos hechas al usuario logueado que estan pendientes de confirmar/rechazar */
+/*La petición devuelve información sobre todas las invitaciones a equipos hechas al usuario logueado que estan pendientes de confirmar/rechazar */
 else if ($f == "getTeamsInvited") {
 /*Pre: - */
 			send( get_teams_invited() );		
@@ -340,7 +344,7 @@ else if ($f == "getTeamsInvited") {
 /*Post: Devuelve una array de objetos con el par nick y name donde el primero es el nick del fundador del equipo al que el usuario logueado esta pendiente y el nombre de dicho equipo*/
 
 
-/*La función modifica el estado de la inscripcion entre el usuario logueado y el campeonato identificado por el nombre en la entrada. Si 'answer' es igual a 1, la petición correspondiente queda aceptada, en el caso que 'answer' es igual a 0, la petición queda rechazada*/
+/*La petición modifica el estado de la inscripcion entre el usuario logueado y el campeonato identificado por el nombre en la entrada. Si 'answer' es igual a 1, la petición correspondiente queda aceptada, en el caso que 'answer' es igual a 0, la petición queda rechazada*/
 else if ($f == "setChampionshipAnswer") {	
 /*Pre: - */
 		$name_champ = clean("name", "string");
@@ -356,7 +360,7 @@ else if ($f == "setChampionshipAnswer") {
 /*Post: Actualiza el estado de la invitación pendiente del campeonato con el mismo nombre que el de la entrada del usuario que esta logueado, en caso de que la rechace se elimina de la base de datos de la invitación. En caso de que el usuario no este logueado no se realiza ninguna actualización*/
 
 
-/*La función modifica el estado de la peticion de ingresar en un equipo identificado por el nombre de la entrada y el usuario logueado. Si 'answer' es igual a 1, la petición correspondiente queda aceptada, en el caso que 'answer' es igual a 0, la petición queda rechazada*/
+/*La petición modifica el estado de la peticion de ingresar en un equipo identificado por el nombre de la entrada y el usuario logueado. Si 'answer' es igual a 1, la petición correspondiente queda aceptada, en el caso que 'answer' es igual a 0, la petición queda rechazada*/
 else if ($f == "setTeamAnswer") {
 /*Pre: - */
 		$name_team = clean("name", "string");
@@ -372,17 +376,17 @@ else if ($f == "setTeamAnswer") {
 /*Post: Actualiza el estado de la invitación pendiente de equipo con el mismo nombre que el de la entrada del usuario que esta logueado, en caso de que la rechace se elimina de la base de datos la invitación. Si no hay ningún usuario logueado no se realiza ninugna actualización.*/
 
 
-/*La función devuelve información sobre un circuito*/
+/*La petición devuelve información sobre un circuito*/
 else if ($f == "getCircuitInfo") {	
 /*Pre: - */
 		send(
 			get_circuit( clean("name", "string") )
 		);
 }
-/*Post: La función nos devuelve una array de strings donde los elementos estan indexados con 'url', 'width', 'height', 'level' y 'n_laps'*/
+/*Post: La petición nos devuelve una array de strings donde los elementos estan indexados con 'url', 'width', 'height', 'level' y 'n_laps'*/
 
 
-/*La función devuelve los circuitos que pertenecen a un campeonato*/
+/*La petición devuelve los circuitos que pertenecen a un campeonato*/
 else if ($f == "getChampionshipCircuits") {	
 /*Pre: - */
 		send(
@@ -392,12 +396,12 @@ else if ($f == "getChampionshipCircuits") {
 /*Post:Devuelve una array de string con los nombres de los circuitos que pertenecen al campeonato con el mismo nombre que la entrada*/
 
 
-/*La función inserta en la base de datos el codigo nuevo con el nombre de fichero indicado en la entrada*/
+/*La petición inserta o actualiza en la base de datos una partida guardada según si existiera o no*/
 else if( $f == "saveCode" ) {	
 /*Pre: - */
 	$code = clean ( "code", "string" );
 	$file_name = clean ( "name", "string" );
-	$date = date("y-m-d g:i:s");
+	$date = date("y-m-d G:i:s");
 	
 	if ( ! isset($_SESSION['user']) ) $result = 2;
 	else {
@@ -419,7 +423,8 @@ else if( $f == "saveCode" ) {
 	- 0 se ha guardado correctamente
 	- 1 otros errores
 	- 2 si el usuario no esta logueado*/
-	
+
+/*La petición comprueba si existe una partida o no*/
 else if( $f == "existCode" ) {	
 /*Pre: - */
 	$file_name = clean ( "name", "string" );
@@ -433,11 +438,14 @@ else if( $f == "existCode" ) {
 	}
 	send($result);
 }	
-	
-	
+/*Post: Retorna un entero, que puede tener los valores
+	- 0 si no existe el código 
+	- 1 si existe el código
+*/
 
 
-/*La función retorna el codigo guardado por el usuario logueado con el mismo nombre que nombre de fichero de la entrada*/
+
+/*La petición retorna el codigo guardado por el usuario logueado con el mismo nombre que nombre de fichero de la entrada*/
 else if( $f == "loadCode" ) {	
 /*Pre: - */
 	if ( isset($_SESSION['user']) ){
@@ -464,7 +472,7 @@ else if( $f == "getSavedCodes" ) {
 /*Post:Devuelve lista con los pares, el nombre de la partida  y la fecha del guardado del código, del usuario de la entrada */
 
 
-/*La función retorna un fragmento de codigo de una partida*/
+/*La petición retorna un fragmento de codigo de una partida*/
 else if( $f == "getTraceFragment" ) {	
 /*Pre: El identificador de la partida existe */
 	send(
@@ -478,7 +486,7 @@ else if( $f == "getTraceFragment" ) {
 /*Post: Retorna dos valores, el tamaño del código leído y el contenido del código que se ha leído*/
 
 
-/*La función retorna el contenido entero del codigo de una partida*/
+/*La petición retorna el contenido entero del codigo de una partida*/
 else if( $f == "getFullTrace" ) {	
 /*Pre: El identificador de la partida existe */
 	send(
@@ -492,7 +500,7 @@ else if( $f == "getFullTrace" ) {
 /*Post:Retorna dos valores, el tamaño de todo el código leído y el contenido del código*/
 
 
-/*La función envia un codigo de partida para que lo compile y lo ejecute en el simulador, indicandole ademas el circuito donde se realizara la partida*/
+/*La petición envia un codigo de partida para que lo compile y lo ejecute en el simulador, indicandole ademas el circuito donde se realizara la partida*/
 else if( $f == "run" ) {	
 /*Pre: El circuito no puede ser nulo */
 	send(
