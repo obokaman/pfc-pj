@@ -160,7 +160,7 @@ Parametros de entrada:
 							$result->page = intval($page);
 					}
 			//En caso de pedir un pagina superior al numero maximo de paginas, retornamos la ultima pagina del ranking
-			}else if ($page > $result->numpages){
+			}else if ( ($page > $result->numpages)&&($result->numpages != 0) ) {
 					$result->page = $result->numpages;
 					$result->data =  extract_interval_rows($result_query, (($result->page-1)*$max), $max);				
 			}else{
