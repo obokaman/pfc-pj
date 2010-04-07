@@ -155,7 +155,7 @@ public class JocProg implements EntryPoint {
    	//private String[] pageSizes = {"Tamaño","10","25","50","75","100"};
    	private String[] pageSizes = {"Tamaño","1","2","3","4","5","6","7","8","9","10"};
    	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
-   	private static boolean whileLogin = false;
+   	private static boolean whileReqOn = false;
 	
 	private static String USER = "";
 	private static int modeOn = CODE;
@@ -213,8 +213,8 @@ public class JocProg implements EntryPoint {
 	  loginButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  if (!whileLogin){
-						  whileLogin = true;
+					  if (!whileReqOn){
+						  whileReqOn = true;
 						  requestLogin();
 					  }
 				  }
@@ -362,8 +362,8 @@ public class JocProg implements EntryPoint {
 	  loginPassword.addKeyDownHandler(
 			  new KeyDownHandler(){
 				  public void onKeyDown(KeyDownEvent event){
-					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER && !whileLogin){
-						  whileLogin = true;
+					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER && !whileReqOn){
+						  whileReqOn = true;
 						  Window.alert("enter key pressed. user value: "+USER);	  
 						  requestLogin();
 					  }
@@ -979,47 +979,57 @@ public class JocProg implements EntryPoint {
 	  rankPagesDropBox.addItem("Página");
 	  rankPagesDropBox.setEnabled(false);
 	  
-	  /*Grid dropBoxes = new Grid (2,1);
-	  dropBoxes.setCellSpacing(5);
-	  dropBoxes.setWidget(0,0,sizePagesDropBox);
-	  dropBoxes.setWidget(1,0,rankPagesDropBox);*/
+	  Grid rankPagesGrid = new Grid (2,1);
+	  rankPagesGrid.setCellSpacing(5);
+	  rankPagesGrid.setWidget(0,0,new Label("Ir a página: "));
+	  rankPagesGrid.setWidget(1,0,rankPagesDropBox);
+	  Grid sizePagesGrid = new Grid (2,1);
+	  sizePagesGrid.setCellSpacing(5);
+	  sizePagesGrid.setWidget(0,0,new Label("Tiempos mostrados por página: "));
+	  sizePagesGrid.setWidget(1,0,sizePagesDropBox);
 	  
 	  HorizontalPanel dropBoxes2 = new HorizontalPanel();
+	  dropBoxes2.addStyleName("inputForm");
 	  dropBoxes2.setWidth("100%");
-	  dropBoxes2.add(new Label("Ir a página: "));
+	  dropBoxes2.add(rankPagesGrid);
+	  dropBoxes2.add(sizePagesGrid);
+	  /*dropBoxes2.add(new Label("Ir a página: "));
 	  dropBoxes2.add(rankPagesDropBox);
 	  dropBoxes2.add(new Label("Tiempos mostrados por página: "));
-	  dropBoxes2.add(sizePagesDropBox);
+	  dropBoxes2.add(sizePagesDropBox);*/
 	  //dropBoxes2.addStyleName("inputForm");
 	  
 	 // HorizontalPanel rankingHPanel = new HorizontalPanel();
 	  VerticalPanel rankingHPanel = new VerticalPanel();
+	  rankingHPanel.addStyleName("inputForm");
 	  //rankingHPanel.setWidth("100%");
 	  rankingHPanel.setSpacing(10);
-	  rankingHPanel.add(rankingFlexTable);
 	  rankingHPanel.add(dropBoxes2);
+	  rankingHPanel.add(rankingFlexTable);
+
 	  //rankingHPanel.setCellHorizontalAlignment(rankingFlexTable,HasHorizontalAlignment.ALIGN_CENTER);
 	  //rankingHPanel.setCellVerticalAlignment(rankingFlexTable,HasVerticalAlignment.ALIGN_TOP);
 	    
+	  rankingVPanel.addStyleName("inputForm");
 	  rankingVPanel.setSize("100%","100%");
 	  rankingVPanel.setSpacing(20);
 	  rankingVPanel.add(boxesVPanel);
 	  rankingVPanel.add(rankingHPanel);
-	  rankingVPanel.setCellHorizontalAlignment(boxesVPanel,HasHorizontalAlignment.ALIGN_CENTER);
-	  rankingVPanel.setCellHorizontalAlignment(rankingHPanel,HasHorizontalAlignment.ALIGN_CENTER);
-	  rankingVPanel.setCellVerticalAlignment(rankingHPanel,HasVerticalAlignment.ALIGN_TOP);
+	  //rankingVPanel.setCellHorizontalAlignment(boxesVPanel,HasHorizontalAlignment.ALIGN_CENTER);
+	  //rankingVPanel.setCellHorizontalAlignment(rankingHPanel,HasHorizontalAlignment.ALIGN_CENTER);
+	  //rankingVPanel.setCellVerticalAlignment(rankingHPanel,HasVerticalAlignment.ALIGN_TOP);
 	  
 	  // Listen for events on the DropBoxs.
 	  circuitsDropBox.addChangeHandler(new ChangeHandler() {
 		  public void onChange(ChangeEvent event) {
 			  if(circuitsDropBox.getSelectedIndex()>0){
 				  if(!USER.equals("")){
-					  requestRanking();
 					  refreshDropBoxs();
 					  champsDropBox.setEnabled(true);
 					  teamsDropBox.setEnabled(true);
-					  sizePagesDropBox.setEnabled(true);
 				  }
+				  requestRanking();
+				  sizePagesDropBox.setEnabled(true);
 			  }
 			  else{
 				  champsDropBox.setSelectedIndex(0);
@@ -1376,7 +1386,7 @@ public class JocProg implements EntryPoint {
 	  //Window.alert("entramos en requestlogin-user value: "+USER);
 	  if (loginUserTextBox.getText().equals("") || loginPassword.getText().equals("")){
 		  Window.alert("Debes indicar tu nombre de usuario y contraseña");
-		  whileLogin = false;
+		  whileReqOn = false;
 	  }
 	  else {
 		  /*String url = JSON_URL;
@@ -1397,7 +1407,7 @@ public class JocProg implements EntryPoint {
 //					  URL.encodeComponent(loginPassword.getText()), new RequestCallback() {
 			        	public void onError(Request request, Throwable exception) {
 			        		Window.alert("Couldn't retrieve JSON");
-			        		whileLogin = false;
+			        		whileReqOn = false;
 			        	}
 			        	public void onResponseReceived(Request request, Response response) {
 			        		if (200 == response.getStatusCode()) {
@@ -1426,12 +1436,12 @@ public class JocProg implements EntryPoint {
 			        		} else {
 			        			Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 			        		}
-			        		whileLogin = false;
+			        		whileReqOn = false;
 			        	}
 			  });
 		  } catch (RequestException e) {
 			  Window.alert("Couldn't retrieve JSON");
-			  whileLogin = false;
+			  whileReqOn = false;
 		  }
 	  }
   }
@@ -1996,7 +2006,10 @@ public class JocProg implements EntryPoint {
 		  //Send request to server and catch any errors.
 		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
 		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
-		
+
+		  champsDropBox.setSelectedIndex(0);
+		  teamsDropBox.setSelectedIndex(0);
+		  
 		  try{
 			  String requestStr = encodeParam("function", "getMyChampionships")+"&"+
 				encodeParam("circuit", circ);
@@ -2061,7 +2074,7 @@ public class JocProg implements EntryPoint {
   }
   
   private void requestRanking(){
-	  Window.alert("entra en requestRanking");
+	  //Window.alert("entra en requestRanking");
 	  if(circuitsDropBox.getSelectedIndex()==0){
 		  Window.alert("Debes elegir un circuito válido");
 	  }
@@ -2089,7 +2102,7 @@ public class JocProg implements EntryPoint {
 				encodeParam("championship", champ)+"&"+
 				encodeParam("page", String.valueOf(page))+"&"+
 				encodeParam("sizepage", String.valueOf(sizepage));
-			  Window.alert(requestStr);
+			  //Window.alert(requestStr);
 
 			  Request request = builder.sendRequest(requestStr, new RequestCallback() {	
 //			  Request request = builder.sendRequest(URL.encodeComponent("function")+"="+
@@ -2105,9 +2118,7 @@ public class JocProg implements EntryPoint {
 
 				  public void onResponseReceived(Request request, Response response) {
 					  if (200 == response.getStatusCode()) {
-						  Window.alert("entra en response");
 						  RankingData res = asRankingData(response.getText());
-						  Window.alert(response.getText());
 						  updateTable(res.getData());
 						  int pag = res.getPage();
 						  int npag = res.getNumPages();
