@@ -13,22 +13,23 @@
 			 switch ( $type ) {
 					case 'int':
 						$var = (int) $var;
-					break;
-					case 'code':
-						$var = trim ( $var );	
-						$var = stripslashes($var);
-					break;
+					break;					
 					case 'string':
-						$var = trim ( $var );	
+						$var = trim ( $var );	//Quitamos los espacios de l principio y el final del contenido de la variable
 						$var = mysql_real_escape_string( stripslashes($var));  /*limpia el parametros evitando la inyección de codigo SQL
 	ademas de colocar barras en caracteres especiales*/
 					break;
+					case 'code':
+						$var = trim ( $var );	
+					break;
 					case 'array':
-						my_error($var, 1);
+						//my_error($var, 1);
+						$var = mysql_real_escape_string( stripslashes($var)); /**/
 						$var = explode("+",$var);
 					break;
 					case 'date':
 						$arr = Array();
+						$var = mysql_real_escape_string( stripslashes($var)); /**/
 						$arr = explode("/",$var);
 						$var = date( "Y/m/d", mktime(0, 0, 0, $arr[1],$arr[0],$arr[2]) ); 
 					break;
