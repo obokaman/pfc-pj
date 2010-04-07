@@ -1013,13 +1013,13 @@ public class JocProg implements EntryPoint {
 	  circuitsDropBox.addChangeHandler(new ChangeHandler() {
 		  public void onChange(ChangeEvent event) {
 			  if(circuitsDropBox.getSelectedIndex()>0){
-				  requestRanking();
-				  sizePagesDropBox.setEnabled(true);
 				  if(!USER.equals("")){
 					  refreshDropBoxs();
 					  champsDropBox.setEnabled(true);
 					  teamsDropBox.setEnabled(true);
 				  }
+				  requestRanking();
+				  sizePagesDropBox.setEnabled(true);
 			  }
 			  else{
 				  champsDropBox.setSelectedIndex(0);
