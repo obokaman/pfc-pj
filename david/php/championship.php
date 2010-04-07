@@ -106,7 +106,7 @@
 		global $connection;
 		
 	    $query = "DELETE FROM championship WHERE id_champ = '$id'";
-		$result_query = mysql_query($query, $connection) or my_error(mysql_errno($connection).": ".mysql_error($connection), 1);
+		$result_query = mysql_query($query, $connection) or my_error('DELETE_CHAMPIONSHIP_ID-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 	}
 	/*Post: La función borra el circuito de la BBDD*/
 	
