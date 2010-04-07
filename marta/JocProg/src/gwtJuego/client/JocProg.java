@@ -979,17 +979,23 @@ public class JocProg implements EntryPoint {
 	  rankPagesDropBox.addItem("Página");
 	  rankPagesDropBox.setEnabled(false);
 	  
-	  /*Grid dropBoxes = new Grid (2,1);
-	  dropBoxes.setCellSpacing(5);
-	  dropBoxes.setWidget(0,0,sizePagesDropBox);
-	  dropBoxes.setWidget(1,0,rankPagesDropBox);*/
+	  Grid rankPagesGrid = new Grid (2,1);
+	  rankPagesGrid.setCellSpacing(5);
+	  rankPagesGrid.setWidget(0,0,new Label("Ir a página: "));
+	  rankPagesGrid.setWidget(1,0,rankPagesDropBox);
+	  Grid sizePagesGrid = new Grid (2,1);
+	  sizePagesGrid.setCellSpacing(5);
+	  sizePagesGrid.setWidget(0,0,new Label("Tiempos mostrados por página: "));
+	  sizePagesGrid.setWidget(1,0,sizePagesDropBox);
 	  
 	  HorizontalPanel dropBoxes2 = new HorizontalPanel();
 	  dropBoxes2.setWidth("100%");
-	  dropBoxes2.add(new Label("Ir a página: "));
+	  dropBoxes2.add(rankPagesGrid);
+	  dropBoxes2.add(sizePagesGrid);
+	  /*dropBoxes2.add(new Label("Ir a página: "));
 	  dropBoxes2.add(rankPagesDropBox);
 	  dropBoxes2.add(new Label("Tiempos mostrados por página: "));
-	  dropBoxes2.add(sizePagesDropBox);
+	  dropBoxes2.add(sizePagesDropBox);*/
 	  //dropBoxes2.addStyleName("inputForm");
 	  
 	 // HorizontalPanel rankingHPanel = new HorizontalPanel();
