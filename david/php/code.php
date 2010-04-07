@@ -70,6 +70,20 @@
 	}
 	/*Post: La función devuelve cierto si ha modificado correctamente la fila junto con todos sus parametros, en caso con contrario devuelve falso y no inserta la nueva fila*/
 
+	/*La función que elimina una partida guardada en la base de datos
+			- name: Nombre de la partida
+			- id_user: Identificador del usuario propietario de la partida
+	*/
+	function delete_code ($name, $id_user){
+	/*Pre: - */	
+		global $connection;
+		
+	    $query = "DELETE FROM code WHERE  file_name = '$name' AND id_user = '$id_user' ";
+		$result_query = mysql_query($query, $connection) or my_error('DELETE_CODE-> '.mysql_errno($connection).": ".mysql_error($connection), 1);		
+		
+	}
+	/*Post: Elimina el código almacenado de una partida en la base de datos identificandola a partir del nombre  de la partida y usuario propietario*/
+
 
 	/*La funcion comprueba que existe el codigo con el mismo nombre de fichero y de identificador de usuario que la entrada
 			- name: Nombre del fichero

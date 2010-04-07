@@ -471,6 +471,21 @@ else if( $f == "getSavedCodes" ) {
 }
 /*Post:Devuelve lista con los pares, el nombre de la partida  y la fecha del guardado del código, del usuario de la entrada */
 
+/*La función elimina el código de una partida guardada en el servidor*/
+else if( $f == "deleteCode" ) {	
+/*Pre: - */
+	if ( isset($_SESSION['user']) ){
+		send(
+			delete_code(
+				clean("name", "string"), 
+				get_id_user( $_SESSION['user'] ) 
+			)
+		);
+	}
+}
+/*Post:Elimina el código de la partida con el nombre igual a name del usuario que esta logueado en ese momento */
+
+
 
 /*La petición retorna un fragmento de codigo de una partida*/
 else if( $f == "getTraceFragment" ) {	

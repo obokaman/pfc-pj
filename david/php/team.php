@@ -64,15 +64,16 @@
 			global $connection;
 			
 			$nick_session = $_SESSION["user"]; 
-			if ($name_champ == null){
-					$query =  	"select t.name
-										from 	user u,
-													user_team ut,
-													team t
-										where u.nick = '$nick_session'
-										and u.id_user = ut.id_user
-										and ut.id_team = t.id_team";
-			}else{
+			/*if ($name_champ == null){*/
+			$query =  	"select t.name
+								from 	user u,
+											user_team ut,
+											team t
+								where u.nick = '$nick_session'
+								and u.id_user = ut.id_user
+								and ut.active <> 0
+								and ut.id_team = t.id_team";
+			/*}else{
 					$query =  	"select t.name
 										from 	user u,
 													inscription i,
@@ -91,8 +92,8 @@
 										and ci.name = '$name_circuit'
 										and u.id_user = ut.id_user
 										and ut.id_team = t.id_team ";
-			}			
-			$result_query = mysql_query($query, $connection) or my_error('GET_MYTEAM-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
+			}		*/	
+			$result_query = mysql_query($query, $connection) or my_error('GET_MYTEAMS-> '.mysql_errno($connection).": ".mysql_error($connection), 1);
 			
 			$arr = extract_rows($result_query);
 			$res = array();
