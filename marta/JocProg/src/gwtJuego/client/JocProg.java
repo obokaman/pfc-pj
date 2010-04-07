@@ -155,7 +155,7 @@ public class JocProg implements EntryPoint {
    	//private String[] pageSizes = {"Tamaño","10","25","50","75","100"};
    	private String[] pageSizes = {"Tamaño","1","2","3","4","5","6","7","8","9","10"};
    	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
-   	private static boolean whileLogin = false;
+   	private static boolean whileReqOn = false;
 	
 	private static String USER = "";
 	private static int modeOn = CODE;
@@ -213,8 +213,8 @@ public class JocProg implements EntryPoint {
 	  loginButton.addClickHandler( 
 			  new ClickHandler() {
 				  public void onClick(ClickEvent event) {
-					  if (!whileLogin){
-						  whileLogin = true;
+					  if (!whileReqOn){
+						  whileReqOn = true;
 						  requestLogin();
 					  }
 				  }
@@ -362,8 +362,8 @@ public class JocProg implements EntryPoint {
 	  loginPassword.addKeyDownHandler(
 			  new KeyDownHandler(){
 				  public void onKeyDown(KeyDownEvent event){
-					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER && !whileLogin){
-						  whileLogin = true;
+					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER && !whileReqOn){
+						  whileReqOn = true;
 						  Window.alert("enter key pressed. user value: "+USER);	  
 						  requestLogin();
 					  }
@@ -1376,7 +1376,7 @@ public class JocProg implements EntryPoint {
 	  //Window.alert("entramos en requestlogin-user value: "+USER);
 	  if (loginUserTextBox.getText().equals("") || loginPassword.getText().equals("")){
 		  Window.alert("Debes indicar tu nombre de usuario y contraseña");
-		  whileLogin = false;
+		  whileReqOn = false;
 	  }
 	  else {
 		  /*String url = JSON_URL;
@@ -1397,7 +1397,7 @@ public class JocProg implements EntryPoint {
 //					  URL.encodeComponent(loginPassword.getText()), new RequestCallback() {
 			        	public void onError(Request request, Throwable exception) {
 			        		Window.alert("Couldn't retrieve JSON");
-			        		whileLogin = false;
+			        		whileReqOn = false;
 			        	}
 			        	public void onResponseReceived(Request request, Response response) {
 			        		if (200 == response.getStatusCode()) {
@@ -1426,12 +1426,12 @@ public class JocProg implements EntryPoint {
 			        		} else {
 			        			Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 			        		}
-			        		whileLogin = false;
+			        		whileReqOn = false;
 			        	}
 			  });
 		  } catch (RequestException e) {
 			  Window.alert("Couldn't retrieve JSON");
-			  whileLogin = false;
+			  whileReqOn = false;
 		  }
 	  }
   }
@@ -1996,7 +1996,10 @@ public class JocProg implements EntryPoint {
 		  //Send request to server and catch any errors.
 		  RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
 		  builder.setHeader("Content-Type","application/x-www-form-urlencoded");*/
-		
+
+		  champsDropBox.setSelectedIndex(0);
+		  teamsDropBox.setSelectedIndex(0);
+		  
 		  try{
 			  String requestStr = encodeParam("function", "getMyChampionships")+"&"+
 				encodeParam("circuit", circ);
