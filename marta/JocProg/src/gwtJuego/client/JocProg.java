@@ -1011,7 +1011,8 @@ public class JocProg implements EntryPoint {
 	  //rankingHPanel.setCellVerticalAlignment(rankingFlexTable,HasVerticalAlignment.ALIGN_TOP);
 	    
 	  rankingVPanel.addStyleName("inputForm");
-	  rankingVPanel.setSize("100%","100%");
+	  rankingVPanel.setWidth("100%");
+	  //rankingVPanel.setSize("100%","100%");
 	  rankingVPanel.setSpacing(20);
 	  rankingVPanel.add(boxesVPanel);
 	  rankingVPanel.add(rankingHPanel);
