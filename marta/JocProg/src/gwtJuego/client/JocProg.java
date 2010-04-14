@@ -959,7 +959,7 @@ public class JocProg implements EntryPoint {
 	  rankingHPanel.add(rankingFlexTable);
 
 	  //rankingHPanel.setCellHorizontalAlignment(rankingFlexTable,HasHorizontalAlignment.ALIGN_CENTER);
-	  //rankingHPanel.setCellVerticalAlignment(rankingFlexTable,HasVerticalAlignment.ALIGN_TOP);
+	  rankingHPanel.setCellVerticalAlignment(rankingFlexTable,HasVerticalAlignment.ALIGN_TOP);
 	    
 	  rankingVPanel.addStyleName("inputForm");
 	  rankingVPanel.setWidth("100%");
@@ -969,7 +969,7 @@ public class JocProg implements EntryPoint {
 	  rankingVPanel.add(rankingHPanel);
 	  //rankingVPanel.setCellHorizontalAlignment(boxesVPanel,HasHorizontalAlignment.ALIGN_CENTER);
 	  //rankingVPanel.setCellHorizontalAlignment(rankingHPanel,HasHorizontalAlignment.ALIGN_CENTER);
-	  //rankingVPanel.setCellVerticalAlignment(rankingHPanel,HasVerticalAlignment.ALIGN_TOP);
+	  rankingVPanel.setCellVerticalAlignment(rankingHPanel,HasVerticalAlignment.ALIGN_TOP);
 	  
 	  // Listen for events on the DropBoxs.
 	  circuitsDropBox.addChangeHandler(new ChangeHandler() {
