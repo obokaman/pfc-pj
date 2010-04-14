@@ -83,16 +83,12 @@ public class AnimationEngine {
     	controllersPanel = controllersHPanel;
     	animationPanel = imgPanel;
     	codeTextArea = inputTextArea;
-    	//final TextBox name = (TextBox)buttonsHPanel.getWidget(0);
     	name = (TextBox)buttonsHPanel.getWidget(0);
     	name.setEnabled(false);
-    	//final Button load = (Button)buttonsHPanel.getWidget(1);
     	load = (Button)buttonsHPanel.getWidget(1);
     	load.setEnabled(false);
-    	//final Button save = (Button)buttonsHPanel.getWidget(2);
     	save = (Button)buttonsHPanel.getWidget(2);
     	save.setEnabled(false);
-    	//final Button change = (Button)buttonsHPanel.getWidget(3);
     	change = (Button)buttonsHPanel.getWidget(3);
     	change.setEnabled(false);
     	
@@ -103,7 +99,6 @@ public class AnimationEngine {
         PushButton controlPauseButton = (PushButton)controllersPanel.getWidget(1);
         PushButton controlPlayButton = (PushButton)controllersPanel.getWidget(2);
         
-        //final PushButton oldStopButton = (PushButton)controllersPanel.getWidget(3);
         oldStopButton = (PushButton)controllersPanel.getWidget(3);
         oldStopButton.setEnabled(true);  
         
@@ -130,21 +125,7 @@ public class AnimationEngine {
         oldStopButton.addClickHandler( 
     			  new ClickHandler() {
    				  public void onClick(ClickEvent event) {
-    					  stop = true;
-    			/*		  oldStopButton.setEnabled(false);
-    					  controllersPanel.getWidget(1).setVisible(false);
-    					  controllersPanel.getWidget(2).setVisible(false);
-    	                  controllersPanel.getWidget(0).setVisible(true);
-    	                  PushButton oldPlayButton = (PushButton)controllersPanel.getWidget(0);
-    	                  oldPlayButton.setEnabled(true);
-    	                  //inputTextArea.setEnabled(true);
-    	                  codeTextArea.setEnabled(true);
-    	                  name.setEnabled(true);
-    	                  load.setEnabled(true);
-    	                  save.setEnabled(true);
-    	                  change.setEnabled(true);
-    	                  if (animationPanel.getWidgetCount() == 2) animationPanel.remove(1);  //borrar widget coche
-    				*/  	
+    					  stop = true;	
     				  }
     			  });
     	
@@ -171,17 +152,6 @@ public class AnimationEngine {
             executingAnimations = true;
             for (Iterator<Map.Entry<Widget, Animation>> entries = animations.entrySet().iterator(); entries.hasNext();) {
                 Animation animation = entries.next().getValue();
-                /*if (!paused && !stop && animation.animateOneFrame()) {
-                    // This animation is completed so remove it.
-                	//afterAnimation();
-                	animation.afterLastFrame();
-                	entries.remove();
-                }
-                else if(stop) {
-                	//afterAnimation();
-            		animation.afterLastFrame();
-            		entries.remove();
-            	}*/
                 if (stop || (!paused && !stop && animation.animateOneFrame())) {
                     // This animation is completed so remove it.
                 	afterAnimation();
