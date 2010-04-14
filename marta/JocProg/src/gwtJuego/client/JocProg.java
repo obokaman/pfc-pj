@@ -952,24 +952,29 @@ public class JocProg implements EntryPoint {
 	 // HorizontalPanel rankingHPanel = new HorizontalPanel();
 	  VerticalPanel rankingHPanel = new VerticalPanel();
 	  rankingHPanel.addStyleName("inputForm");
-	  rankingHPanel.setHeight("100%");
+	  //rankingHPanel.setHeight("100%");
 	  //rankingHPanel.setWidth("100%");
 	  rankingHPanel.setSpacing(10);
-	  rankingHPanel.add(dropBoxes2);
 	  rankingHPanel.add(rankingFlexTable);
+	  rankingHPanel.add(dropBoxes2);
 
 	  //rankingHPanel.setCellHorizontalAlignment(rankingFlexTable,HasHorizontalAlignment.ALIGN_CENTER);
-	  rankingHPanel.setCellVerticalAlignment(rankingFlexTable,HasVerticalAlignment.ALIGN_TOP);
-	    
+	  //rankingHPanel.setCellVerticalAlignment(rankingFlexTable,HasVerticalAlignment.ALIGN_TOP);
+	  VerticalPanel vLayout = new VerticalPanel();
+	  vLayout.add(boxesVPanel);
+	  vLayout.add(rankingHPanel);
+	  vLayout.addStyleName("inputForm");
+	  
 	  rankingVPanel.addStyleName("inputForm");
 	  rankingVPanel.setWidth("100%");
 	  //rankingVPanel.setSize("100%","100%");
 	  rankingVPanel.setSpacing(20);
-	  rankingVPanel.add(boxesVPanel);
-	  rankingVPanel.add(rankingHPanel);
+	  //rankingVPanel.add(boxesVPanel);
+	  //rankingVPanel.add(rankingHPanel);
+	  rankingVPanel.add(vLayout);
 	  //rankingVPanel.setCellHorizontalAlignment(boxesVPanel,HasHorizontalAlignment.ALIGN_CENTER);
 	  //rankingVPanel.setCellHorizontalAlignment(rankingHPanel,HasHorizontalAlignment.ALIGN_CENTER);
-	  rankingVPanel.setCellVerticalAlignment(rankingHPanel,HasVerticalAlignment.ALIGN_TOP);
+	  //rankingVPanel.setCellVerticalAlignment(rankingHPanel,HasVerticalAlignment.ALIGN_TOP);
 	  
 	  // Listen for events on the DropBoxs.
 	  circuitsDropBox.addChangeHandler(new ChangeHandler() {
