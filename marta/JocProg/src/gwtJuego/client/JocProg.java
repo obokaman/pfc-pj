@@ -961,18 +961,20 @@ public class JocProg implements EntryPoint {
 	  //rankingHPanel.setCellHorizontalAlignment(rankingFlexTable,HasHorizontalAlignment.ALIGN_CENTER);
 	  //rankingHPanel.setCellVerticalAlignment(rankingFlexTable,HasVerticalAlignment.ALIGN_TOP);
 	  VerticalPanel vLayout = new VerticalPanel();
+	  vLayout.setSpacing(30);
 	  vLayout.add(boxesVPanel);
 	  vLayout.add(rankingHPanel);
 	  vLayout.addStyleName("inputForm");
+	  vLayout.setCellHorizontalAlignment(boxesVPanel,HasHorizontalAlignment.ALIGN_CENTER);
 	  
 	  rankingVPanel.addStyleName("inputForm");
 	  rankingVPanel.setWidth("100%");
 	  //rankingVPanel.setSize("100%","100%");
-	  rankingVPanel.setSpacing(20);
+	  rankingVPanel.setSpacing(5);
 	  //rankingVPanel.add(boxesVPanel);
 	  //rankingVPanel.add(rankingHPanel);
 	  rankingVPanel.add(vLayout);
-	  //rankingVPanel.setCellHorizontalAlignment(boxesVPanel,HasHorizontalAlignment.ALIGN_CENTER);
+	  rankingVPanel.setCellHorizontalAlignment(vLayout,HasHorizontalAlignment.ALIGN_CENTER);
 	  //rankingVPanel.setCellHorizontalAlignment(rankingHPanel,HasHorizontalAlignment.ALIGN_CENTER);
 	  //rankingVPanel.setCellVerticalAlignment(rankingHPanel,HasVerticalAlignment.ALIGN_TOP);
 	  
