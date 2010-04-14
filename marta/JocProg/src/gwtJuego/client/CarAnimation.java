@@ -166,25 +166,16 @@ public class CarAnimation implements Animation {
     					nextField = (nextField/3)*3+2;
     					nextField = Math.max(nextField, 5);  //primera posicion de trace donde hay coordenada x
     					nextField = Math.min(nextField, trace2.length()-6);
-    			    	
-//    			    	int x = (int)Float.parseFloat(getNextTraceField());
-//    			    	int y = (int)Float.parseFloat(getNextTraceField());
-//    			    	targetAngle = Float.parseFloat(getNextTraceField());
+
     			    	int x = (int)(getNextTraceField());
     			    	int y = (int)(getNextTraceField());
     			    	targetAngle = (float)(getNextTraceField());
-
     			    	convertMeasures(x,y,"initial");
     			    	
     			    	x = (int)(getNextTraceField());
     			    	y = (int)(getNextTraceField());
     			        targetAngle = (float)(getNextTraceField());
-//    			    	x = (int)Float.parseFloat(getNextTraceField());
-//    			    	y = (int)Float.parseFloat(getNextTraceField());
-//    			        targetAngle = Float.parseFloat(getNextTraceField());
-
-    			    	convertMeasures(x,y,"target");
-    			    	
+    			    	convertMeasures(x,y,"target");  			    	
     					dragging = false;
     				}
     			});
@@ -213,23 +204,15 @@ public class CarAnimation implements Animation {
     					nextField = (nextField/3)*3+2;
     					nextField = Math.max(nextField, 5);  //primera posicion de trace donde hay coordenada x
     					nextField = Math.min(nextField, trace2.length()-6);
-    			    	
-//    			    	int x = (int)Float.parseFloat(getNextTraceField());
- //   			    	int y = (int)Float.parseFloat(getNextTraceField());
-//    			    	targetAngle = Float.parseFloat(getNextTraceField());
+
     			    	int x = (int)(getNextTraceField());
     			    	int y = (int)(getNextTraceField());
     			    	targetAngle = (float)(getNextTraceField());
-
     			    	convertMeasures(x,y,"initial");
-    			    	
-//    			    	x = (int)Float.parseFloat(getNextTraceField());
-//    			    	y = (int)Float.parseFloat(getNextTraceField());
-//    			        targetAngle = Float.parseFloat(getNextTraceField());
+
     			    	x = (int)(getNextTraceField());
     			    	y = (int)(getNextTraceField());
     			        targetAngle = (float)(getNextTraceField());
-
     			    	convertMeasures(x,y,"target");
     				}
     			});
@@ -251,13 +234,9 @@ public class CarAnimation implements Animation {
      * @return true if the animation is finished already, false if animateOneFrame should be called at least once.
      */
     public boolean beforeFirstFrame() {
-//    	int x = (int)Float.parseFloat(getNextTraceField());
-//    	int y = (int)Float.parseFloat(getNextTraceField());
     	int x = (int)(getNextTraceField());
     	int y = (int)(getNextTraceField());
-
     	convertMeasures(x,y,"target");
-//        targetAngle = Float.parseFloat(getNextTraceField());
         targetAngle = (float)(getNextTraceField());
 
         panel.add(this.widget, this.initialX, this.initialY);
@@ -313,12 +292,9 @@ public class CarAnimation implements Animation {
                 	initialX = targetX;
                 	initialY = targetY;
                 	pointerIniX = pointerX;
-//                	int x = (int)Float.parseFloat(getNextTraceField());
-//                	int y = (int)Float.parseFloat(getNextTraceField());
                 	int x = (int)(getNextTraceField());
                 	int y = (int)(getNextTraceField());
                 	convertMeasures(x,y,"target");
-//                	targetAngle = Float.parseFloat(getNextTraceField());
                 	targetAngle = (float)(getNextTraceField());
                 	startTime = new Duration();
                 	return false;
@@ -338,13 +314,9 @@ public class CarAnimation implements Animation {
         	initialX = targetX;
         	initialY = targetY;
         	pointerIniX = pointerX;
-//        	int x = (int)Float.parseFloat(getNextTraceField());
-//        	int y = (int)Float.parseFloat(getNextTraceField());
         	int x = (int)getNextTraceField();
         	int y = (int)getNextTraceField();
-
         	convertMeasures(x,y,"target");
-//        	targetAngle = Float.parseFloat(getNextTraceField());
         	targetAngle = (float)getNextTraceField();
             startTime = new Duration();
             return false;
@@ -363,13 +335,7 @@ public class CarAnimation implements Animation {
     }
     
     private void getTrace(String t) {
-//    	String[] vs = t.split("[ \n]");
-//    	trace.clear();
-//    	for(int i=0; i<vs.length;++i) {
-//    		this.trace.add(vs[i]);
-//    	}
     	nextField = 5;
-    	
     	trace2 = JavaScriptObject.createArray().cast();
     	int len = t.length();
     	int lasti = 0, val = 0;
@@ -383,11 +349,7 @@ public class CarAnimation implements Animation {
     	}
     }
     
-//    private String getNextTraceField() {
     private double getNextTraceField() {
-//    	String s = this.trace.get(nextField);
-//    	nextField++;
-//    	return s;
     	return this.trace2.get(nextField++);
     }
     
