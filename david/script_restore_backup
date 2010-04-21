@@ -1,0 +1,27 @@
+#!/bin/bash      
+
+#Path del directorio backup con los archivos del estado del servidor
+path="/home/dvd/Escritorio" 
+path_server="/var/www/racing"
+path_src="/var/local/share/racing"
+
+tar -xzvf $path/backup_pfc.tar.gz
+
+mysql --password=proyecto --user=root pfc < $path/backup_pfc/archivo.sql
+
+#Directorio con la configuracion de las rutas
+#cp -r $path_server/conf $dirtmp/conf
+
+#Directorio con los archivos PHP
+cp -r $path/backup_pfc/php $path_src/php
+
+#Directorio con las imagenes 
+cp -r $path/backup_pfc/img $path_server/img
+
+#Directorio con la informacion de los circuitos, partidas y archivos para la ejecucion de partidas
+#mkdir $dirtmp/racing
+cp -r $path/backup_pfc/racing/bin $path_src/bin
+cp -r $path/backup_pfc/racing/circuits $path_src/circuits
+cp -r $path/backup_pfc/racing/games $path_src/games
+cp -r $path/backup_pfc/racing/pack $path_src/pack
+

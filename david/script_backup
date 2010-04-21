@@ -2,8 +2,8 @@
 
 #Path del directorio backup que contendra los archivos que contienen el estado del servidor de nuestra aplicación
 path="/home/dvd/Escritorio" 
-path_server="/var/www"
-path_src="/home/dvd/share"
+path_server="/var/www/racing"
+path_src="/var/local/share/racing"
 
 diract=`pwd`
 
@@ -13,20 +13,20 @@ dirtmp=`mktemp -d`
 mysqldump --opt --password=proyecto --user=root pfc > $dirtmp/archivo.sql
 
 #Directorio con los archivos PHP
-cp -r $path/pfc-pj/david/php $dirtmp/php
+cp -r $path_server/php $dirtmp/php
 
 #Directorio con la configuracion de las rutas
-cp -r $path_server/conf $dirtmp/conf
+#cp -r $path_server/conf $dirtmp/conf
 
 #Directorio con las imagenes 
 cp -r $path_server/img $dirtmp/img
 
 #Directorio con la informacion de los circuitos, partidas y archivos para la ejecucion de partidas
-mkdir $dirtmp/racing
-cp -r /home/dvd/Escritorio/pfc-pj/omer/racing/bin $dirtmp/racing/bin
-cp -r /home/dvd/Escritorio/pfc-pj/omer/racing/circuitos $dirtmp/racing/circuits
-cp -r $path_src/racing/games $dirtmp/racing/games
-cp -r $path_src/racing/pack $dirtmp/racing/pack
+#mkdir $dirtmp/racing
+cp -r $path_src/bin $dirtmp/racing/bin
+cp -r $path_src/circuits $dirtmp/racing/circuits
+cp -r $path_src/games $dirtmp/racing/games
+cp -r $path_src/pack $dirtmp/racing/pack
 
 
 #Comanda para comprimir el directorio backup
