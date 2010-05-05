@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.DecoratedStackPanel;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DisclosurePanel;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -79,7 +80,7 @@ public class JocProg implements EntryPoint {
 	private static final String TEXTO_EJEMPLO = "// -- Escribe aqui tu codigo --\n"+
 												"//ejemplo:\n\n"+
 												"void corre() {\n"+
-												"setVel(50);  // fija la velocidad de el coche a 50 km/h\n"+
+												"  setVel(50);  // fija la velocidad del coche a 50 km/h\n"+
 												"}\n\n"+
 												"//Para encontrar mas ejemplos de como escribir tu codigo"+
 												" consulta el apartado de 'Ayuda'\n";
@@ -256,7 +257,8 @@ public class JocProg implements EntryPoint {
 	  mainPanel.add(multiPanel,"Inicio");
 	  mainPanel.add(codiPanel,"Juega");
 	  mainPanel.add(rankingVPanel,"Ranking");
-	  mainPanel.add(new HTML("Help Tab"),"Ayuda");
+	  Frame frame = new Frame(LOCAL_URL+"instrucciones.html");
+	  mainPanel.add(frame,"Ayuda");
 	  mainPanel.selectTab(0);
 	  
 	  mainPanel.setSize("100%","100%");
