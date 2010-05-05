@@ -85,9 +85,9 @@ else if ($f == "changeUser") {
 			)
 		);
 }
-/*Post: La petición retorna enteros distintos dependiendo del comportamiento que siga:				
-				- 0 se realiza el cambio correctamente ya que el 'old_pass' es correcto para el usuario logueado
+/*Post: La petición retorna enteros distintos dependiendo del comportamiento que siga:
 				- 1 si el usuario de la sesion no esta logueado
+				- 0 se realiza el cambio correctamente ya que el 'old_pass' es correcto para el usuario logueado
 				- 2 el 'old_pass' no corresponde al usuario logueado*/
 
 

@@ -125,19 +125,6 @@ CREATE TABLE game (
 ENGINE = InnoDB
 CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-DROP TABLE IF EXISTS cup;
-CREATE TABLE cup (
-  id_user	integer  NOT NULL,
-  id_circuit 	integer  NOT NULL,
-
-  PRIMARY KEY (id_user, id_circuit),
-
-  FOREIGN KEY (id_user)  REFERENCES user (id_user),
-  FOREIGN KEY (id_circuit) REFERENCES circuit (id_circuit)
-
-)
-ENGINE = InnoDB
-CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 DROP TABLE IF EXISTS code;
 CREATE TABLE code (
@@ -156,31 +143,52 @@ INSERT INTO user (nick, name, surname1, surname2, email_user,
 city, school, email_school, type_user, pass, activated, date_insertion) VALUES ('anonymous', 'anonymous', 'anonymous', null , 'anonymous@gmail.com', 'Blanes', 'Colegio1', 'cole@colegio1.com', 'alumno', '3434343434', 1, now());
 
 INSERT INTO user (nick, name, surname1, surname2, email_user,
-city, school, email_school, type_user, pass, date_insertion) VALUES ('dgb', 'David', 'Garcia', 'Bautista', 'dvdgarcia.83@gmail.com', 'Blanes', 'Colegio1', 'cole@colegio1.com', 'alumno', '123', '2008-1-1');
+city, school, email_school, type_user, pass, activated, date_insertion) VALUES ('usuario1', 'David', 'Garcia', 'Bautista', 'dvdgarcia.83@gmail.com', 'Blanes', 'Colegio1', 'cole@colegio1.com', 'alumno', '123', 1, '2008-1-1');
 
 INSERT INTO user (nick, name, surname1, surname2, email_user,
-city, school, email_school, type_user, pass, activated, date_insertion) VALUES ('asd', 'Mari', 'Juana', 'Rica', 'mjuana@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'alumno', '123', 1, now());
+city, school, email_school, type_user, pass, activated, date_insertion) VALUES ('usuario2', 'Marta', 'Lucio', 'Peña', 'mlp@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'alumno', '123', 1, now());
 
 INSERT INTO user (nick, name, surname1, surname2, email_user,
-city, school, email_school, type_user, pass, activated, date_insertion) VALUES ('qwe', 'Omer', 'Jimenez', 'algo', 'omer.jimenez@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'tutor', '123', 1, now());
+city, school, email_school, type_user, pass, activated, date_insertion) VALUES ('usuario3', 'Omer', 'Jimenez', 'Llach', 'omer.jimenez@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'tutor', '123', 1, now());
 
-INSERT INTO team (name, id_founded) VALUES ('Escuderia1', 3);
+INSERT INTO user (nick, name, surname1, surname2, email_user,
+city, school, email_school, type_user, pass, activated, date_insertion) VALUES ('usuario4', 'Pepe', 'Garcia', '.', 'pepe@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'alumno', '123', 1, '2008-1-1');
 
-INSERT INTO team (name, id_founded) VALUES ('Escuderia2', 3);
+INSERT INTO user (nick, name, surname1, surname2, email_user,
+city, school, email_school, type_user, pass, activated, date_insertion) VALUES ('usuario5', 'Fulano', 'Lol', '.', 'fulano@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'alumno', '123', 1, now());
 
-INSERT INTO team (name, id_founded) VALUES ('Escuderia3', 3);
+INSERT INTO user (nick, name, surname1, surname2, email_user,
+city, school, email_school, type_user, pass, activated, date_insertion) VALUES ('usuario6', 'Menganito', 'Owned', 'Jeje', 'menganito@gmail.com', 'Bcn', 'Colegio1', 'cole@colegio1.com', 'tutor', '123', 1, now());
 
-INSERT INTO user_team (id_user, id_team, active) VALUES (1,1,1);
+INSERT INTO team (name, id_founded) VALUES ('Equipo1', 2);
+
+INSERT INTO team (name, id_founded) VALUES ('Equipo2', 3);
+
+INSERT INTO team (name, id_founded) VALUES ('Equipo3', 4);
 
 INSERT INTO user_team (id_user, id_team, active) VALUES (2,1,1);
 
-INSERT INTO user_team (id_user, id_team, active) VALUES (1,2,1);
-
-INSERT INTO user_team (id_user, id_team, active) VALUES (2,2,0);
-
 INSERT INTO user_team (id_user, id_team, active) VALUES (3,1,1);
 
+INSERT INTO user_team (id_user, id_team, active) VALUES (4,1,0);
+
+INSERT INTO user_team (id_user, id_team, active) VALUES (5,1,1);
+
+INSERT INTO user_team (id_user, id_team, active) VALUES (6,1,0);
+
+INSERT INTO user_team (id_user, id_team, active) VALUES (7,1,1);
+
 INSERT INTO user_team (id_user, id_team, active) VALUES (3,2,1);
+
+INSERT INTO user_team (id_user, id_team, active) VALUES (5,2,1);
+
+INSERT INTO user_team (id_user, id_team, active) VALUES (7,2,1);
+
+INSERT INTO user_team (id_user, id_team, active) VALUES (2,3,1);
+
+INSERT INTO user_team (id_user, id_team, active) VALUES (4,3,1);
+
+INSERT INTO user_team (id_user, id_team, active) VALUES (6,3,1);
 
 INSERT INTO circuit (name, short_name, level, n_laps, time, width, height) VALUES ('Montmelo', 'basic', 1, 3, null, 1000, 1000);
 
@@ -198,56 +206,88 @@ INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato2', '
 
 INSERT INTO championship (name, data_limit, id_founded) VALUES ('Campeonato3', '2011-01-31', 3);
 
-INSERT INTO inscription (id_user, id_champ, active) VALUES (1, 1, 1);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (2,1,1);
 
-INSERT INTO inscription (id_user, id_champ, active) VALUES (2, 1, 1);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (3,1,1);
 
-INSERT INTO inscription (id_user, id_champ, active) VALUES (2, 2, 1);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (4,1,1);
 
-INSERT INTO inscription (id_user, id_champ, active) VALUES (2, 3, 0);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (5,1,0);
 
-INSERT INTO inscription (id_user, id_champ, active) VALUES (3, 1, 0);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (6,1,0);
 
-INSERT INTO inscription (id_user, id_champ, active) VALUES (3, 2, 0);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (7,1,0);
 
-INSERT INTO inscription (id_user, id_champ, active) VALUES (3, 3, 1);
+INSERT INTO inscription (id_user, id_champ, active) VALUES (3,2,1);
+
+INSERT INTO inscription (id_user, id_champ, active) VALUES (5,2,1);
+
+INSERT INTO inscription (id_user, id_champ, active) VALUES (7,2,1);
+
+INSERT INTO inscription (id_user, id_champ, active) VALUES (2,3,1);
+
+INSERT INTO inscription (id_user, id_champ, active) VALUES (4,3,1);
+
+INSERT INTO inscription (id_user, id_champ, active) VALUES (6,3,1);
 
 INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 1);
-
-INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (2, 2);
-
-INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 3);
 
 INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (2, 1);
 
 INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (3, 1);
 
-INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (2, 3);
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (4, 1);
 
-INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (3, 3);
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (5, 1);
+
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (1, 2);
+
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (2, 2);
 
 INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (3, 2);
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 1, null, 75321, NOW());
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (4, 3);
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 1, 1, 75322, NOW());
+INSERT INTO circuit_championship (id_circuit, id_champ) VALUES (5, 3);
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 1, 1, 75323, NOW());
-
-/*INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 1, 1, 75321);*/
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 1, 1, 75321, NOW());
 
 INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (3, 1, 1, 75322, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (3, 1, 1, 75323, NOW());
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (4, 1, 1, 75323, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 2, null, 75324, NOW());
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (5, 1, 1, 75322, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 2, 2, 75325, NOW());
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (6, 1, 1, 75323, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 3, 1, 75326, NOW());
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 2, 1, 75321, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (3, 3, 2, 75327, NOW());
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (3, 2, 1, 75322, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 3, 2, 75328);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (4, 2, 1, 75323, NOW());
 
-INSERT INTO game (id_user, id_circuit, id_champ, time_result) VALUES (3, 2, 3, 75329);
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (5, 2, 1, 75322, NOW());
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (6, 2, 1, 75323, NOW());
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (7, 2, 1, 75324, NOW());
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (3, 1, 2, 75325, NOW());
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (5, 1, 2, 75325, NOW());
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (7, 1, 2, 75325, NOW());
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 4, 3, 75325, NOW());
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 4, 3, 75325, NOW());
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (4, 5, 3, 75325, NOW());
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (6, 5, 3, 75325, NOW());
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (2, 3, null, 75326, NOW());
+
+INSERT INTO game (id_user, id_circuit, id_champ, time_result, time_insertion) VALUES (3, 3, null, 75327, NOW());
+
+

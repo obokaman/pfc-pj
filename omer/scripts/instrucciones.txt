@@ -1,0 +1,29 @@
+sudo apt-get install $(cat paquetes.txt)
+
+Password de root de mysql: 'proyecto'
+
+git clone http://github.com/obokaman/pfc-pj.git
+
+
+Mail: anadir "relay.upc.edu" a /etc/postfix/mail.cf
+
+
+
+?????? No recuerod que era esto.
+
+sudo cp -r david/php /var/www
+
+sudo chown -R www-data /var/www/php
+sudo chgrp -R www-data /var/www/php
+
+sudo cp marta/JocProg/war/JocProg.css /var/www
+sudo cp marta/JocProg/war/JocProg.html /var/www
+sudo cp -r marta/JocProg/war/WEB-INF /var/www
+sudo cp -r marta/JocProg/war/jocprog /var/www
+
+sudo chown www-data /var/www/*
+sudo chgrp www-data /var/www/*
+sudo chown -R www-data /var/www/WEB-INF
+sudo chgrp -R www-data /var/www/WEB-INF
+sudo chown -R www-data /var/www/jocprog
+sudo chgrp -R www-data /var/www/jocprog
