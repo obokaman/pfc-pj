@@ -939,7 +939,7 @@ public class JocProg implements EntryPoint {
 	  sizePagesGrid.setWidget(0,1,sizePagesDropBox);
 	  
 	  HorizontalPanel dropBoxes2 = new HorizontalPanel();
-	  dropBoxes2.addStyleName("inputForm");
+	  //dropBoxes2.addStyleName("inputForm");
 	  dropBoxes2.setWidth("100%");
 	  dropBoxes2.add(rankPagesGrid);
 	  dropBoxes2.add(sizePagesGrid);
@@ -951,7 +951,7 @@ public class JocProg implements EntryPoint {
 	  
 	 // HorizontalPanel rankingHPanel = new HorizontalPanel();
 	  VerticalPanel rankingHPanel = new VerticalPanel();
-	  rankingHPanel.addStyleName("inputForm");
+	  //rankingHPanel.addStyleName("inputForm");
 	  //rankingHPanel.setHeight("100%");
 	  //rankingHPanel.setWidth("100%");
 	  rankingHPanel.setSpacing(10);
@@ -964,10 +964,10 @@ public class JocProg implements EntryPoint {
 	  vLayout.setSpacing(30);
 	  vLayout.add(boxesVPanel);
 	  vLayout.add(rankingHPanel);
-	  vLayout.addStyleName("inputForm");
+	  //vLayout.addStyleName("inputForm");
 	  vLayout.setCellHorizontalAlignment(boxesVPanel,HasHorizontalAlignment.ALIGN_CENTER);
 	  
-	  rankingVPanel.addStyleName("inputForm");
+	  //rankingVPanel.addStyleName("inputForm");
 	  rankingVPanel.setWidth("100%");
 	  //rankingVPanel.setSize("100%","100%");
 	  rankingVPanel.setSpacing(5);
