@@ -76,6 +76,13 @@ public class JocProg implements EntryPoint {
 	private static final String LOCAL_URL = "http://gabarro.org/racing/";
 	private static final String JSON_URL = "http://gabarro.org/racing/php/main.php?";
 	private static final String IMG_URL = "http://gabarro.org/racing/img/";
+	private static final String TEXTO_EJEMPLO = "// -- Escribe aqui tu codigo --\n"+
+												"//ejemplo:\n\n"+
+												"void corre() {\n"+
+												"setVel(50);  // fija la velocidad de el coche a 50 km/h\n"+
+												"}\n\n"+
+												"//Para encontrar mas ejemplos de como escribir tu codigo"+
+												" consulta el apartado de 'Ayuda'\n";
 	private static final int CODE = 1;
 	private static final int DEBUG = 2;
 	private static final int EXECUTION = 3;
@@ -247,9 +254,9 @@ public class JocProg implements EntryPoint {
 	  //Assemble Main panel.
 	  //mainPanel.setAnimationEnabled(true);
 	  mainPanel.add(multiPanel,"Inicio");
-	  mainPanel.add(codiPanel,"Corre");
+	  mainPanel.add(codiPanel,"Juega");
 	  mainPanel.add(rankingVPanel,"Ranking");
-	  mainPanel.add(new HTML("Help Tab"),"Help");
+	  mainPanel.add(new HTML("Help Tab"),"Ayuda");
 	  mainPanel.selectTab(0);
 	  
 	  mainPanel.setSize("100%","100%");
@@ -364,7 +371,7 @@ public class JocProg implements EntryPoint {
 				  public void onKeyDown(KeyDownEvent event){
 					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER && !whileReqOn){
 						  whileReqOn = true;
-						  Window.alert("enter key pressed. user value: "+USER);	  
+						  //Window.alert("enter key pressed. user value: "+USER);	  
 						  requestLogin();
 					  }
 				  }
@@ -556,7 +563,7 @@ public class JocProg implements EntryPoint {
 	  controlHPanel.setCellWidth(buttonsPanel,"100%");
 	  controlHPanel.setCellHorizontalAlignment(buttonsPanel, HasHorizontalAlignment.ALIGN_RIGHT);
 	  
-	  inputTextArea.setText("Escribe aquí tu código");
+	  inputTextArea.setText(TEXTO_EJEMPLO);
 	  inputTextArea.setSize("100%","100%");
 	  VerticalPanel inputPanel = new VerticalPanel();
 	  inputPanel.setSize("100%","100%");
@@ -2166,6 +2173,7 @@ public class JocProg implements EntryPoint {
 		        	  else if (res==0){
 		        		  Window.alert("La invitación para el usuario "+nick+" al campeonato "+name+" se ha enviado con éxito");
 		        		  suggestNickBox.setText("");
+		        		  addPlayersDropBox.setSelectedIndex(0);
 		        	  }
 				  } else {
 		        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
@@ -2202,6 +2210,7 @@ public class JocProg implements EntryPoint {
 		        	  else if (res==0){
 		        		  Window.alert("La invitación para el usuario "+nick+" al equipo "+name+" se ha enviado con éxito");
 		        		  suggestNickBox.setText("");
+		        		  addPlayersDropBox.setSelectedIndex(0);
 		        	  }
 		          } else {
 		        	  Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
@@ -2384,7 +2393,7 @@ private void requestLogout() {
 	  mainPanel.insert(multiPanel,"Inicio", 0);
 	  mainPanel.selectTab(0);
 	  
-	  inputTextArea.setText("Escribe aquí tu código");
+	  inputTextArea.setText(TEXTO_EJEMPLO);
 	  consolaTextArea.setText("consola de salida");
 	  
 	  circuitsDropBox.setSelectedIndex(0);
@@ -2526,7 +2535,7 @@ private void requestLogout() {
 	  modeOn = CODE;
 	  changeMode();
 	  
-	  inputTextArea.setText("Escribe aquí tu código");
+	  inputTextArea.setText(TEXTO_EJEMPLO);
 	  consolaTextArea.setText("consola de salida");
 	  
 	  circuitsDropBox.setSelectedIndex(0);
