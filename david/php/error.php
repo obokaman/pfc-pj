@@ -1,6 +1,6 @@
 <?php
 	
-	/*La función guarda los errores con el texto del parametro message, según el parametro option podemos seleccionar distintos modos de guardado de la información. Al principio de cada mensaje de error tb se muestra la hora de este, para diferenciar un error entre los demas
+	/*La función guarda información de los errores: el texto del parametro message y el parametro option que indica el modo de guardado de la información. También se guarda la fecha y hora en la que se ha producido el error.
 			- message: Texto del error
 			- option: Entero para el modo de impresion del error
 	*/

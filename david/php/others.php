@@ -98,6 +98,7 @@
 	/*Esta función se encarga de realizar la simulacion de la carrera en el circuito que se indica en la entrada a partir del codigo que le pasamos. Primero se crea un archivo temporal para realizar la simulacion en el servidor. En este directorio temporal ponemos todos los archivos necesarios para probar la simulacion. Tambien incluimos el codigo de la entrada en un fichero. Finalmente realizamos la llamada del simulador. Según el resultado que nos devuelva retornaremos un mensaje de error junto el codigo correspondiente del error. En caso de exito, añadimos la partida realiza a la base de datos junto con el tiempo realizado en la carrera simulada, seguidamente copiamos todos los archivos que habian en el directorio temporal en un directorio donde se mantendra guardado en el servidor. La función retornará un mensaje de que se ha realizado correctamente la simulacion, el codigo que retornara sera igual a 0 y el identificador de la partida
 			- code: Codigo de la partida
 			- circuit: Nombre del circuito			
+			- champ: Nombre del campeonato
 	*/
 	function run( $code, $circuit, $champ ){
 	/*Pre: El circuito existe en la base de datos*/

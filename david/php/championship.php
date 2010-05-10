@@ -1,6 +1,6 @@
 <?php
 
-	/*La función crea un campeonato en la BBDD con los parametros que le pasamos de entrada
+	/*La función crea un campeonato nuevo en la BBDD con los parametros de la entrada de la función.
 			- name: Nombre del campeonato
 			- date_limit: Fecha limite para poderse inscribir en el campeonato
 			- id_founded: Identificador del usuario fundador del campeonat
@@ -60,7 +60,8 @@
 	
 	
 	
-	/*La función devuelve una lista de nombres de campeonatos a los que pertenece el usuario que esta logueado, y el circuito
+	/*La función devuelve una lista de nombres de campeonatos a los que pertenece el usuario que esta logueado y que ademas contiene el circuito
+	de la entrada.
 			- name_circuit: Nombre del circuito
 	*/
 	function get_my_championships($name_circuit){
