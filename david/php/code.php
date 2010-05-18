@@ -1,6 +1,6 @@
 <?php
 	
-	/*La función añade una nueva fila en la base de datos con el codigo de una partida realizada por un usuario
+	/*La función añade el código de una partida junto con el identificador del usuario que lo ha creado, fecha y nombre de la partida
 			- file_name: Nombre del fichero
 			- code: Codigo
 			- date: Fecha de insercion
@@ -16,7 +16,7 @@
 			return false;
 		}else			return true;
 	}
-	/*Post: La función devuelve cierto si ha insertado correctamente la fila junto con todos sus parametros, en caso con contrario devuelve falso y no inserta la nueva fila*/
+	/*Post: La función devuelve cierto si ha insertado correctamente el codigo de la partida junto con el resto de los parametros, en caso con contrario devuelve falso*/
 
 
 	/*La funcion retorna el codigo segun el nombre del fichero que lo contiene y el usuario que lo creo
@@ -36,11 +36,12 @@
 
 
 
-	/*La funcion retorna una lista de los nombres de ficheros y sus fechas a partir de identificador de un usuario que las ha realizado
+	/*La funcion retorna una lista donde cada elemento contiene: el nombre y fecha de los codigos de partidas que ha guardado el usuario
+	con el mismo identificador que la variable de entrada de la funcion
 			- id_user: Identificador de usuario
 	*/
 	function get_saved_codes( $id_user) {
-	/*Pre: El identificador debe existir en la base de datos */	
+	/*Pre: - */	
 		global $connection;
 		
 		$query = "SELECT c.file_name as name, c.file_date as date FROM code c WHERE c.id_user = '$id_user'";	
@@ -48,7 +49,7 @@
 		
 		return extract_rows($result_query);
 	}
-	/*Post:  Devuelve lista con los pares, el nombre de la partida  y la fecha del guardado del código, del usuario de la entrada */
+	/*Post:  Devuelve lista con los pares: el nombre y la fecha de los codigos de partida que ha guardado el usuario con el mismo identificador que la variable de la entrada*/
 
 
 	/*La función actualiza una partida guardada en la base de datos con los nuevos parametros de entrada
@@ -68,7 +69,7 @@
 			return false;
 		}else			return true;
 	}
-	/*Post: La función devuelve cierto si ha modificado correctamente la fila junto con todos sus parametros, en caso con contrario devuelve falso y no inserta la nueva fila*/
+	/*Post: La función devuelve cierto si ha modificado correctamente la fila junto con todos sus parametros, en caso con contrario devuelve falso*/
 
 	/*La función que elimina una partida guardada en la base de datos
 			- name: Nombre de la partida
@@ -85,7 +86,7 @@
 	/*Post: Elimina el código almacenado de una partida en la base de datos identificandola a partir del nombre  de la partida y usuario propietario*/
 
 
-	/*La funcion comprueba que existe el codigo con el mismo nombre de fichero y de identificador de usuario que la entrada
+	/*La funcion comprueba que existe el codigo con el mismo nombre de partida que la variable 'name' y mismo identificador de usuario que la variable 'id_user'
 			- name: Nombre del fichero
 			- id_user: Identificador de usuario
 	*/

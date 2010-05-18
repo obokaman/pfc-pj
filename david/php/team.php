@@ -1,6 +1,6 @@
 <?php
 
-	/*La función crea un equipo en la BBDD 
+	/*La función crea un equipo en la BD 
 			- name: Nombre del equipo
 			- id_founded: Identificador del usuario fundador
 	*/
@@ -59,7 +59,7 @@
 			- name_champ: Nombre del campeonato
 	*/
 	function get_my_teams($name_circuit, $name_champ){
-	/*Pre: El nombre del circuito no debe ser nulo y los nombres deben existir en caso de que no lo sean*/			
+	/*Pre: El parametros de entrada no puede ser nulos*/			
 		if(isset($_SESSION["user"])){						
 			global $connection;
 			
@@ -87,7 +87,7 @@
 	/*Post:  Devuelve una array de nombres de equipos a los que pertenece el usuario logueado*/
 	
 	
-	/*Esta función borra el equipo de la BBDD identificado por el mismo identificador que tienen en la BBDD
+	/*Esta función borra el equipo de la BD identificado con el parametro de la entrada de la funcion
 			- id: Identificador del equipo
 	*/
 	function delete_team_id($id){
@@ -100,7 +100,7 @@
 	/*Post: La función borra el circuito de la BBDD*
 	
 	
-	/*La función comprueba si el nombre del equipo existe
+	/*La función comprueba si el nombre del equipo existe en la BD.
 			name: Nombre del equipo
 	*/
 	function exist_team($name){	

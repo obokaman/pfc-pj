@@ -526,7 +526,7 @@ else if( $f == "run" ) {
 		)
 	);	
 }
-/*Post: En caso de éxito, registramos la partida en la base de datos y creamos un directorio en el servidor con los archivos necesarios para simular una partida, finalmente, retornamos el identificador de la partida que acaba de ser ejecutada, el codigo de error (que en caso de éxito es igual a 0), un mensaje descriptivo del error en el caso de que haya y el tiempo realizado en la partida. En caso de fallo, todos los campos estan vacios a excepción del código del error y el mensaje descriptivo del error, y no se realiza ningún tipo de registro en la base de datos ni se crea un directorio para la partida. */
+/*Post: En caso de éxito, registramos la partida en la base de datos y creamos un directorio en el servidor con los archivos necesarios para simular una partida, finalmente, retornamos el identificador de la partida que acaba de ser ejecutada, el codigo de error (que en caso de éxito es igual a 0), un mensaje descriptivo del error en el caso de que haya y el tiempo realizado en la partida. En caso de fallo, todos los campos estan vacios a excepción del código del error y el mensaje descriptivo del error. Ademas, no se realiza ningún tipo de registro en la base de datos ni se crea un directorio para la partida. */
 
 
 close_connection($connection);
