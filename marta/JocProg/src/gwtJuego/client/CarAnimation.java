@@ -57,8 +57,8 @@ public class CarAnimation implements Animation {
     /**
      * The trace the widget should follow.
      */
-    protected final ArrayList<String> trace = new ArrayList<String>();
-    protected JsArrayNumber trace2; //
+    //protected final ArrayList<String> trace = new ArrayList<String>();
+    protected JsArrayNumber trace; //
     /**
      * The circuit image width.
      */
@@ -161,11 +161,11 @@ public class CarAnimation implements Animation {
     					pointerIniX = event.getClientX() - progressPanel.getAbsoluteLeft();
     		    		pointerIniX = Math.max(0, pointerIniX);
     		    		pointerIniX = Math.min(pointerIniX, progressPanel.getOffsetWidth()-pointer.getOffsetWidth());
-    					double wBar = (progressPanel.getOffsetWidth()/(double)trace2.length());
+    					double wBar = (progressPanel.getOffsetWidth()/(double)trace.length());
     					nextField = (int)(pointerIniX/wBar);
     					nextField = (nextField/3)*3+2;
     					nextField = Math.max(nextField, 5);  //primera posicion de trace donde hay coordenada x
-    					nextField = Math.min(nextField, trace2.length()-6);
+    					nextField = Math.min(nextField, trace.length()-6);
 
     			    	int x = (int)(getNextTraceField());
     			    	int y = (int)(getNextTraceField());
@@ -199,11 +199,11 @@ public class CarAnimation implements Animation {
     					pointerIniX = event.getClientX() - progressPanel.getAbsoluteLeft();
     		    		pointerIniX = Math.max(0, pointerIniX);
     		    		pointerIniX = Math.min(pointerIniX, progressPanel.getOffsetWidth()-pointer.getOffsetWidth());
-    					double wBar = (progressPanel.getOffsetWidth()/(double)trace2.length());
+    					double wBar = (progressPanel.getOffsetWidth()/(double)trace.length());
     					nextField = (int)(pointerIniX/wBar);
     					nextField = (nextField/3)*3+2;
     					nextField = Math.max(nextField, 5);  //primera posicion de trace donde hay coordenada x
-    					nextField = Math.min(nextField, trace2.length()-6);
+    					nextField = Math.min(nextField, trace.length()-6);
 
     			    	int x = (int)(getNextTraceField());
     			    	int y = (int)(getNextTraceField());
@@ -288,7 +288,7 @@ public class CarAnimation implements Animation {
             	else panel.setWidgetPosition(widget, targetX, targetY);
             	progressPanel.setWidgetPosition(pointer, pointerX,0);
             	
-                if (nextField < trace2.length()){
+                if (nextField < trace.length()){
                 	initialX = targetX;
                 	initialY = targetY;
                 	pointerIniX = pointerX;
@@ -310,7 +310,7 @@ public class CarAnimation implements Animation {
                 return false;
             }
         }
-        else if (trace2.length()>0) {
+        else if (trace.length()>0) {
         	initialX = targetX;
         	initialY = targetY;
         	pointerIniX = pointerX;
@@ -336,13 +336,13 @@ public class CarAnimation implements Animation {
     
     private void getTrace(String t) {
     	nextField = 5;
-    	trace2 = JavaScriptObject.createArray().cast();
+    	trace = JavaScriptObject.createArray().cast();
     	int len = t.length();
     	int lasti = 0, val = 0;
     	for (int i=0;i<len;++i) {
     		char c = t.charAt(i);
     		if (c==' ' || c=='\n') {
-    			trace2.set(val, Double.parseDouble(t.substring(lasti, i)));
+    			trace.set(val, Double.parseDouble(t.substring(lasti, i)));
     			lasti = i+1;
     			++val;
     		}
@@ -350,7 +350,7 @@ public class CarAnimation implements Animation {
     }
     
     private double getNextTraceField() {
-    	return this.trace2.get(nextField++);
+    	return this.trace.get(nextField++);
     }
     
     private void convertMeasures(int x, int y, String what) {
@@ -376,7 +376,7 @@ public class CarAnimation implements Animation {
     	else if(what.equals("target")){
     		this.targetX = (int)newX;
     		this.targetY = (int)newY;
-    		double wBar = (this.progressPanel.getOffsetWidth()/(double)trace2.length());
+    		double wBar = (this.progressPanel.getOffsetWidth()/(double)trace.length());
     		pointerX = (int)(wBar*nextField);
     		pointerX = Math.max(0, pointerX);
     		pointerX = Math.min(pointerX, progressPanel.getOffsetWidth()-pointer.getOffsetWidth());

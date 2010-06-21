@@ -98,10 +98,10 @@ public class JocProg implements EntryPoint {
 	private HorizontalSplitPanel correPanel = new HorizontalSplitPanel();
 	private VerticalSplitPanel codiPanel = new VerticalSplitPanel();
 	private AbsolutePanel imagePanel = new AbsolutePanel();
-	private AbsolutePanel progressAbsPanel = new AbsolutePanel();  //se podria (pasando parametros)
+	private AbsolutePanel progressAbsPanel = new AbsolutePanel();
 	private HTMLPanel centerImagePanel;
 	private DialogBox modeDialogBox = new DialogBox();
-	private VerticalPanel rankingVPanel = new VerticalPanel();  //se podria (return)
+	private VerticalPanel rankingVPanel = new VerticalPanel();
 	private HorizontalPanel multiPanel = new HorizontalPanel();
 	private VerticalPanel loginVPanel = new VerticalPanel();
 	private VerticalPanel perfilVPanel = new VerticalPanel();
@@ -157,9 +157,9 @@ public class JocProg implements EntryPoint {
 	
 	private ArrayList<CircuitInfo> circuitsList = new ArrayList<CircuitInfo>();
 	private ArrayList<CircuitInfo> champCircuitsList = new ArrayList<CircuitInfo>();
-   	private ArrayList<String> champsList = new ArrayList<String>(); //??
-   	private ArrayList<String> teamsList = new ArrayList<String>(); //??
-   	private ArrayList<String> invitationsList = new ArrayList<String>(); //??
+   	//private ArrayList<String> champsList = new ArrayList<String>();
+   	//private ArrayList<String> teamsList = new ArrayList<String>();
+   	private ArrayList<String> invitationsList = new ArrayList<String>();
    	//private String[] pageSizes = {"Tamaño","10","25","50","75","100"};
    	private String[] pageSizes = {"Tamaño","1","2","3","4","5","6","7","8","9","10"};
    	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
@@ -253,8 +253,9 @@ public class JocProg implements EntryPoint {
 			  });
 
 	  //Assemble Main panel.
-	  //mainPanel.setAnimationEnabled(true);
-	  mainPanel.add(multiPanel,"Inicio");
+	  mainPanel.setAnimationEnabled(true);
+	  if(USER.equals("")) mainPanel.add(multiPanel,"Inicio");
+	  else mainPanel.add(multiPanel,"Administración");
 	  mainPanel.add(codiPanel,"Juega");
 	  mainPanel.add(rankingVPanel,"Ranking");
 	  Frame frame = new Frame(LOCAL_URL+"instrucciones.html");
@@ -372,8 +373,7 @@ public class JocProg implements EntryPoint {
 			  new KeyDownHandler(){
 				  public void onKeyDown(KeyDownEvent event){
 					  if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER && !whileReqOn){
-						  whileReqOn = true;
-						  //Window.alert("enter key pressed. user value: "+USER);	  
+						  whileReqOn = true;  
 						  requestLogin();
 					  }
 				  }
@@ -486,6 +486,7 @@ public class JocProg implements EntryPoint {
 	  HorizontalPanel consolaPanel = new HorizontalPanel();
 	  consolaTextArea.setText("consola de salida");
 	  consolaTextArea.setSize("100%","100%");
+	  consolaTextArea.setReadOnly(true);
 	  consolaPanel.setSize("100%","100%");
 	  consolaPanel.setSpacing(5);
 	  consolaPanel.add(consolaTextArea);
@@ -605,7 +606,6 @@ public class JocProg implements EntryPoint {
 					  if (USER.equals("")) Window.alert("Para guardar tu código debes ser un usuario registrado");
 					  else if(codeNameTextBox.getText().equals("")) Window.alert("Debes introducir un nombre para el archivo de guardado");
 					  else {
-						  //requestSaveCode(codeNameTextBox.getText(),inputTextArea.getText());
 						  requestExistCode(codeNameTextBox.getText(),inputTextArea.getText());
 						  codeNameTextBox.setText("");
 					  }
@@ -916,7 +916,6 @@ public class JocProg implements EntryPoint {
 	  boxesHPanel.add(teamsDropBox);
 	  
 	  VerticalPanel boxesVPanel = new VerticalPanel();
-	  //boxesVPanel.setHeight("30%");
 	  boxesVPanel.addStyleName("inputForm");
 	  boxesVPanel.setSpacing(5);
 	  boxesVPanel.add(new Label("Filtrar ranking según:"));
@@ -948,44 +947,25 @@ public class JocProg implements EntryPoint {
 	  sizePagesGrid.setWidget(0,1,sizePagesDropBox);
 	  
 	  HorizontalPanel dropBoxes2 = new HorizontalPanel();
-	  //dropBoxes2.addStyleName("inputForm");
 	  dropBoxes2.setWidth("100%");
 	  dropBoxes2.add(rankPagesGrid);
 	  dropBoxes2.add(sizePagesGrid);
-	  /*dropBoxes2.add(new Label("Ir a página: "));
-	  dropBoxes2.add(rankPagesDropBox);
-	  dropBoxes2.add(new Label("Tiempos mostrados por página: "));
-	  dropBoxes2.add(sizePagesDropBox);*/
-	  //dropBoxes2.addStyleName("inputForm");
 	  
-	 // HorizontalPanel rankingHPanel = new HorizontalPanel();
-	  VerticalPanel rankingHPanel = new VerticalPanel();
-	  //rankingHPanel.addStyleName("inputForm");
-	  //rankingHPanel.setHeight("100%");
-	  //rankingHPanel.setWidth("100%");
-	  rankingHPanel.setSpacing(10);
-	  rankingHPanel.add(rankingFlexTable);
-	  rankingHPanel.add(dropBoxes2);
+	  VerticalPanel rankingVertPanel = new VerticalPanel();
+	  rankingVertPanel.setSpacing(10);
+	  rankingVertPanel.add(rankingFlexTable);
+	  rankingVertPanel.add(dropBoxes2);
 
-	  //rankingHPanel.setCellHorizontalAlignment(rankingFlexTable,HasHorizontalAlignment.ALIGN_CENTER);
-	  //rankingHPanel.setCellVerticalAlignment(rankingFlexTable,HasVerticalAlignment.ALIGN_TOP);
 	  VerticalPanel vLayout = new VerticalPanel();
 	  vLayout.setSpacing(30);
 	  vLayout.add(boxesVPanel);
-	  vLayout.add(rankingHPanel);
-	  //vLayout.addStyleName("inputForm");
+	  vLayout.add(rankingVertPanel);
 	  vLayout.setCellHorizontalAlignment(boxesVPanel,HasHorizontalAlignment.ALIGN_CENTER);
 	  
-	  //rankingVPanel.addStyleName("inputForm");
 	  rankingVPanel.setWidth("100%");
-	  //rankingVPanel.setSize("100%","100%");
 	  rankingVPanel.setSpacing(5);
-	  //rankingVPanel.add(boxesVPanel);
-	  //rankingVPanel.add(rankingHPanel);
 	  rankingVPanel.add(vLayout);
 	  rankingVPanel.setCellHorizontalAlignment(vLayout,HasHorizontalAlignment.ALIGN_CENTER);
-	  //rankingVPanel.setCellHorizontalAlignment(rankingHPanel,HasHorizontalAlignment.ALIGN_CENTER);
-	  //rankingVPanel.setCellVerticalAlignment(rankingHPanel,HasVerticalAlignment.ALIGN_TOP);
 	  
 	  // Listen for events on the DropBoxs.
 	  circuitsDropBox.addChangeHandler(new ChangeHandler() {
@@ -1012,32 +992,25 @@ public class JocProg implements EntryPoint {
 				  sizePagesDropBox.setEnabled(false);
 				  Window.alert("Debes elegir un circuito válido");
 			  }
-			  /*rankPagesDropBox.clear();
-			  rankPagesDropBox.addItem("Página");
-			  rankPagesDropBox.setEnabled(false);*/
 		  }
 	  });
 	  champsDropBox.addChangeHandler(new ChangeHandler() {
 		  public void onChange(ChangeEvent event) {
-			  //if(champsDropBox.getSelectedIndex()>0) requestRanking();
 			  requestRanking();
 		  }
 	  });
 	  teamsDropBox.addChangeHandler(new ChangeHandler() {
 		  public void onChange(ChangeEvent event) {
-			  //if(teamsDropBox.getSelectedIndex()>0) requestRanking();
 			  requestRanking();
 		  }
 	  });
-	  rankPagesDropBox.addChangeHandler(new ChangeHandler() {  //tener en cuenta si esta logeado!!algo de paginas?
+	  rankPagesDropBox.addChangeHandler(new ChangeHandler() {
 		  public void onChange(ChangeEvent event) {
-			  //if(rankPagesDropBox.getSelectedIndex()>0) requestRanking();
 			  requestRanking();
 		  }
 	  });
 	  sizePagesDropBox.addChangeHandler(new ChangeHandler() {
 		  public void onChange(ChangeEvent event) {
-			  //if(sizePagesDropBox.getSelectedIndex()>0) requestRanking();
 			  requestRanking();
 		  }
 	  });
@@ -1154,13 +1127,14 @@ public class JocProg implements EntryPoint {
 	  
 	  VerticalPanel champNameVPanel = new VerticalPanel();
 	  
-	  Grid champNameGrid = new Grid(2,2);
+	  Grid champNameGrid = new Grid(2,3);
 	  champNameGrid.setCellSpacing(10);
 	  champNameGrid.setWidget(0,0,new Label("Nombre del campeonato:"));
 	  champNameGrid.setWidget(0,1,champNameTextBox);
 	  champNameGrid.setWidget(1,0,new Label("Fecha límite inscripciones:"));
 	  champDateBox.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("dd/MM/yyyy")));
-	  champNameGrid.setWidget(1,1,champDateBox);  
+	  champNameGrid.setWidget(1,1,champDateBox);
+	  champNameGrid.setWidget(1,2,new Label("(dd/mm/aaaa)"));
 	  champNameVPanel.add(champNameGrid);
 	  
 	  VerticalPanel champChooseVPanel = new VerticalPanel();
@@ -1465,20 +1439,6 @@ public class JocProg implements EntryPoint {
 	  }
   }
   
-  private boolean checkEmail(String email){
-	  boolean arr = false;
-	  boolean dot = false;
-	  for(int i=0;i<email.length();i++){
-		  if(email.charAt(i)=='@'&& i==0) return false;
-		  else if(email.charAt(i)=='.'&& i==(email.length()-1)) return false;
-		  else if(arr && email.charAt(i)=='@') return false;
-		  else if(!arr && email.charAt(i)=='@') arr = true;
-		  else if(arr && !dot && email.charAt(i)=='.' && !(email.charAt(i-1)=='@')) dot = true;
-		  else if(arr && dot && email.charAt(i)=='.') return false;
-	  }
-	  return dot;
-  }
-  
   private void requestCircuitInfo(String circuit, final int index) {
 	  try {
 		  String requestStr = encodeParam("function", "getCircuitInfo")+"&"+
@@ -1649,7 +1609,6 @@ public class JocProg implements EntryPoint {
 		    	  if (200 == response.getStatusCode()) {
 					  JsArray<JSonData> res =  asJsArrayJSonData(response.getText());
 					  
-					  //final DialogBox dialogBox = createDialogBox();
 					  final DialogBox dialogBox = new DialogBox();
 					  dialogBox.setAnimationEnabled(true);
 					  
@@ -1907,11 +1866,12 @@ public class JocProg implements EntryPoint {
 			      public void onResponseReceived(Request request, Response response) {
 			    	  if (200 == response.getStatusCode()) {
 			    		  JsArrayString res = asJsArrayString(response.getText());
-			    		  champsList.clear();
+			    		  //champsList.clear();
 			    		  champsDropBox.clear();
 			    		  champsDropBox.addItem("CAMPEONATOS");
-			    		  for(int i=0;i<res.length();i++) { champsList.add(res.get(i)); }
-			    		  for(int i=0;i<champsList.size();i++) { champsDropBox.addItem((String)champsList.get(i)); }
+			    		  //for(int i=0;i<res.length();i++) { champsList.add(res.get(i)); }
+			    		  //for(int i=0;i<champsList.size();i++) { champsDropBox.addItem((String)champsList.get(i)); }
+			    		  for(int i=0;i<res.length();i++) { champsDropBox.addItem(res.get(i)); }
 			          } else {
 			        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 			          }
@@ -1936,11 +1896,12 @@ public class JocProg implements EntryPoint {
 			      public void onResponseReceived(Request request, Response response) {
 			    	  if (200 == response.getStatusCode()) {
 			    		  JsArrayString res = asJsArrayString(response.getText());
-			    		  teamsList.clear();
+			    		  //teamsList.clear();
 			    		  teamsDropBox.clear();
 			    		  teamsDropBox.addItem("EQUIPOS");
-			    		  for(int i=0;i<res.length();i++) { teamsList.add(res.get(i)); }
-			    		  for(int i=0;i<teamsList.size();i++) { teamsDropBox.addItem((String)teamsList.get(i)); }
+			    		  //for(int i=0;i<res.length();i++) { teamsList.add(res.get(i)); }
+			    		  //for(int i=0;i<teamsList.size();i++) { teamsDropBox.addItem((String)teamsList.get(i)); }
+			    		  for(int i=0;i<res.length();i++) { teamsDropBox.addItem(res.get(i)); }
 			          } else {
 			        	Window.alert("Couldn't retrieve JSON (" + response.getStatusText()+ ")");
 			          }
@@ -1962,10 +1923,12 @@ public class JocProg implements EntryPoint {
 		  String circuit = circuitsList.get(circuitsDropBox.getSelectedIndex() - 1).name;
 		  String champ;
 		  if(champsDropBox.getSelectedIndex()==0) champ = "";
-		  else champ = (String)champsList.get(champsDropBox.getSelectedIndex() - 1);
+		  //else champ = (String)champsList.get(champsDropBox.getSelectedIndex() - 1);
+		  else champ = champsDropBox.getItemText(champsDropBox.getSelectedIndex());
 		  String team;
 		  if(teamsDropBox.getSelectedIndex()==0) team = "";
-		  else team = (String)teamsList.get(teamsDropBox.getSelectedIndex() - 1);
+		  //else team = (String)teamsList.get(teamsDropBox.getSelectedIndex() - 1);
+		  else team = teamsDropBox.getItemText(teamsDropBox.getSelectedIndex());
 
 		  try {
 			  String requestStr = encodeParam("function", "getRankings")+"&"+
@@ -2627,6 +2590,20 @@ private void requestLogout() {
 	  segs = segs%60;
 	  int mins = segs/60;
 	  return mins+":"+segs+"."+milesimas; 
+  }
+  
+  private boolean checkEmail(String email){
+	  boolean arr = false;
+	  boolean dot = false;
+	  for(int i=0;i<email.length();i++){
+		  if(email.charAt(i)=='@'&& i==0) return false;
+		  else if(email.charAt(i)=='.'&& i==(email.length()-1)) return false;
+		  else if(arr && email.charAt(i)=='@') return false;
+		  else if(!arr && email.charAt(i)=='@') arr = true;
+		  else if(arr && !dot && email.charAt(i)=='.' && !(email.charAt(i-1)=='@')) dot = true;
+		  else if(arr && dot && email.charAt(i)=='.') return false;
+	  }
+	  return dot;
   }
   
   

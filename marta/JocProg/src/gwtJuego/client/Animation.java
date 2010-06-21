@@ -4,8 +4,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Interface for animations to be executed by an AnimationEngine instance.
- *
- * @author amoffat Alex Moffat
  */
 public interface Animation {
 

@@ -94,20 +94,20 @@ public class AnimationEngine {
     	
     	paused = false;
     	stop = false;
-    	controllersPanel.getWidget(0).setVisible(false);
-    	controllersPanel.getWidget(1).setVisible(true);
+    	controllersPanel.getWidget(0).setVisible(false);  //before playButton
+    	controllersPanel.getWidget(1).setVisible(true);  //pauseButton
         PushButton controlPauseButton = (PushButton)controllersPanel.getWidget(1);
-        PushButton controlPlayButton = (PushButton)controllersPanel.getWidget(2);
+        PushButton controlPlayButton = (PushButton)controllersPanel.getWidget(2);  //after playButton
         
-        oldStopButton = (PushButton)controllersPanel.getWidget(3);
+        oldStopButton = (PushButton)controllersPanel.getWidget(3);  //stopButton
         oldStopButton.setEnabled(true);  
         
         controlPauseButton.addClickHandler( 
   			  new ClickHandler() {
   				  public void onClick(ClickEvent event) {
   					  if(!paused) {
-  						controllersPanel.getWidget(1).setVisible(false);
-  						controllersPanel.getWidget(2).setVisible(true);
+  						controllersPanel.getWidget(1).setVisible(false);  //playButton
+  						controllersPanel.getWidget(2).setVisible(true);  //pauseButton
   				        paused = true;
   					  }
   				  }
@@ -219,7 +219,7 @@ public class AnimationEngine {
                 }
                 addedAnimations.clear();
             }
-            // If there are animations still to execute schedule ourselves to run later.
+            // If there are animations to execute schedule ourselves to run later.
             if (animations.size() > 0) {
                 schedule(ANIMATION_INTERVAL);
             }
