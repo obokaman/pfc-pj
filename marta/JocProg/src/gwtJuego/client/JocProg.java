@@ -1279,7 +1279,7 @@ public class JocProg implements EntryPoint {
 	  addPlayersHPanel.add(addPlayersButton);*/
 	  
 	  VerticalPanel dataVPanel = new VerticalPanel();
-	  dataVPanel.setSpacing(10);
+	  dataVPanel.setSpacing(5);
 	  dataVPanel.add(addToHPanel);
 	  dataVPanel.add(playerHPanel);
 	  
@@ -1291,6 +1291,8 @@ public class JocProg implements EntryPoint {
 	  addPlayersVPanel.add(addPlayersLabel);
 	  addPlayersVPanel.add(dataVPanel);
 	  addPlayersVPanel.add(addPlayersButton);
+	  addPlayersVPanel.setCellHorizontalAlignment(addPlayersLabel, HasHorizontalAlignment.ALIGN_CENTER);
+	  addPlayersVPanel.setCellHorizontalAlignment(dataVPanel, HasHorizontalAlignment.ALIGN_CENTER);
 	  addPlayersVPanel.setCellHorizontalAlignment(addPlayersButton, HasHorizontalAlignment.ALIGN_CENTER);
 	  
 	  addPlayersButton.addClickHandler( 
