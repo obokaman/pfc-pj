@@ -1,5 +1,6 @@
 <?php 
 	
+	/*Función que nos realiza la conexión a la base de datos del proyecto*/
 	function open_connection(){
 			$dbhost="localhost";   		// Host del MySQL 
 			$dbusuario="root"; 			// Usuario para acceder
@@ -21,7 +22,7 @@
 	
 	} 
 	
-	
+	/*Función que nos cierra la conexión con la base de datos del proyecto*/
 	function close_connection($connection){
 			mysql_close($connection);
 	}

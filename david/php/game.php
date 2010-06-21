@@ -7,7 +7,7 @@
 			- time_insertion: Fecha y hora de la partida cuando ha sido realizada
 	*/
 	function create_game($id_user, $id_circuit, $id_champ, $time, $time_insertion){
-	/*Pre: Ninguno de los valores de la entrada son nulos y los identificadores de usuari y de circuito deben existir*/	
+	/*Pre: Ninguno de los valores de la entrada son nulos*/	
 		global $connection;
 		
 		if (!$id_champ)		$query = "INSERT INTO game ( id_user, id_circuit, time_result, time_insertion) VALUES ('$id_user',' $id_circuit', '$time', '$time_insertion')";	
@@ -28,7 +28,7 @@
 			- time_insertion: Fecha y hora de la insercion de la partida en la BBDD
 	*/
 	function get_id_by_date_user($id_user, $time_insertion){
-	/*Pre: Ninguno de los dos valores puede ser nulo y el identificador de usuario debe de existir*/
+	/*Pre: Ninguno de los dos valores puede ser nulo*/
 		global $connection;
 		
 		$query =  "SELECT g.id_game AS id FROM game g WHERE g.id_user = '$id_user' AND g.time_insertion = '$time_insertion'";
@@ -181,7 +181,7 @@ Parametros de entrada:
 			-length: Longitud de lectura
 	*/
 	function get_trace_fragment( $id_game, $start_byte, $length ){
-	/*Pre: El identificador de la partida ha de existir*/	
+	/*Pre: El identificador de la partida 'id_game' no puede ser nulo*/	
 		global $path;
 		
 		//Localizamos el fichero de lectura

@@ -17,7 +17,7 @@
 	/*Post: La función nos retorna cierto en caso de que haya tenido exito la creacion de la nueva instancia entre el circuito y el campeonato, en caso contrario devuelve falso*/
 
 
-	/*La función retorna un listado de nombres de circuitos a los que pertenece al nombre del campeonato que le pasamos por la entrada
+	/*La función retorna un listado de nombres de circuitos que pertenecen al campeonato con el mismo nombre que le pasamos en la entrada de la función
 			- name: Nombre del campeonato
 	*/
 	function get_championship_circuits($name){

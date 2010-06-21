@@ -1,12 +1,12 @@
 <?php
 
-	/*La función crea un campeonato en la BBDD con los parametros que le pasamos de entrada
+	/*La función crea un campeonato nuevo en la BBDD con los parametros de la entrada de la función.
 			- name: Nombre del campeonato
 			- date_limit: Fecha limite para poderse inscribir en el campeonato
 			- id_founded: Identificador del usuario fundador del campeonat
 	*/
 	function create_championship($name, $date_limit, $id_founded){
-	/*Pre: 'id_founded' es un identificador de usuario que existe en la BBDD y ningún valor puede ser nulo */	
+	/*Pre: Los parametros de entrada no  son nulos */
 		global $connection;
 		
 	    $query = "INSERT INTO championship (name, data_limit, id_founded) VALUES ('$name', '$date_limit', '$id_founded')";
@@ -22,7 +22,7 @@
 			- name: Nombre del campeonato
 	*/	
 	function get_id_championship($name){
-	/*Pre: El nombre del campeonato de la entrada existe*/
+	/*Pre: El nombre del campeonato de la entrada no es nulo*/
 		global $connection;
 		
 		$query = "SELECT c.id_champ FROM championship c WHERE c.name = '$name'";	
@@ -60,11 +60,12 @@
 	
 	
 	
-	/*La función devuelve una lista de nombres de campeonatos a los que pertenece el usuario que esta logueado, y el circuito
+	/*La función devuelve una lista de nombres de campeonatos a los que pertenece el usuario que esta logueado y que ademas contiene el circuito
+	de la entrada.
 			- name_circuit: Nombre del circuito
 	*/
 	function get_my_championships($name_circuit){
-	/*Pre: - */			
+	/*Pre: El nombre del circuito de la entrada no es nulo */			
 		if(isset($_SESSION["user"])){			
 			$nick_session = $_SESSION["user"]; 
 			

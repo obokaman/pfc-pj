@@ -1,6 +1,6 @@
 <?php
 
-	/*La función crea un usuario en la BBDD
+	/*La función crea un usuario en la BD
 			-nick: Nick del usuario
 			- name: Nombre del usuario
 			- surname1: Primer apellido del usuario
@@ -17,8 +17,9 @@
 		
 		/*Creamos la clave de activación del usuario*/
 		$key_act = make_activationkey();
+		
 	    $query = "INSERT INTO user ( nick, name, surname1, surname2, email_user, city, school, email_school, type_user, pass, activation_key, date_insertion)
-						VALUES ('$nick',' $name',' $surname1',' $surname2',' $email_user',' $city',' $school',' $email_school','alumno','$pass', '$key_act', now())";//<--- ACABAR DE RETOCAR LA QUERY CON EL TIPO DE ALUMNO
+						VALUES ('$nick',' $name',' $surname1',' $surname2',' $email_user',' $city',' $school',' $email_school','alumno','$pass', '$key_act', now())";
 		if (!mysql_query($query, $connection)) {
 			if (exist_user_nick($nick)) return 1;
 			else{			
@@ -38,7 +39,7 @@
 			- nick: Nick del usuario
 	*/
 	function get_id_user($nick){
-	/*Pre: - */
+	/*Pre: El parametro de la entrada no es nulo */
 		global $connection;
 		
 		$query = "SELECT u.id_user FROM user u WHERE u.nick = '$nick'";	
@@ -53,7 +54,7 @@
 			- nick: Nick del usuario
 	*/
 	function get_activation_key($nick){
-	/*Pre: - */
+	/*Pre: El parametro de la entrada no es nulo */
 		global $connection;
 		
 		$query = "SELECT u.activation_key FROM user u WHERE u.nick = '$nick'";	
@@ -64,7 +65,7 @@
 	/*Post: Retorna la cadena de caracteres que representa la clave de activación del usuario con el mismo nick que el de la entrada*/
 	
 	
-	/*La función nos devuelve la lista de todos los nicks de los usuarios que estan almacenados en la BBDD*/
+	/*La función nos devuelve la lista de todos los nicks de los usuarios que estan almacenados en la BD*/
 	function get_users(){
 	/*Pre: - */	
 		global $connection;
@@ -83,11 +84,11 @@
 	/*Post: La función nos devuelve una array de strings de todos los nicks de los  usuarios que estan almacenados en la base de datos*/
 	
 	
-	/*La función nos devuelve la información de un usuario a partir del nick del usuario, si este usuario con el nick de la entrada es el mismo que el que esta logueado devuelve toda la informacion del usuario, en caso contrario, solo devuelve parte de la informacion del usuario  con el mismo nick que el de la entrada
+	/*La función nos devuelve la información de un usuario a partir del nick del usuario. Si este usuario con el nick de la entrada es el mismo que el  logueado devuelve toda la informacion del usuario. En caso contrario, solo devuelve una pequeña parte de la informacion del usuario  con el mismo nick que el de la entrada
 			-nick: Nick del usuario
 	*/
 	function get_user_nick($nick){
-	/*Pre: Debe de haber un usuario logueado */	
+	/*Pre: El parametro de la entrada no es nulo */
 		if (isset($_SESSION["user"])){
 			
 			global $connection;
@@ -123,7 +124,7 @@
 			- pass: Nuevo password del usuario
     */
 	function set_user($name, $surname1, $surname2, $email_user, $city, $school, $email_school, $type_user, $old_pass, $pass){
-	/*Pre: El identificador del usuario existe y los campos no son nulos a exception del segundo apellido o del email de la escuela */
+	/*Pre: Los campos no son nulos a exception del segundo apellido o del email de la escuela */
 		
 		global $connection;
 		
@@ -172,7 +173,7 @@
 			-nick: Nick del usuario
 	*/
 	function exist_user($nick){	
-	/*Pre: - */	
+	/*Pre: El parametro de la entrada no es nulo */
 		global $connection;
 		
 		$query =  "SELECT * FROM user WHERE nick = '$nick'";

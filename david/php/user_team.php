@@ -6,7 +6,7 @@
 			- active: Entero que representa el valor del estado del usuario respecto al equipo
 	*/
 	function add_user_team($id_user, $id_team, $active){
-	/*Pre: Los identificadores deben existir */	
+	/*Pre: Los parametros de entrada no  son nulos  y el  parametro 'active' contiene el valor 0 o 1*/
 		global $connection;
 		
 	    $query = "INSERT INTO user_team ( id_user, id_team, active) VALUES ('$id_user',' $id_team', '$active')";
@@ -23,7 +23,7 @@
 			- id: Identificador del usuario
 	*/
 	function get_teams_of_user($id){
-	/*Pre: - */
+	/*Pre: El identificador del equipo no es nulo */
 		global $connection;
 		
 		$query =  "SELECT id_team FROM user_team WHERE id_user = '$id' AND active = 1";
@@ -34,11 +34,11 @@
 	/*Post: Retorna una array de enteros con los identificadores de equipo a los que pertence el usuario de la entrada*/
 	
 	
-	/*La función nos devuelve la lista de usuarios que pertenecen a un equipo en concreto, la información la retorna
+	/*La función nos devuelve la lista de identificadores de usuarios que pertenecen al equipo con el mismo identificador que el recibido en la entrada de la función
 			- id: Identificador del equipo
 	*/
 	function get_users_of_team($id){
-	/*Pre: - */
+	/*Pre: El identificador del equipo no es nulo */
 		global $connection;
 		
 		$query =  "SELECT id_user FROM user_team WHERE id_team = '$id' AND active = 1";
@@ -53,7 +53,7 @@
 			- id_user: Identificador del usuario
 	*/
 	function get_num_userteam_pendents($id_user){
-	/*Pre: El identificador de la entrada existe */
+	/*Pre: - */
 		global $connection;
 		
 		$query = " SELECT COUNT(*) AS num FROM user_team ut WHERE ut.id_user = '$id_user' AND ut.active = 0";
@@ -70,7 +70,7 @@
 			- id_team: Identificador del equipo
 	*/
 	function get_status($id_user, $id_team){
-	/*Pre: - */
+	/*Pre: Los parametros de la entrada no son nulos */
 		global $connection;
 		
 	    $query = "SELECT active FROM user_team WHERE id_user='$id_user' AND id_team='$id_team'";
@@ -80,7 +80,7 @@ $result_query = mysql_query($query, $connection) or my_error('GET_STATUS-> '.mys
 	/*Post: La función nos retorna el valor del estado del usuario en el equipo, en caso de que no exista relación entre el usuario y el equipo se retorna valor nulo*/
 	
 	
-	/*La funcion devuelve una lista con los nick del fundador y el nombre de los equipos que tiene pendientes el usuario logueado */
+	/*La funcion devuelve una lista donde cada elemento contiene: el nick del fundador y el nombre de los equipos que tiene pendientes el usuario logueado */
 	function get_teams_invited(){
 	/*Pre: - */
 		if ( isset( $_SESSION[ 'user' ] ) ){
@@ -109,7 +109,7 @@ $result_query = mysql_query($query, $connection) or my_error('GET_STATUS-> '.mys
 			- active: Entero que representa el valor del estado del usuario respecto al equipo
 	*/
 	function set_user_team_status($id_user, $id_team, $active){
-	/*Pre: Los identificadores deben existir y no ser nulos, active contiene los valores 0 o 1 y  la invitacion esta inactiva */
+	/*Pre: Los identificadores no son nulos y active contiene los valores 0 o 1*/
 		global $connection;
 		
 		$query = "UPDATE user_team SET active='$active' WHERE id_user='$id_user' AND id_team='$id_team'";		
@@ -140,7 +140,7 @@ $result_query = mysql_query($query, $connection) or my_error('GET_STATUS-> '.mys
 			- id_team: Identificador del campeonato	
 	*/
 	function exist_user_team($id_user, $id_team){	
-	/*Pre: - */
+	/*Pre: Los parametros de entrada no son nulos*/
 		global $connection;
 		
 		$query =  "SELECT * FROM user_team WHERE id_user = '$id_user' AND id_team='$id_team'";	

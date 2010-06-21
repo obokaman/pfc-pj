@@ -1,5 +1,5 @@
 <?php
-/*Esta array hace referencia a algunas rutas a directorios del servidor importantes para la ejecucion de algunas de la peticiones de la aplicacion cliente.
+/*Esta array hace referencia a algunas rutas a directorios del servidor importantes para la ejecucion de las peticiones del cliente.
 	- circuits: Directorio donde almacenan los txt de que contienen la informacion necesaria de los circuitos
 	- images: Directorio con las imagenes de los circuitos
 	- url-images: Este directorio hace referencia a una ruta con posicionamiento relativo, hacia el directorio donde se almacenan las imagenes de los circutos

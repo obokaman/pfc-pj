@@ -23,7 +23,7 @@
 			- id: Identificador del usuario
 	*/	
 	function get_champs_of_user($id){
-	/*Pre: El identificador del usuario no es nulo y debe de existir */
+	/*Pre: El identificador del usuario no es nulo */
 		global $connection;
 		
 		$query =  "SELECT id_champ FROM inscription WHERE id_user = '$id' AND active=1";
@@ -54,7 +54,7 @@
 			- id_champ: Identificador el campeonato
 	*/
 	function get_status_inscription($id_user, $id_champ){
-	/*Pre: - */
+	/*Pre: Los parametros de entrada no  son nulos */
 		global $connection;
 		
 	    $query = "SELECT active FROM inscription WHERE id_user='$id_user' AND id_champ='$id_champ'";
@@ -67,10 +67,10 @@
 	
 	
 	/*La función devuelve el numero de inscripciones pendientes que tiene el usuario de la entrada
-			- id_user; Identificador del usuario
+			- id_user: Identificador del usuario
 	*/
 	function get_num_inscriptions_pendents($id_user){
-	/*Pre: - */
+	/*Pre: El identificador del usuario no es nulo */
 		global $connection;
 		
 		$query = " SELECT COUNT(*) AS num FROM inscription i, championship c WHERE i.id_user = '$id_user' AND i.active = 0 AND c.id_champ = i.id_champ AND c.data_limit >= now()";
