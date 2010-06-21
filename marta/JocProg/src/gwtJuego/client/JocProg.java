@@ -253,7 +253,7 @@ public class JocProg implements EntryPoint {
 			  });
 
 	  //Assemble Main panel.
-	  mainPanel.setAnimationEnabled(true);
+	  //mainPanel.setAnimationEnabled(true);
 	  if(USER.equals("")) mainPanel.add(multiPanel,"Inicio");
 	  else mainPanel.add(multiPanel,"Administración");
 	  mainPanel.add(codiPanel,"Juega");
@@ -1169,7 +1169,7 @@ public class JocProg implements EntryPoint {
 
 	  VerticalPanel newChampVPanel = new VerticalPanel();
 	  newChampVPanel.setSize("100%","100%");
-	  newChampVPanel.setSpacing(10);
+	  newChampVPanel.setSpacing(20);
 	  newChampVPanel.add(champNameVPanel);
 	  newChampVPanel.add(newChampHPanel);
 	  Button createChampButton = new Button("Crear campeonato");
@@ -1230,16 +1230,18 @@ public class JocProg implements EntryPoint {
   private VerticalPanel createNewTeamPanel(){
 	  
 	  Grid newTeam = new Grid(1,2);
+	  newTeam.setCellSpacing(10);
 	  newTeam.setWidget(0,0,new HTML("Nombre: "));
 	  newTeam.setWidget(0,1,teamNameTextBox);
 	  
 	  Button createTeamButton = new Button("Crear equipo");
 
 	  VerticalPanel newTeamVPanel = new VerticalPanel();
-	  newTeamVPanel.setSpacing(20);
+	  newTeamVPanel.setSpacing(30);
 	  newTeamVPanel.add(new HTML("¡Crea un nuevo equipo del que serás propietario!"));
 	  newTeamVPanel.add(newTeam);
 	  newTeamVPanel.add(createTeamButton);
+	  newTeamVPanel.setCellHorizontalAlignment(createTeamButton, HasHorizontalAlignment.ALIGN_CENTER);
 	  
 	  createTeamButton.addClickHandler( 
 			  new ClickHandler() {
@@ -1260,16 +1262,35 @@ public class JocProg implements EntryPoint {
 	  suggestNickBox = new SuggestBox(oracle);
 	  Button addPlayersButton = new Button("Invitar");
 	  
-	  HorizontalPanel addPlayersHPanel = new HorizontalPanel();
+	  HorizontalPanel addToHPanel = new HorizontalPanel();
+	  addToHPanel.setSpacing(10);
+	  addToHPanel.add(new Label("Invitar a :"));
+	  addToHPanel.add(addPlayersDropBox);
+	  
+	  HorizontalPanel playerHPanel = new HorizontalPanel();
+	  playerHPanel.setSpacing(10);
+	  playerHPanel.add(new Label("Nombre del usuario:"));
+	  playerHPanel.add(suggestNickBox);
+	  
+	  /*HorizontalPanel addPlayersHPanel = new HorizontalPanel();
 	  addPlayersHPanel.setSpacing(5);
 	  addPlayersHPanel.add(addPlayersDropBox);
 	  addPlayersHPanel.add(suggestNickBox);
-	  addPlayersHPanel.add(addPlayersButton);
+	  addPlayersHPanel.add(addPlayersButton);*/
+	  
+	  VerticalPanel dataVPanel = new VerticalPanel();
+	  dataVPanel.setSpacing(20);
+	  dataVPanel.add(addToHPanel);
+	  dataVPanel.add(playerHPanel);
 	  
 	  VerticalPanel addPlayersVPanel = new VerticalPanel();
-	  addPlayersVPanel.setSpacing(20);
-	  addPlayersVPanel.add(addPlayersLabel);
-	  addPlayersVPanel.add(addPlayersHPanel);
+	  //addPlayersVPanel.setSpacing(20);
+	  //addPlayersVPanel.add(addPlayersLabel);
+	  //addPlayersVPanel.add(addPlayersHPanel);
+	  addPlayersVPanel.setSpacing(40);
+	  addPlayersVPanel.add(dataVPanel);
+	  addPlayersVPanel.add(addPlayersButton);
+	  addPlayersVPanel.setCellHorizontalAlignment(addPlayersButton, HasHorizontalAlignment.ALIGN_CENTER);
 	  
 	  addPlayersButton.addClickHandler( 
 			  new ClickHandler() {
