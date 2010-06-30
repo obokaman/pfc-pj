@@ -80,7 +80,7 @@ public class JocProg implements EntryPoint {
 	private static final String TEXTO_EJEMPLO = "// -- Escribe aqui tu codigo --\n"+
 												"//ejemplo:\n\n"+
 												"void corre() {\n"+
-												"  setVel(50);  // fija la velocidad del coche a 50 km/h\n"+
+												"  setVel(100);  // fija la velocidad del coche a 50 km/h\n"+
 												"}\n\n"+
 												"//Para encontrar mas ejemplos de como escribir tu codigo"+
 												" consulta el apartado de 'Ayuda'\n";
